@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+   
+     	
+     <context:component-scan base-package="com.sm.portal"/>	
+     <context:annotation-config/>
+     			
+     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<property name="viewClass"	value="org.springframework.web.servlet.view.JstlView" />
+			<property name="prefix" value="/WEB-INF/view/" />
+			<property name="suffix" value=".jsp" />
+	</bean>
+	<context:property-placeholder location="classpath*:*.properties"/>
+	
+	 <mvc:resources mapping="/resources/**" location="/resources/" />
+	 
+	<mvc:annotation-driven/>
+	
+	<!-- Reading Email Templates -->
+	<bean id="velocityEngine"	class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="resourceLoaderPath" value="classpath:/email/templates" />
+		<property name="preferFileSystemAccess" value="false" />
+		<property name="velocityProperties">
+            <props>
+                <prop key="input.encoding">UTF-8</prop>
+                <prop key="output.encoding">UTF-8</prop>                
+            </props>
+        </property> 
+	</bean>
+
+	<!-- file uploading -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+	   <property name="maxUploadSize" value="3000000000" />
+	</bean>
+
+	<!-- Spring Mail API -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mail.hostname}" />
+		<property name="port" value="${mail.port}" />
+		<property name="username" value="${mail.username}" />
+		<property name="password" value="${mail.password}" />  
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>				
+			</props>
+		</property>
+	</bean>
+	<!--nlob MongoDB util start -->
+   <bean id="nextMongoDBUtil" class="com.sm.portal.mongo.MongoDBUtil" init-method="initIt">
+  		<property name="user" value="${mongo.username}"/>
+  		<property name="password" value="${mongo.password}"/>
+  		<property name="defDatabase" value="${mongo.def.database}"/>
+  		<property name="authDatabases" value="${mongo.auth.databases}"/>
+  		<property name="serverAddress" value="${mongo.server}"/>
+  	</bean>  
+<!--  MongoDB util end -->
+
+
+	<bean id="nestMongoDBMorphiaUtil" class="com.sm.portal.mongo.MongoDBUtilMorphia" init-method="getInstance">
+  		<property name="user" value="${mongo.user}"/>
+  		<property name="password" value="${mongo.password}"/>
+  		<property name="database" value="${mongo.database}"/>
+  		<property name="serverAddress" value="${mongo.host}"/>
+  		<property name="authDatabases" value="${mongo.auth.databases}"/>
+  		 <property name="nlobdatabase" value="${mongo.database.nlob}"/>
+  		 <property name="e2goolddatabase" value="${mongo.database.e2goold}"/>
+  	</bean>
+</beans>

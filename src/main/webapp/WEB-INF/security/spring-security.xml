@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security
+						http://www.springframework.org/schema/security/spring-security-3.1.xsd
+						http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+   <beans:bean class="org.springframework.security.access.vote.RoleVoter">
+		<beans:property name="rolePrefix" value="" />
+	</beans:bean>
+
+	<http pattern="/resources/**" security="none" />
+	<http pattern="/home" security="none"  />
+    <http pattern="/login" security="none" />
+    <http pattern="/signup" security="none" />
+    <http pattern="/tutors" security="none" />
+    <http pattern="/" security="none" />    
+    <http pattern="/loginfailed" security="none" />
+    <http pattern="/admin/login" security="none"  />
+    <http pattern="/admin/loginfailed" security="none"  />
+    <http pattern="/admin/forgot-password" security="none"  />
+    <http pattern="/admin/send-forgotpwd" security="none"  />
+
+
+	
+	
+	<http pattern="/admin/**" auto-config="true" use-expressions="true">
+       <intercept-url pattern="/admin/login" access="permitAll()" />
+		<intercept-url pattern="/admin/loginfailed" access="permitAll()" />
+		<intercept-url pattern="/admin/accessDenied" access="permitAll()" />
+		<intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')" />
+ 		<form-login login-processing-url="/admin/j_spring_security_check"
+		            login-page="/admin/login" authentication-failure-url="/admin/loginfailed"
+			        authentication-success-handler-ref="myAdminSimpleAuthenticationSuccessHandler" />
+		<logout logout-url="/admin/j_spring_security_logout"
+			delete-cookies="JSESSIONID" invalidate-session="true"
+			logout-success-url="/admin/login" />
+		<sec:access-denied-handler error-page="/admin/accessDenied" />
+	</http>
+
+	
+	
+	<http pattern="/**" auto-config="true" use-expressions="true">
+       <intercept-url pattern="/sm/**" access="hasRole('ROLE_CUSTOMER')" />
+ 		<form-login login-processing-url="/j_spring_security_check"
+		            login-page="/"
+			        authentication-failure-url="/loginfailed"
+			        authentication-success-handler-ref="mySimpleAuthenticationSuccessHandler" />
+		<logout logout-url="/j_spring_security_logout"  logout-success-url="/login" />
+		<sec:access-denied-handler error-page="/accessDenied" />
+	</http>
+	
+	 <beans:bean id="authenticationEntryPoint" class="com.sm.portal.security.AjaxAwareAuthenticationEntryPoint">
+          <beans:constructor-arg value="/signin"/>
+      </beans:bean>
+      
+      <beans:bean id="authenticationEntryPointForAdmin" class="com.sm.portal.security.AjaxAwareAuthenticationEntryPointForAdmin">
+          <beans:constructor-arg value="/admin/login"/>
+      </beans:bean>
+      
+   <beans:bean id="mySimpleAuthenticationSuccessHandler" class="com.sm.portal.security.AuthenticationUrlHandler"/>
+   <beans:bean id="myAdminSimpleAuthenticationSuccessHandler" class="com.sm.portal.security.AdminAuthenticationUrlHandler"/>
+	
+	
+    <beans:bean id="userSecurityService" class="com.sm.portal.security.UserSecurityService" />
+	<authentication-manager>
+		<authentication-provider user-service-ref="userSecurityService" />
+	</authentication-manager>
+	
+	<beans:bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors"
+		factory-method="noOpText" />
+		
+	<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"
+		factory-method="getInstance" />
+		
+  
+
+</beans:beans>

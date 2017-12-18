@@ -1,0 +1,48 @@
+<div
+	style='background: #F6F6F6; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; margin: 0; padding: 0;'>
+	<table width='100%' cellspacing='0' cellpadding='0' border='0'
+		height='100%'>
+		<tbody>
+			<tr>
+				<td valign='top' align='center' style='padding: 20px 0 20px 0'>
+					<table width='900' cellspacing='0' cellpadding='10' border='0'
+						bgcolor='FFFFFF' style='border: 1px solid #E0E0E0;'>
+						<tbody>
+							
+							<tr>
+								<td valign='top'>
+									<h1
+										style='font-size: 16px; font-weight: normal; line-height: 22px; margin: 0 0 11px 0;'>Hi, ${user.firstname} ${user.lastname}</h1>
+										<div style='font-size: 12px; line-height: 16px; margin: 0 0 8px 0;'>
+											<br/>
+											<p> Thank you for registering Tutorial portal . Below your login credentials</p>
+										    </div>
+										   
+										<div style='font-size: 12px; line-height: 16px; margin: 0;'>
+											Username  :  ${user.mobile_no}<br/>
+											Password  :  ${user.password}
+										</div>
+										<br/><br/>
+											Thanks &amp; Regards<br/>
+											helpdesk,<br/>
+											helpdesk@sm.com,<br/>
+											
+											<br/><br/><br/><br/>
+											
+										
+										
+								</td>
+							</tr>							
+							<tr>
+								<td style='background-color: #EAEAEA; text-align: center;'><div
+										style='font-size: 12px; margin: 0; text-align: center;'>
+										<strong>SM Team</strong>
+									</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

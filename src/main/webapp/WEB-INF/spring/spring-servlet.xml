@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans	  http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/tx   http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/context	http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/data/jpa 	http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd 
+     					http://www.springframework.org/schema/mvc 	http://www.springframework.org/schema/mvc/spring-mvc.xsd ">
+
+
+	<context:property-placeholder location="classpath*:*.properties" />
+
+	<mvc:annotation-driven />
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${dataSource.driverClassName}"></property>
+		<property name="url" value="${dataSource.url}"></property>
+		<property name="username" value="${dataSource.username}"></property>
+		<property name="password" value="${dataSource.password}"></property>
+		<property name="initialSize" value="${dataSource.initialSize}"></property>
+		<property name="maxActive" value="${dataSource.maxActive}"></property>
+		<property name="maxIdle" value="${dataSource.maxIdle}"></property>
+		<property name="validationQuery" value="${dataSource.validationQuery}">
+		</property>
+		<property name="testOnBorrow" value="true"></property>
+		<property name="testOnReturn" value="false"></property>
+	</bean>
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="packagesToScan" value="com.sm.portal.model" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				 <prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<tx:annotation-driven />
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager" p:sessionFactory-ref="sessionFactory"></bean>
+
+</beans>
