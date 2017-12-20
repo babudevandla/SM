@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,7 +25,7 @@ public class LoginController {
     private UserService userService;
 	
 	
-	@RequestMapping(value=URLCONSTANT.LOGIN_PAGE,method=RequestMethod.GET)
+	@GetMapping(value=URLCONSTANT.LOGIN_PAGE)
 	public ModelAndView showLoginForm(){
 		System.out.println("login form");
 		ModelAndView mv = new ModelAndView("/common/login");
@@ -33,7 +34,7 @@ public class LoginController {
 	
 	
 	
-	@RequestMapping(value="/accessdenied", method=RequestMethod.GET)
+	@GetMapping(value="/accessdenied")
 	public ModelAndView showAccessDenied(){
 		ModelAndView mv = new ModelAndView("/access-denied");
 		mv.addObject("error", "true");
@@ -41,14 +42,14 @@ public class LoginController {
 	}
 	
 	
-	@RequestMapping(value="/loginfailed", method = RequestMethod.GET)
+	@GetMapping(value="/loginfailed")
 	public String loginerror(ModelMap model) {
 		model.addAttribute("error", "true");
 		return "/common/login";
  
 	}
 	
- 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@GetMapping(value = "/logout")
 	public ModelAndView logout(HttpSession session)
 			throws Exception {
 		if(session.isNew())

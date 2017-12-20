@@ -4,6 +4,7 @@ import java.security.Principal;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,7 +24,7 @@ public class GalleryController {
 	@Autowired
     private UserService userService;
 	
-	@RequestMapping(value=URLCONSTANT.GALLERY_HOME, method=RequestMethod.GET)
+	@GetMapping(value=URLCONSTANT.GALLERY_HOME)
 	public @ResponseBody ModelAndView gallery(Principal principal){
 		logger.debug(" show user gallery ...");
 		ModelAndView mvc = new ModelAndView("/customer/gallery");

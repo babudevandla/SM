@@ -16,13 +16,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sm.portal.constants.PropertyConstant;
@@ -34,7 +36,7 @@ import com.sm.portal.service.FileManagementService;
 import com.sm.portal.service.PropertyService;
 import com.sm.portal.service.UserService;
 
-@Controller
+@RestController
 @RequestMapping(URLCONSTANT.BASE_URL)
 public class FileManagementController {
 
@@ -50,7 +52,7 @@ public class FileManagementController {
 	FileManagementService managementService;
 	
 	
-	@RequestMapping(value=URLCONSTANT.FILE_MANAGEMENT_HOME, method=RequestMethod.GET)
+	@GetMapping(value=URLCONSTANT.FILE_MANAGEMENT_HOME)
 	public ModelAndView fileManagement(@PathVariable Integer userId, Principal principal){
 		logger.debug(" show fileManagement ...");
 		ModelAndView mvc = new ModelAndView("/customer/file_management");
@@ -83,7 +85,7 @@ public class FileManagementController {
 	
 	
 
-	@RequestMapping(value=URLCONSTANT.FILE_MANAGEMENT_CREATE_FOLDER, method=RequestMethod.GET)
+	@GetMapping(value=URLCONSTANT.FILE_MANAGEMENT_CREATE_FOLDER)
 	public @ResponseBody ModelAndView createFolder(@RequestParam Integer userid,@RequestParam String foldername,
 			@RequestParam Integer parentid, Principal principal){
 		logger.debug(" show fileManagement ...");
@@ -111,7 +113,7 @@ public class FileManagementController {
 		return mvc;
 	}
 	
-	@RequestMapping(value=URLCONSTANT.FILE_MANAGEMENT_UPLOAD_FILES, method=RequestMethod.POST)
+	@PostMapping(value=URLCONSTANT.FILE_MANAGEMENT_UPLOAD_FILES)
 	public ModelAndView uploadFiles(Principal principal){
 		logger.debug(" show fileManagement ...");
 		
@@ -125,7 +127,7 @@ public class FileManagementController {
 		return mvc;
 	}
 	
-	@RequestMapping(value=URLCONSTANT.FILE_MANAGEMENT_OPEN_FOLDER, method=RequestMethod.GET)
+	@GetMapping(value=URLCONSTANT.FILE_MANAGEMENT_OPEN_FOLDER)
 	public  ModelAndView openFolder(@RequestParam Integer userid,@RequestParam String foldername, Principal principal){
 		logger.debug(" show fileManagement ...");
 		ModelAndView mvc = new ModelAndView("/customer/file_management");

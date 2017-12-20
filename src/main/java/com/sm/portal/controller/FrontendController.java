@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +37,7 @@ public class FrontendController extends CommonController{
 	public UserService userService;
 	
 	
-	@RequestMapping(value=URLCONSTANT.LOGIN_PAGE , method=RequestMethod.POST)
+	@PostMapping(value=URLCONSTANT.LOGIN_PAGE)
 	public ModelAndView loginSubmit(@ModelAttribute UsersDto usersDto , final RedirectAttributes redirectAttributes){
 		if(logger.isTraceEnabled())logger.info("FrontOendCntroller --- loginSubmit --start");
 		ModelAndView model=new ModelAndView("common/login");
@@ -67,7 +69,7 @@ public class FrontendController extends CommonController{
 		return model;
 	}
 	
-	@RequestMapping(value=URLCONSTANT.DASHBOARD , method=RequestMethod.GET)
+	@GetMapping(value=URLCONSTANT.DASHBOARD)
 	public ModelAndView dashboard(Principal principal){
 		ModelAndView model=new ModelAndView();
 		Users user=userService.findUserByUserName(principal.getName());
@@ -76,7 +78,7 @@ public class FrontendController extends CommonController{
 		return model;
 	}
 	
-	@RequestMapping(value=URLCONSTANT.SIGNUP_PAGE,method=RequestMethod.GET)
+	@GetMapping(value=URLCONSTANT.SIGNUP_PAGE)
 	public ModelAndView signup(@RequestParam(value="message",required=false) String message){
 		if(logger.isTraceEnabled())logger.info("FrontendCntroller --- signup --start");
 		System.out.println("singup");
@@ -86,7 +88,7 @@ public class FrontendController extends CommonController{
 		return model;
 	}
 	
-	@RequestMapping(value=URLCONSTANT.SIGNUP_PAGE,method=RequestMethod.POST)
+	@PostMapping(value=URLCONSTANT.SIGNUP_PAGE)
 	public ModelAndView signupProcess(@ModelAttribute UsersDto users,HttpServletRequest request){
 		if(logger.isTraceEnabled())
 			logger.info("FrontendCntroller --- signupProcess --start");
@@ -130,7 +132,7 @@ public class FrontendController extends CommonController{
 		return model;
 		
 	}
-	@RequestMapping(value=URLCONSTANT.DYNAMIC_ACCESS_CODE,method=RequestMethod.GET)
+	@GetMapping(value=URLCONSTANT.DYNAMIC_ACCESS_CODE)
 	public ModelAndView dynamicAccessCode(@RequestParam Integer userId){
 		if(logger.isTraceEnabled())
 			logger.info("FrontendCntroller --- dynamicAccessCode --start");
@@ -149,7 +151,7 @@ public class FrontendController extends CommonController{
 	}
 	
 	
-	@RequestMapping(value=URLCONSTANT.RE_GENARATE,method=RequestMethod.GET)
+	@GetMapping(value=URLCONSTANT.RE_GENARATE)
 	public ModelAndView reGenerateDAC(@PathVariable Integer userId){
 		if(logger.isTraceEnabled())
 			logger.info("FrontendCntroller --- reGenerateDAC --start");
@@ -186,7 +188,7 @@ public class FrontendController extends CommonController{
 		return model;
 	}
 	
-	@RequestMapping(value=URLCONSTANT.SUBMIT_DAC,method=RequestMethod.POST)
+	@GetMapping(value=URLCONSTANT.SUBMIT_DAC)
 	public ModelAndView submitDAC(@ModelAttribute UsersDto userDto){
 		if(logger.isTraceEnabled())
 			logger.info("FrontendCntroller --- submitDAC --start");
