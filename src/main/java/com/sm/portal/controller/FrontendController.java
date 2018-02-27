@@ -1,5 +1,6 @@
 package com.sm.portal.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,13 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sm.portal.constants.CommonController;
 import com.sm.portal.constants.Email;
 import com.sm.portal.constants.MESSAGECONSTANT;
 import com.sm.portal.constants.SMSGateway;
 import com.sm.portal.constants.URLCONSTANT;
 import com.sm.portal.model.Users;
 import com.sm.portal.model.UsersDto;
+import com.sm.portal.service.FileUploadServices;
 import com.sm.portal.service.UserService;
 
 @Controller
@@ -36,6 +37,8 @@ public class FrontendController extends CommonController{
 	@Autowired
 	public UserService userService;
 	
+	@Autowired
+	FileUploadServices fileUploadServices;
 	
 	@PostMapping(value=URLCONSTANT.LOGIN_PAGE)
 	public ModelAndView loginSubmit(@ModelAttribute UsersDto usersDto , final RedirectAttributes redirectAttributes){
@@ -72,9 +75,16 @@ public class FrontendController extends CommonController{
 	@GetMapping(value=URLCONSTANT.DASHBOARD)
 	public ModelAndView dashboard(Principal principal){
 		ModelAndView model=new ModelAndView();
-		Users user=userService.findUserByUserName(principal.getName());
-		model.addObject("user",user);
-		model.setViewName("customer/dashboard");
+		try {
+			Users user=userService.findUserByUserName(principal.getName());
+			model.addObject("user",user);
+			model.setViewName("customer/dashboard");
+			
+			//create userid folder under webdav
+			fileUploadServices.createDefaultUserIdFolder(user.getUserId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return model;
 	}
 	
@@ -121,6 +131,8 @@ public class FrontendController extends CommonController{
 					model.addObject("flag",flag);
 					return model;
 				}
+				//create userid folder under webdav
+				//fileUploadServices.createDefaultUserIdFolder(user.getUserId());
 			}else{
 				flag=true;
 				model.setViewName("common/signup");

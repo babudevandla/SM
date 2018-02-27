@@ -13,6 +13,11 @@ public class FileManagementVO {
 	private Integer folder_parent_id;
 	private boolean file_status;
 	private Integer file_id;
+	private Date modifyDate;
+	private Long contentLength;
+	private String href;
+	private String serverPath;
+	private boolean fileType;
 	
 	public Integer getDoc_id() {
 		return doc_id;
@@ -67,6 +72,38 @@ public class FileManagementVO {
 	}
 	public void setFile_id(Integer file_id) {
 		this.file_id = file_id;
+	}
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
+	}
+	
+	public Long getContentLength() {
+		return contentLength;
+	}
+	public void setContentLength(Long contentLength) {
+		this.contentLength = contentLength;
+	}
+	public String getHref() {
+		return href;
+	}
+	public void setHref(String href) {
+		this.href = href;
+	}
+	
+	public String getServerPath() {
+		return serverPath;
+	}
+	public void setServerPath(String serverPath) {
+		this.serverPath = serverPath;
+	}
+	public boolean isFileType() {
+		return fileType;
+	}
+	public void setFileType(boolean fileType) {
+		this.fileType = fileType;
 	}
 	@Override
 	public String toString() {

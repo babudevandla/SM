@@ -18,12 +18,14 @@ public class URLCONSTANT {
 	
 		
 	/* File Management Tab  url's  */
-	public static final String FILE_MANAGEMENT_HOME					=	"/file_management/{userId}" ;
-	public static final String FILE_MANAGEMENT_CREATE_FOLDER		=	"/create_folder" ;
-	public static final String FILE_MANAGEMENT_UPLOAD_FILES			=	"/upload_files" ; 
-	public static final String FILE_MANAGEMENT_OPEN_FOLDER			=	"/openfolder" ;
-	public static final String FILE_MANAGEMENT_VIEW_FILE			=	"/view_file" ;
-	
+	public static final String FILE_MANAGEMENT_HOME						=	"/file_management/{userId}" ;
+	public static final String FILE_MANAGEMENT_CREATE_FOLDER			=	"/create_folder" ;
+	public static final String FILE_MANAGEMENT_UPLOAD_FILES				=	"/upload_files" ; 
+	public static final String FILE_MANAGEMENT_OPEN_FOLDER				=	"/openfolder" ;
+	public static final String FILE_MANAGEMENT_VIEW_FILE				=	"/view_file" ;
+	public static final String FILE_MANAGEMENT_DELETE_FILE_OR_FOLDER	=	"/delete_files" ;
+	public static final String DIGILOCKER_DELETE_OR_HIDE_FILE			= 	"/deleteOrHidefile";
+	public static final String DIGILOCKER_DELETE_OR_HIDE_FOLDER			=   "/deleteOrHidefolder";
 	
 	/*  Gallery Tab url's   */
 	public static final String GALLERY_HOME							=	"/gallery" ;

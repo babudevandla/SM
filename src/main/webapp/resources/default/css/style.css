@@ -70,7 +70,6 @@ body{
     src: url("../fonts/agency-fb.ttf") /* TTF file for CSS3 browsers */
 }
 
-h1, h2, h3, h4, h5, h6{color: #27aae1;}
 
 h1.grey, h2.grey, h3.grey, h4.grey, h5.grey, h6.grey{
   color: #6d6e71;
@@ -93,7 +92,7 @@ h1.grey, h2.grey, h3.grey, h4.grey, h5.grey, h6.grey{
 
 .text-muted{color: #939598;}
 
-a{color: #27aae1;}
+/* a{color: #27aae1;} */
 
 a:hover{color: #149AC9;}
 

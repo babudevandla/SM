@@ -1,6 +1,7 @@
-package com.sm.portal.constants;
+package com.sm.portal.controller;
 
 import java.net.URLEncoder;
+import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,42 +10,51 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.sm.portal.constants.EmailSender;
 import com.sm.portal.model.Users;
 import com.sm.portal.model.UsersDto;
+import com.sm.portal.service.UserService;
 
 @Component
 public class CommonController {
 
      public Users user = null;
 
-    /*@ModelAttribute
-	public void getLoggedUser(HttpSession session,Principal pricipal,Model model){
-		if(pricipal!=null){
-			user=userService.findUserByUserName(pricipal.getName());
-			if(user!=null){
-				
-			}
-			model.addAttribute("user", user);
-		}
-	}*/
+    
 	
 	@Autowired protected ServletContext context;
 	
+	@Autowired
+	public UserService userService;
 
 	@Autowired 
 	protected VelocityEngine velocityEngine;
 	
 	@Autowired 
 	protected EmailSender emailSender;
+	
+	
+	@ModelAttribute
+	public void getLoggedUser(HttpSession session,Principal pricipal,Model model){
+		if(pricipal!=null){
+			user=userService.findUserByUserName(pricipal.getName());
+			if(user!=null){
+			}
+			model.addAttribute("user", user);
+		}
+	}
 	
 	public static String SMSAuthetications(UsersDto users){
 		
