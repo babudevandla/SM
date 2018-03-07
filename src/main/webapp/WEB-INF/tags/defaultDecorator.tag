@@ -90,7 +90,7 @@ body {
             </div><!--profile card ends-->
             <ul class="nav-news-feed">
               <li><i class="icon ion-lock-combination"></i><div><a href="${contextPath}/sm/file_management/${user.userId}">Digi Locker</a></div></li>
-              <li><i class="fa fa-calendar" aria-hidden="true"></i><div><a href="${contextPath}/sm/e_dairy_list">E Dairy</a></div></li>
+              <li><i class="fa fa-calendar" aria-hidden="true"></i><div><a href="${contextPath}/sm/getUserDairiesList">E Dairy</a></div></li>
               <li><i class="icon ion-chatboxes"></i><div><a href="${contextPath}/sm/messanger">Messanger</a></div></li>
               <li><i class="icon ion-images"></i><div><a href="${contextPath}/sm/gallery">Gallery</a></div></li>
                <li><i class="fa fa-bell-o" aria-hidden="true"></i><div><a href="#">Personal Assistant</a></div></li>
