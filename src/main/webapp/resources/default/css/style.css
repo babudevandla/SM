@@ -146,7 +146,7 @@ section .wrapper{
 	position: relative;
   font-weight: 600;
   outline: none;
-  border-radius: 30px;
+  /* border-radius: 30px; */
 }
 
 .btn-primary:hover{
@@ -891,7 +891,7 @@ textarea{
 #Login_form .form-control{
   background: #fff;
   color: #939598;
-  border-radius: 30px;
+ /*  border-radius: 30px; */
   box-shadow: none;
   width: 100%;
   border: 1px solid #f1f2f2;

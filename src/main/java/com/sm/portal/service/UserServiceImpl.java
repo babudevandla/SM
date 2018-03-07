@@ -1,15 +1,24 @@
 package com.sm.portal.service;
 
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sm.portal.dao.UserDao;
+import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
+import com.sm.portal.digilocker.model.FilesInfo;
+import com.sm.portal.digilocker.model.FolderInfo;
+import com.sm.portal.digilocker.service.DigilockerService;
 import com.sm.portal.model.Role;
 import com.sm.portal.model.Users;
 import com.sm.portal.model.UsersDto;
@@ -21,6 +30,9 @@ public class UserServiceImpl  implements UserService {
 	@Autowired
 	private  UserDao userDao;
 	
+	
+	@Autowired
+	DigilockerService digilockerService;
 	
 	@Override
 	public Users findUserByUserName(String username) {
@@ -34,7 +46,7 @@ public class UserServiceImpl  implements UserService {
 	
 	
 	@Override
-	public Integer saveUser(UsersDto users) {
+	public Integer saveUser(UsersDto users,HttpServletRequest request) {
 		Users info=new Users();
 		info.setFirstname(users.getFirstname());
 		info.setLastname(users.getLastname());
@@ -57,10 +69,27 @@ public class UserServiceImpl  implements UserService {
 		List<Role> roles=new ArrayList<>();
 		Role role=new Role();
 		role.setRoleName("ROLE_CUSTOMER");
-		role.setRoleId(1);
+		role.setRoleId(2);
 		roles.add(role);
 		info.setRoles(roles);
-		return userDao.saveUser(info);
+		
+		Integer  userId=userDao.saveUser(info);
+		
+		
+		FolderInfo newFolder =new FolderInfo();
+		newFolder.setfId(0);
+		newFolder.setfName("");
+		newFolder.setParentId(0);
+		newFolder.setFolderNamePath("home");
+		newFolder.setFolderPath("/"+userId+"/"+newFolder.getfId()+"/");
+		newFolder.setFolderStatus(DigiLockerStatusEnum.ACTIVE.toString());
+		newFolder.setChildFolders(null);
+		newFolder.setLocalFilesInfo(null);
+		List<FilesInfo> fileList = new ArrayList<>();
+		newFolder.setLocalFilesInfo(fileList);
+		digilockerService.storeFolderInfo(newFolder, new Integer(""+newFolder.getfId()), userId);
+		
+		return userId;
 	}
 
 	@Override
@@ -90,4 +119,22 @@ public class UserServiceImpl  implements UserService {
 	}
 
 
+	
+	public Integer gerUniqueKey(HttpServletRequest request){
+		int newValue=0;
+		InputStream input = request.getServletContext().getResourceAsStream("/WEB-INF/uniquekey.properties");
+		Properties properties = new Properties();
+		try{
+			properties.load(input);
+			String uniqueKey=properties.getProperty("uniqueId");
+			newValue= Integer.parseInt(uniqueKey)+1;
+			properties.setProperty("uniqueId", ""+newValue);
+			properties.store(new FileOutputStream(request.getServletContext().getRealPath("/WEB-INF/uniquekey.properties")),null);
+		}catch(Exception e){
+			
+		}
+		
+		return newValue;
+	}//closing
+	
 }

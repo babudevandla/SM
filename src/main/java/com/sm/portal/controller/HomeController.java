@@ -26,5 +26,12 @@ public class HomeController {
 	}
 	
 	
+	@GetMapping(value = "/contact")
+	public String contact(Model model,Locale locale) {
+		System.out.println("contact page");
+		return "/common/contact";
+		
+	}
+	
 	
 }

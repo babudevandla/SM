@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sm.portal.constants.URLCONSTANT;
@@ -26,10 +25,11 @@ public class LoginController {
 	
 	
 	@GetMapping(value=URLCONSTANT.LOGIN_PAGE)
-	public ModelAndView showLoginForm(){
+	public ModelAndView showLoginForm(@RequestParam(value="message",required=false) String message){
 		System.out.println("login form");
-		ModelAndView mv = new ModelAndView("/common/login");
-		return mv;
+		ModelAndView mvc = new ModelAndView("/common/login");
+		mvc.addObject("message",message);
+		return mvc;
 	}
 	
 	

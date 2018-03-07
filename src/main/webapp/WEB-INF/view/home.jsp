@@ -53,7 +53,7 @@
               <li class="dropdown">
                <a href="${contextPath}/signup" >Register </a>
              </li>
-              <li class="dropdown"><a href="contact.html">Contact</a></li>
+              <li class="dropdown"><a href="${contextPath}/contact">Contact</a></li>
             </ul>
            
           </div>
@@ -70,7 +70,7 @@
         	<div class="col-sm-5">
             <div class="intro-texts">
             	<h1 class="text-white">Make you feel happy !!!</h1>
-            	<p>Friend Finder is a social network template that can be used to connect people. The template offers Landing pages, News Feed, Image/Video Feed, Chat Box, Timeline and lot more. <br /> <br />Why are you waiting for? Buy it now.</p>
+            	<p>SM is a social network template that can be used to connect people. The template offers Landing pages, News Feed, Image/Video Feed, Chat Box, Timeline and lot more. <br /> <br />Why are you waiting for? Buy it now.</p>
               <button class="btn btn-primary">Learn More</button>
             </div>
           </div>
@@ -99,9 +99,9 @@
     </div>
 
     <!--preloader-->
-    <div id="spinner-wrapper">
+    <!-- <div id="spinner-wrapper">
       <div class="spinner"></div>
-    </div>
+    </div> -->
     
 
     <!-- Scripts

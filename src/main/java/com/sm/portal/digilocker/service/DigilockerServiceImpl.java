@@ -62,4 +62,10 @@ public class DigilockerServiceImpl implements DigilockerService{
 		digiLockerMongoDao.showHiddenFoldersAndFiles(fid, userid);
 	}//showHiddenFoldersAndFiles() closing
 
+
+	@Override
+	public void storeFolderInfo(FolderInfo newFolder, Integer folderid, Integer userId) {
+		digiLockerMongoDao.storeFolderInfo(newFolder,folderid,userId);	
+	}
+
 }//class closing

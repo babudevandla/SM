@@ -93,7 +93,7 @@
 					</div>
 				</c:if>
                   <!--Register Form-->
-                  <form action="${contextPath}/submit-dac" method="post" id="dac_update">
+                  <form action="${contextPath}/submit-dac" method="get" id="dac_update">
                     <input type="hidden" name="userId" value="${userId}">
                       <div class="form-group">
                        <input type="text" id="dynamic_access_code" name="dynamic_access_code" class="form-control" placeholder=" Enter dynamic access code" maxlength="6" required>

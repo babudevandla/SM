@@ -1,6 +1,5 @@
 package com.sm.portal.controller;
 
-import java.io.IOException;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -111,7 +108,7 @@ public class FrontendController extends CommonController{
 			users.setDynamic_access_code(dynamicCode);
 			String final_url=SMSAuthetications(users);
 			boolean smsStatus=SMSGateway.SendDynamicAccessCode(final_url);
-			Integer userId= userService.saveUser(users);
+			Integer userId= userService.saveUser(users,request);
 			if(userId!=null){
 				userService.updateDynamicCode(dynamicCode,users);
 				if(smsStatus){
@@ -212,7 +209,7 @@ public class FrontendController extends CommonController{
 			user=userService.checkDynamicAccessCode(userDto);
 			if(user!=null){
 				userService.updateUserInfo(userDto);
-				model.setViewName("redirect:/signup");
+				model.setViewName("redirect:/login");
 				model.addObject("message",MESSAGECONSTANT.ACCOUNT_CREATE_SUCCESS);
 				model.addObject("user",user);
 			}else{

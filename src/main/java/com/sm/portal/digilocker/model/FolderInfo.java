@@ -8,9 +8,9 @@ public class FolderInfo  implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	public String folderName;
-	 public Long folderId;
+	 public Integer folderId;
 	 public String folderPath;
-	 public Long parentId;
+	 public Integer parentId;
 	 public String folderNamePath;
 	 public String folderStatus;
 	 public List<FilesInfo> files;
@@ -22,10 +22,10 @@ public class FolderInfo  implements Serializable{
 	public void setfName(String fName) {
 		this.folderName = fName;
 	}
-	public Long getfId() {
+	public Integer getfId() {
 		return folderId;
 	}
-	public void setfId(Long fId) {
+	public void setfId(Integer fId) {
 		this.folderId = fId;
 	}
 	public String getFolderPath() {
@@ -34,10 +34,10 @@ public class FolderInfo  implements Serializable{
 	public void setFolderPath(String folderPath) {
 		this.folderPath = folderPath;
 	}
-	public Long getParentId() {
+	public Integer getParentId() {
 		return parentId;
 	}
-	public void setParentId(Long parentId) {
+	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
 	}
 	public List<FilesInfo> getLocalFilesInfo() {

@@ -50,7 +50,7 @@
               <%-- <li class="dropdown">
                 <a href="${contextPath}/signup" >Register </a>
              </li> --%>
-              <li class="dropdown"><a href="contact.html">Contact</a></li>
+              <li class="dropdown"><a href="${contextPath}/contact">Contact</a></li>
             </ul>
             
           </div>
@@ -66,8 +66,8 @@
         <div class="row">
         	<div class="col-sm-5">
             <div class="intro-texts">
-            	<h1 class="text-white">Make Cool Friends !!!</h1>
-            	<p>Friend Finder is a social network template that can be used to connect people. The template offers Landing pages, News Feed, Image/Video Feed, Chat Box, Timeline and lot more. <br /> <br />Why are you waiting for? Buy it now.</p>
+            	<h1 class="text-white">Make you feel happy !!!</h1>
+            	<p>SM is a social network template that can be used to connect people. The template offers Landing pages, News Feed, Image/Video Feed, Chat Box, Timeline and lot more. <br /> <br />Why are you waiting for? Buy it now.</p>
               <button class="btn btn-primary">Learn More</button>
             </div>
           </div>
@@ -86,8 +86,15 @@
               <div class="tab-content">
                 <!--Login-->
                 <div >
-                  <h3>Login</h3>
-                  <p class="text-muted">Log into your account</p>
+                	<c:if test="${not empty message}">
+		       	    	<c:if test="${flag}"><div class="alert alert-danger" role="alert">	</c:if>
+		       	    	<c:if test="${flag eq false}"><div class="alert alert-success" role="alert">	</c:if>
+			           	  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						  <strong>${message}</strong> 
+						</div>
+					</c:if>
+                  <h3>Login</h3><br/>
+                 <!--  <p class="text-muted">Log into your account</p> -->
                   <c:if test="${not empty error}">
 			            <div style="color:red">
 			                Your fake login attempt was bursted, dare again !!<br />
@@ -99,7 +106,7 @@
                      <div class="row">
                       <div class="form-group col-xs-12">
                         <label for="my-email" class="sr-only">Email</label>
-                        <input id="my-email" class="form-control input-group-lg" type="text" name="j_username" title="Enter Username" placeholder="Your Username"/>
+                        <input id="my-email" class="form-control input-group-lg" type="text" name="j_username" title="Mobileno" placeholder="Your Mobileno"/>
                       </div>
                     </div>
                     <div class="row">
@@ -108,9 +115,9 @@
                         <input id="my-password" class="form-control input-group-lg" type="password" name="j_password" title="Enter password" placeholder="Password"/>
                       </div>
                     </div>
-	                  <p><a href="#">Forgot Password?</a></p>
+	                  <!-- <p><a href="#">Forgot Password?</a></p> -->
 	                   <input name="submit" type="submit"	class="btn btn-primary" value="Login Now" />
-                   </form><!--Login Form Ends--> 
+                   </form>
                 </div>
               </div>
             </div>
@@ -133,9 +140,9 @@
     </div>
 
     <!--preloader-->
-    <div id="spinner-wrapper">
+    <!-- <div id="spinner-wrapper">
       <div class="spinner"></div>
-    </div>
+    </div> -->
     
 
     <!-- Scripts

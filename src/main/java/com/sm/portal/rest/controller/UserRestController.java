@@ -1,5 +1,7 @@
 package com.sm.portal.rest.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,7 +35,7 @@ public class UserRestController {
     }
 	
 	@PostMapping(value = APIConstants.CREATE_USER_API_URL)
-    public ResponseEntity<Void> createUser(@RequestBody UsersDto user,    UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Void> createUser(@RequestBody UsersDto user,    UriComponentsBuilder ucBuilder,HttpServletRequest request) {
         System.out.println("Creating User " + user.getFirstname());
  
         if (userService.isUserExist(user)) {
@@ -41,7 +43,7 @@ public class UserRestController {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
  
-        userService.saveUser(user);
+        userService.saveUser(user,request);
  
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getUserId()).toUri());

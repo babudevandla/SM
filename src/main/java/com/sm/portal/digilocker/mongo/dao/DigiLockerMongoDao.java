@@ -62,9 +62,9 @@ public class DigiLockerMongoDao {
 				
 				folderInfo =new FolderInfo();
 				
-				folderInfo.setfId(Long.valueOf(folderDoc.getInteger("folderId")));
+				folderInfo.setfId(folderDoc.getInteger("folderId"));
 				folderInfo.setfName(folderDoc.getString("folderName"));
-				folderInfo.setParentId(Long.valueOf(folderDoc.getInteger("parentId")));
+				folderInfo.setParentId(folderDoc.getInteger("parentId"));
 				folderInfo.setFolderPath(folderDoc.getString("folderPath"));
 				folderInfo.setFolderNamePath(folderDoc.getString("folderNamePath"));
 				folderInfo.setFolderStatus(folderDoc.getString("folderStatus"));
@@ -126,7 +126,8 @@ public class DigiLockerMongoDao {
 							fileList.add(newFolderInfo.getLocalFilesInfo().get(0));
 						}else{
 							fileList = new ArrayList<>();
-							fileList.add(newFolderInfo.getLocalFilesInfo().get(0));
+							if(newFolderInfo.getLocalFilesInfo().size()> 0)
+								fileList.add(newFolderInfo.getLocalFilesInfo().get(0));
 							folderInfo.setLocalFilesInfo(fileList);
 						}
 						isFolderAlreadyExists=true;
@@ -221,5 +222,28 @@ public class DigiLockerMongoDao {
 			}//for closing
 		}//if closing
 	}//showHiddenFoldersAndFiles() closing
+
+	public void storeFolderInfo(FolderInfo newFolder, Integer folderid, Integer userId) {
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.DIGILOCKER_MONGO_COLLETION);
+		
+		Document mainDocu=new Document();
+		mainDocu.append("userId", userId);
+		
+		List<Document> foldersList=new ArrayList<Document>();
+		Document folderDoc=new Document();
+		folderDoc.append("folderId", newFolder.getfId());
+		folderDoc.append("folderName", "");
+		folderDoc.append("parentId", newFolder.getParentId());
+		folderDoc.append("folderPath", newFolder.getFolderPath());
+		folderDoc.append("folderNamePath", newFolder.getFolderNamePath());
+		folderDoc.append("folderStatus", newFolder.getFolderStatus());
+		folderDoc.append("files", new ArrayList<>());
+		foldersList.add(folderDoc);
+		mainDocu.append("foldersList", foldersList);
+		
+		coll.insertOne(mainDocu);
+		logger.info(" saved the data to the collection ");
+	}
 	
 }//class closing

@@ -298,7 +298,7 @@ public class Users implements java.io.Serializable {
 		this.profilePhoto = profilePhoto;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "userId") }, inverseJoinColumns = { @JoinColumn(name = "roleId") })
 	public List<Role> getRoles() {
 		return this.roles;

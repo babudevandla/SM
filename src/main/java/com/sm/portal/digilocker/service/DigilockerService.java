@@ -19,4 +19,6 @@ public interface DigilockerService {
 
 	public void showHiddenFoldersAndFiles(Integer fid, Integer userid);
 
+	public void storeFolderInfo(FolderInfo newFolder, Integer integer, Integer userId);
+
 }

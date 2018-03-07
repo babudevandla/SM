@@ -30,7 +30,7 @@
         	<div class="col-md-3 col-sm-3">
               <div class="form-group">
                 	<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">
-                		<i class="fa fa-folder" aria-hidden="true"></i> &nbsp; Create Folder
+                		<i class="fa fa-folder-o" aria-hidden="true"></i> &nbsp; New Folder
                 	</button>
               </div>
               </div>
@@ -44,19 +44,23 @@
                 	<input type="hidden" name="folderPath" value="${folderInfo.folderPath}">
                 	<input type="hidden" name="folderId" value="${folderInfo.fId}">
                 	</button>
-                	&nbsp;&nbsp;  <input type="submit" class="btn btn-primary pull-right" value="Upload">
+                	&nbsp;&nbsp;  
+                	<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button>
+                	<!-- <input type="submit" class="btn btn-primary pull-right" value="Upload"> -->
               	</div>
               </div>
               </form>
              
             </div>
         </div>
-         
+        <%--  <c:set  value="" var="currentFolderPath"/> --%>
          <div class="pull-right"><a href="${contextPath}/sm/showHiddenFoldersAndFiles/${folderInfo.fId}?userid=${userid}"><label style="color:red">show hidden files and folders</label></a></div>
         
-        <a href="${contextPath}/sm/file_management/${userid}" style="cursor: pointer;"	class="user-link">Home/</a>
+        <a href="${contextPath}/sm/file_management/${userid}" style="cursor: pointer;"	class="user-link">Home &nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></a>
          <c:forEach items="${addressBar}" var="folderPath" varStatus="status">
-             <a href="${contextPath}/sm/getfolderinfo/${folderPath.folderId}" style="cursor: pointer;"	class="user-link">${folderPath.folderName}/</a>
+         	<c:if test="${not empty folderPath.folderName}">
+             	<a href="${contextPath}/sm/getfolderinfo/${folderPath.folderId}" style="cursor: pointer;"	class="user-link">${folderPath.folderName} &nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i> </a>
+       		</c:if>
         </c:forEach>
      <div class="media">
        	<div class="row js-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": ".grid-sizer", "percentPosition": true }'>
@@ -65,9 +69,10 @@
             <table class="table user-list"  style="margin-left: 10px;">
               <thead>
                 <tr>
-                  <th><span>Folder Name</span></th>
-                  <th><span>Size</span></th>
-                 <!--  <th><span>Hide</span></th> -->
+                  <th><span>Name <i class="fa fa-chevron-right" aria-hidden="true"></i></span></th>
+                  <th><span>Size <i class="fa fa-chevron-right" aria-hidden="true"></i></span></th>
+                  <th><span>Last Modified <i class="fa fa-chevron-right" aria-hidden="true"></i></span></th>
+                   <th><span>Owner <i class="fa fa-chevron-right" aria-hidden="true"></i></span></th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -97,6 +102,12 @@
                 					10 kb
                 				</td>
                 				<td>
+                					2018-02-28
+                				</td>
+                				<td>
+                					${user.firstname}
+                				</td>
+                				<td>
                 					<!-- <a href="#" class="table-link">
 				                      <span class="fa-stack">
 				                        <i class="fa fa-square fa-stack-2x"></i>
@@ -110,6 +121,12 @@
 				                      </span>
 				                    </a>
 				                    
+				                    <a href="${contextPath}/sm/deleteOrHidefile?folderId=${folders.fId}&deleteInfo=Folder&parentId=${folders.parentId}&userid=${userid}&action=Hide" style="cursor: pointer;"	class="user-link">
+				                      <span class="fa-stack">
+				                        <i class="fa fa-square fa-stack-2x"></i>
+				                        <i class="fa fa-eye-slash fa-stack-1x fa-inverse"></i>
+				                      </span>
+				                    </a>
 				                    <!-- <a href="#" class="table-link">
 				                      <span class="fa-stack">
 				                        <i class="fa fa-square fa-stack-2x"></i>
@@ -132,8 +149,8 @@
 				                	<a href="${WEBDAV_SERVER_URL}${files.filePath}"  target="_blank" style="cursor: pointer;"	class="user-link">
 				                		<c:choose>
 				                			<c:when test="${files.fileType eq 'img' }">
-				                				<!-- <i class="fa fa-file-image-o" aria-hidden="true"></i> -->
-				                				<img alt="" src="${contextPath}/resources/default/images/img_icon.png" style="width: 20px;margin-top: -3px;">
+				                				<i class="icon ion-images"></i>
+				                				<%-- <img alt="" src="${contextPath}/resources/default/images/img_icon.png" style="width: 20px;margin-top: -3px;"> --%>
 				                			</c:when>
 				                			<c:when test="${files.fileType eq 'pdf' }">
 				                				<!-- <i class="fa fa-file-pdf-o" aria-hidden="true"></i> -->
@@ -174,6 +191,12 @@
 				                <td>
                 					10 kb
                 				</td>
+                				<td>
+                					2018-02-28
+                				</td>
+                				<td>
+                					${user.firstname}
+                				</td>
 				                <td>
                 					<!-- <a href="#" class="table-link">
 				                      <span class="fa-stack">
@@ -185,6 +208,12 @@
 				                      <span class="fa-stack">
 				                        <i class="fa fa-square fa-stack-2x"></i>
 				                        <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+				                      </span>
+				                    </a>
+				                    <a href="${contextPath}/sm/deleteOrHidefile?folderId=${folders.fId}&deleteInfo=File&&parentId=${folderInfo.fId}&userid=${userid}&action=Hide&fileId=${files.fileId}" class="table-link danger">
+				                      <span class="fa-stack">
+				                        <i class="fa fa-square fa-stack-2x"></i>
+				                        <i class="fa fa-eye-slash fa-stack-1x fa-inverse"></i>
 				                      </span>
 				                    </a>
 				                    <!-- <a href="#" class="table-link">
@@ -213,6 +242,8 @@
                 	</c:when>
                 	<c:otherwise>
                 		 <c:forEach items="${digiLockerHomeData}" var="folders" varStatus="status">
+                		 <%--  <c:set  value="${folders.folderPath}" var="currentFolderPath"/> --%>
+                		 <c:if test="${not empty folders.fName}">
 			                <tr>
 				                <td>
 					                <a href="${contextPath}/sm/getfolderinfo/${folders.fId}" style="cursor: pointer;"	class="user-link">
@@ -222,33 +253,23 @@
 				                 <td>
                 					10 kb
                 				</td>
+                				<td>
+                					2018-02-28
+                				</td>
+                				<td>
+                					${user.firstname}
+                				</td>
 				                <td>
-                					<a href="#" class="table-link">
-				                      <span class="fa-stack">
-				                        <i class="fa fa-square fa-stack-2x"></i>
-				                        <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-				                      </span>
-				                    </a>
-				                    <a href="${contextPath}/sm/deleteOrHidefile?folderId=${folders.fId}&deleteInfo=File&&parentId=${folderInfo.fId}&userid=${userid}&action=Delete&fileId=${files.fileId}" class="table-link danger">
+				                    <%-- <a href="${contextPath}/sm/deleteOrHidefile?folderId=${folders.fId}&deleteInfo=File&&parentId=${folderInfo.fId}&userid=${userid}&action=Delete&fileId=${files.fileId}" class="table-link danger">
 				                      <span class="fa-stack">
 				                        <i class="fa fa-square fa-stack-2x"></i>
 				                        <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
 				                      </span>
-				                    </a>
-				                    <!-- <a href="#" class="table-link">
-				                      <span class="fa-stack">
-				                        <i class="fa fa-square fa-stack-2x"></i>
-				                        <i class="fa fa-share fa-stack-1x fa-inverse"></i>
-				                      </span>
-				                    </a> -->
-				                    <!-- <a href="#" class="table-link">
-				                      <span class="fa-stack">
-				                        <i class="fa fa-square fa-stack-2x"></i>
-				                        <i class="fa fa-download fa-stack-1x fa-inverse"></i>
-				                      </span>
-				                    </a> -->
+				                    </a> --%>
+				                    
 				                </td>
 			                 </tr>
+			                 </c:if>
 			                 </c:forEach>
                 	</c:otherwise>
                 </c:choose>
@@ -275,7 +296,7 @@
         </div>
         <div class="modal-footer">
          <button type="button" class="btn btn-primary submitFolder" 
-         	data-href="${contextPath}/sm/create_folder" 	data-userid="${userid}"	data-currentfolderpath="${currentFolderPath }"  >Create</button>
+         	data-href="${contextPath}/sm/create_folder" 	data-userid="${userid}"	data-currentfolderpath="${currentFolderPath}"  >Create</button>
           <button type="button" class="btn btn-primary"  data-dismiss="modal">Close</button>
         </div>
       </div>

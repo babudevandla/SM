@@ -1,6 +1,7 @@
 package com.sm.portal.controller;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +80,10 @@ public class FileManagementController  extends CommonController{
 			mvc.addObject("digiLockerHomeData", rootFolderList);
 			System.out.println(user);	
 			mvc.addObject("WEBDAV_SERVER_URL", WebDavServerConstant.WEBDAV_SERVER_URL);
-		}catch(Exception e){e.printStackTrace();}
-		mvc.addObject("currentFolderPath", "home");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		//mvc.addObject("currentFolderPath", "home");
 		return mvc;
 	}//closing getDigiLockerHomeData() 
 	
@@ -184,11 +188,16 @@ public class FileManagementController  extends CommonController{
 		HttpSession httpSession=request.getSession(true);
 		ModelAndView mvc = new ModelAndView();
 		Integer currentFolderId=null;
-		if(currentFolderPath!=null){
+		if(StringUtils.isNotBlank(currentFolderPath)){
 			String strTemp1=currentFolderPath.substring(0, currentFolderPath.length()-1);
 			currentFolderId = Integer.parseInt(strTemp1.substring(strTemp1.lastIndexOf('/')+1));
+			
+			fileUploadServices.createFolderName(currentFolderPath);
+		}else{
+			currentFolderId=0;
+			fileUploadServices.createFolderName("/"+userid+"/"+currentFolderId+"/");
 		}
-		fileUploadServices.createFolderName(currentFolderPath);
+		
 		
 		@SuppressWarnings("unchecked")
 		List<FolderInfo> allFolderList =(List<FolderInfo>) httpSession.getAttribute("allFoldersData");
@@ -198,9 +207,9 @@ public class FileManagementController  extends CommonController{
 		
 		
 		FolderInfo newFolder =new FolderInfo();
-		newFolder.setfId(new Long(""+gerUniqueKey(request)));
+		newFolder.setfId(gerUniqueKey(request));
 		newFolder.setfName(foldername);
-		newFolder.setParentId(new Long(currentFolderId));
+		newFolder.setParentId(currentFolderId);
 		newFolder.setFolderNamePath(currentFolderInfo.getFolderNamePath()+"/"+foldername);
 		newFolder.setFolderPath(currentFolderInfo.getFolderPath()+newFolder.getfId()+"/");
 		newFolder.setFolderStatus(DigiLockerStatusEnum.ACTIVE.toString());
@@ -343,18 +352,24 @@ public class FileManagementController  extends CommonController{
 		return mvc;
 	}//closing getDigiLockerHomeData() 
 	
-	public Integer gerUniqueKey(HttpServletRequest request){
+	public synchronized Integer gerUniqueKey(HttpServletRequest request){
 		int newValue=0;
-		InputStream input = request.getServletContext().getResourceAsStream("/WEB-INF/uniquekey.properties");
+		
 		Properties properties = new Properties();
-		try{
+		FileOutputStream fos =null;
+		try(InputStream input = request.getServletContext().getResourceAsStream("/WEB-INF/uniquekey.properties");){
 			properties.load(input);
 			String uniqueKey=properties.getProperty("uniqueId");
 			newValue= Integer.parseInt(uniqueKey)+1;
 			properties.setProperty("uniqueId", ""+newValue);
-			properties.store(new FileOutputStream(request.getServletContext().getRealPath("/WEB-INF/uniquekey.properties")),null);
+			fos =new FileOutputStream(request.getServletContext().getRealPath("/WEB-INF/uniquekey.properties"));
+			properties.store(fos,null);
 		}catch(Exception e){
 			
+		}
+		finally{
+			try {fos.close();} catch (IOException e) {e.printStackTrace();}
+			properties=null;
 		}
 		
 		return newValue;

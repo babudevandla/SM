@@ -4,10 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,12 +15,12 @@ import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
 import com.sm.portal.constants.WebDavServerConstant;
-import com.sm.portal.digilocker.model.FolderInfo;
 import com.sm.portal.model.FileManagementVO;
 
 @Service
 public class FileUploadServices {
 
+	
 	static Sardine sardine = SardineFactory.begin();
 	  private static final String FILE_PATTERN ="([^\\s]+(\\.(?i)(jpg|png|gif|bmp|pdf|xls))$)";
 	public boolean uploadWebDavServer(MultipartFile multipartFile, String folderPath) {

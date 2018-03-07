@@ -50,7 +50,7 @@
              <%--  <li class="dropdown">
                <a href="${contextPath}/login" >Login </a>
              </li> --%>
-              <li class="dropdown"><a href="contact.html">Contact</a></li>
+              <li class="dropdown"><a href="${contextPath}/contact">Contact</a></li>
             </ul>
             
           </div>
@@ -66,8 +66,8 @@
         <div class="row">
         	<div class="col-sm-5">
             <div class="intro-texts">
-            	<h1 class="text-white">Make Cool Friends !!!</h1>
-            	<p>Friend Finder is a social network template that can be used to connect people. The template offers Landing pages, News Feed, Image/Video Feed, Chat Box, Timeline and lot more. <br /> <br />Why are you waiting for? Buy it now.</p>
+            	<h1 class="text-white">Make you feel happy !!!</h1>
+            	<p>SM is a social network template that can be used to connect people. The template offers Landing pages, News Feed, Image/Video Feed, Chat Box, Timeline and lot more. <br /> <br />Why are you waiting for? Buy it now.</p>
               <button class="btn btn-primary">Learn More</button>
             </div>
           </div>
@@ -85,8 +85,8 @@
               <!--Registration Form Contents-->
               <div class="tab-content">
                 <div >
-                  <h3>Register Now !!!</h3>
-                  <p class="text-muted">Be cool and join today. Meet millions</p>
+                  <h3>Register Now </h3>
+                  <p class="text-muted">Be cool and join today. Make you feel happy.</p>
                   <c:if test="${not empty message}">
 		       	    	<c:if test="${flag}"><div class="alert alert-danger" role="alert">	</c:if>
 		       	    	<c:if test="${flag eq false}"><div class="alert alert-success" role="alert">	</c:if>
@@ -115,7 +115,7 @@
                     <div class="row">
                       <div class="form-group col-xs-12">
                         <label for="mobile_no" class="sr-only">Mobile no</label>
-                        <input id="mobile_no" class="form-control input-group-lg" type="text" name="mobile_no" title="Enter Mobileno" placeholder="Your Mobileno"/>
+                        <input id="mobile_no" class="form-control input-group-lg" type="text" name="mobile_no" title="Mobile Number" placeholder="Your Mobile Number"/>
                       </div>
                     </div>
                     <div class="row">
@@ -433,9 +433,9 @@
                         </select>
                       </div>
                     </div>
-                     <p><a href="#login" data-toggle="tab">Already have an account?</a></p>
+                     <%-- <p><a href="${contextPath}/login" data-toggle="tab">Already have an account?</a></p> --%>
                   	<button type="submit" class="btn btn-primary">Register Now</button>
-                  </form><!--Register Now Form Ends-->
+                  </form>
                  
                 </div>
                 
@@ -460,9 +460,9 @@
     </div>
 
     <!--preloader-->
-    <div id="spinner-wrapper">
+   <!--  <div id="spinner-wrapper">
       <div class="spinner"></div>
-    </div>
+    </div> -->
     
 
     <!-- Scripts
