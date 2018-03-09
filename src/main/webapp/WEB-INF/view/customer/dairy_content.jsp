@@ -12,15 +12,22 @@
 <defaultTemplate:defaultDecorator>
 <jsp:attribute name="title">E-Dairy</jsp:attribute>
 <jsp:body>
-
+<c:set var="dairyPagesList" value="${ pages}"></c:set>
 <script>
 	$(document).ready(function() {
+		 var list=${pagelist};
+		 console.log(list);
+		 // var list=$.parseJSON("${pagelist}");
 		// var list=${pagelist};
-		 //console.log(list);
-		  
-		 /* $.each(list, function( index, value ) {
-			$("#pageContent").html(list[2].pageName);
-		}); */  
+		  $.each(list,function( index, value ) {
+			 
+			  if(value.pageNo==2){
+				  alert(value.pageName);
+				$("#pageContent").html(value.pageName);
+				
+				return false;
+			  }
+		});  
 		
 	});
 	
@@ -49,6 +56,9 @@
        </tbody>
     </table>  
 
+<%-- <c:forEach items="${pages}" var="page" varStatus="status">
+	${page}
+</c:forEach> --%>
 
 <span style="display: none;" id="pageListCont">${pagelist}</span>
 
