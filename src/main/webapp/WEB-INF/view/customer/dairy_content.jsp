@@ -7,10 +7,26 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <%@taglib prefix="defaultTemplate" tagdir="/WEB-INF/tags"%>
+ <script src="${contextPath}/resources/default/js/jquery-3.1.1.min.js"></script>
 
 <defaultTemplate:defaultDecorator>
 <jsp:attribute name="title">E-Dairy</jsp:attribute>
 <jsp:body>
+
+<script>
+	$(document).ready(function() {
+		// var list=${pagelist};
+		 //console.log(list);
+		  
+		 /* $.each(list, function( index, value ) {
+			$("#pageContent").html(list[2].pageName);
+		}); */  
+		
+	});
+	
+	
+ 
+</script>
 
  <div class="create-post">
    <div class="row">
@@ -23,22 +39,19 @@
          </div>
        </div>
    	</div>
-
+   	<a class="btn btn-primary pull-left" id="prevBtn" data-pageid="-1"><i class="fa fa-chevron-left" aria-hidden="true"></i> PRE </a>
+	<a class="btn btn-primary pull-right nextBtn" id="" data-pageid="1" onclick="IteratePageList(${pagelist});">NEXT <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
     <table id="example" class="table  table-bordered" cellspacing="0" style="width: 100%">
-        
         <tbody>
-        <c:forEach items="${dairyInfo.pages}" var="page" varStatus="status">
-            <c:choose>
-            	<c:when test="${showPageNo eq page.pageNo}">
-		            <tr>
-		                <td>${page.content}</td>
-		                <td><a href="${ contextPath}/sm/editPageContent/${dairyInfo.userId}/${dairyInfo.dairyId}?pageNo=${page.pageNo}&content=${page.content}">edit</a>
-		            </tr>
-	            </c:when>
-            </c:choose>
-          </c:forEach>  
+        	<tr >
+        		<td id="pageContent"></td>
+        	</tr>
        </tbody>
     </table>  
+
+
+<span style="display: none;" id="pageListCont">${pagelist}</span>
+
 
     
 </jsp:body>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.sm.portal.constants.URLCONSTANT;
 import com.sm.portal.edairy.model.DairyInfo;
 import com.sm.portal.edairy.model.DairyPage;
@@ -147,11 +148,14 @@ public class EDairyController {
 	public ModelAndView getDairyInfo(Principal principal, @PathVariable("userId") Integer userId,
 			@PathVariable("dairyId") Integer dairyId){
 		logger.debug(" show user profile ...");
+		
+		Gson gson = new Gson();
 		ModelAndView mvc = new ModelAndView("/customer/dairy_content");
 		DairyInfo  dairyInfo=edairyServiceImpl.getDairyInfo(userId, dairyId);
-		mvc.addObject("showPageNo", 1);
+		//mvc.addObject("showPageNo", 1);
 		mvc.addObject("userId", userId);
 		mvc.addObject("dairyInfo", dairyInfo);
+		mvc.addObject("pagelist", gson.toJson(dairyInfo.getPages()));
 		return mvc;
 	}//getUserDairiesList() closing
 	
