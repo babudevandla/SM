@@ -14,6 +14,7 @@ public class FilesInfo implements Serializable {
 	 private String fileType;
 	 private Date createddate;
 	 private Date updateddate;
+	 private String statusAtGallery;
 	 
 	public String getFileName() {
 		return fileName;
@@ -62,6 +63,12 @@ public class FilesInfo implements Serializable {
 	}
 	public void setDumy_filename(String dumy_filename) {
 		this.dumy_filename = dumy_filename;
+	}
+	public String getStatusAtGallery() {
+		return statusAtGallery;
+	}
+	public void setStatusAtGallery(String statusAtGallery) {
+		this.statusAtGallery = statusAtGallery;
 	}
 	
 	

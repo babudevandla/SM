@@ -11,6 +11,7 @@ public class FolderInfo  implements Serializable{
 	 public Integer folderId;
 	 public String folderPath;
 	 public Integer parentId;
+	 public String origin;
 	 public String folderNamePath;
 	 public String folderStatus;
 	 public List<FilesInfo> files;
@@ -63,6 +64,30 @@ public class FolderInfo  implements Serializable{
 	}
 	public void setFolderStatus(String folderStatus) {
 		this.folderStatus = folderStatus;
+	}
+	public String getFolderName() {
+		return folderName;
+	}
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
+	}
+	public Integer getFolderId() {
+		return folderId;
+	}
+	public void setFolderId(Integer folderId) {
+		this.folderId = folderId;
+	}
+	public String getOrigin() {
+		return origin;
+	}
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+	public List<FilesInfo> getFiles() {
+		return files;
+	}
+	public void setFiles(List<FilesInfo> files) {
+		this.files = files;
 	}
 	 
 	 

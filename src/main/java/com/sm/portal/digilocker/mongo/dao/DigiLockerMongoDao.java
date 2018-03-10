@@ -61,7 +61,7 @@ public class DigiLockerMongoDao {
 			for(Document folderDoc:foldersList){
 				
 				folderInfo =new FolderInfo();
-				
+				folderInfo.setOrigin(folderDoc.getString("origin"));
 				folderInfo.setfId(folderDoc.getInteger("folderId"));
 				folderInfo.setfName(folderDoc.getString("folderName"));
 				folderInfo.setParentId(folderDoc.getInteger("parentId"));
@@ -245,5 +245,37 @@ public class DigiLockerMongoDao {
 		coll.insertOne(mainDocu);
 		logger.info(" saved the data to the collection ");
 	}
+
+	public FolderInfo getGallerContent(Integer userId, String filesType) {
+		FolderInfo gallerInfo = new FolderInfo();
+		List<FilesInfo> galleryFiles = new ArrayList<>();
+		
+		List<FilesInfo> filesList = null;
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.DIGILOCKER_MONGO_COLLETION);
+		Bson filter = Filters.eq("userId", userId);
+		
+		FindIterable<Document> folderInfoVos=coll.find(filter);
+		if(null != folderInfoVos){
+			for (Document cur :  folderInfoVos ) {
+				FolderInfoVo folderInfoVo = gson.fromJson(cur.toJson(), FolderInfoVo.class);
+				List<FolderInfo> folderInfoList=folderInfoVo.getFoldersList();
+				for(FolderInfo folderInfo :folderInfoList){
+					filesList =folderInfo.getFiles();
+					if(filesList!=null && filesList.size()>0){
+						for(FilesInfo file:filesList){
+							if(filesType!=null){//checking that files are getting based on type or not
+								if(filesType.equals(file.getFileType()))galleryFiles.add(file);//getting file list based on type
+							}else{
+								galleryFiles.add(file);//getting all type(audio, video, documents and images) of files 
+							}//else closing
+						}//inner for closing
+					}//if closing
+				}//inner for closing
+			}//outer for closing
+		}//if closing
+		gallerInfo.setFiles(galleryFiles);
+		return gallerInfo;
+	}//getGallerContent() closing
 	
 }//class closing

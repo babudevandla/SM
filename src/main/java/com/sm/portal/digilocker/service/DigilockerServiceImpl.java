@@ -68,4 +68,14 @@ public class DigilockerServiceImpl implements DigilockerService{
 		digiLockerMongoDao.storeFolderInfo(newFolder,folderid,userId);	
 	}
 
+
+	@Override
+	public FolderInfo getGallerContent(Integer userid, String filesType) {
+
+		FolderInfo galleryContent = null;
+		galleryContent =digiLockerMongoDao.getGallerContent(userid, filesType);
+		
+		return galleryContent;
+	}//getGallerContent() closing
+
 }//class closing

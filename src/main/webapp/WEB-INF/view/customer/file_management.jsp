@@ -242,33 +242,53 @@
                 	</c:when>
                 	<c:otherwise>
                 		 <c:forEach items="${digiLockerHomeData}" var="folders" varStatus="status">
-                		 <%--  <c:set  value="${folders.folderPath}" var="currentFolderPath"/> --%>
                 		 <c:if test="${not empty folders.fName}">
-			                <tr>
-				                <td>
-					                <a href="${contextPath}/sm/getfolderinfo/${folders.fId}" style="cursor: pointer;"	class="user-link">
-		                				<strong style="color: black;"><i class="fa fa-folder"></i> &nbsp;${folders.fName} </strong>
-					                 </a>	
-				                 </td>
-				                 <td>
-                					10 kb
-                				</td>
-                				<td>
-                					2018-02-28
-                				</td>
-                				<td>
-                					${user.firstname}
-                				</td>
-				                <td>
-				                    <%-- <a href="${contextPath}/sm/deleteOrHidefile?folderId=${folders.fId}&deleteInfo=File&&parentId=${folderInfo.fId}&userid=${userid}&action=Delete&fileId=${files.fileId}" class="table-link danger">
-				                      <span class="fa-stack">
-				                        <i class="fa fa-square fa-stack-2x"></i>
-				                        <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-				                      </span>
-				                    </a> --%>
-				                    
-				                </td>
-			                 </tr>
+			                
+			                	<c:choose>
+			                		<c:when test="${folders.origin eq 'GALLERY' }">
+			                			<tr>
+						                <td>
+							                <a href="${contextPath}/sm/getGallerContent?userid=${userId}" style="cursor: pointer;"	class="user-link">
+				                				<strong style="color: black;"><i class="fa fa-folder"></i> &nbsp;${folders.fName} </strong>
+							                 </a>	
+						                 </td>
+						                 <td>
+		                					10 kb
+			                				</td>
+			                				<td>
+			                					2018-02-28
+			                				</td>
+			                				<td>
+			                					${user.firstname}
+			                				</td>
+							                <td>
+							                        
+							                </td>
+					                 	</tr>
+			                		</c:when>
+			                		<c:otherwise>
+					                	<tr>
+						                <td>
+							                <a href="${contextPath}/sm/getfolderinfo/${folders.fId}" style="cursor: pointer;"	class="user-link">
+				                				<strong style="color: black;"><i class="fa fa-folder"></i> &nbsp;${folders.fName} </strong>
+							                 </a>	
+						                 </td>
+						                 <td>
+		                					10 kb
+			                				</td>
+			                				<td>
+			                					2018-02-28
+			                				</td>
+			                				<td>
+			                					${user.firstname}
+			                				</td>
+							                <td>
+							                        
+							                </td>
+					                 	</tr>
+			                 </c:otherwise>
+			                	</c:choose>
+			                	
 			                 </c:if>
 			                 </c:forEach>
                 	</c:otherwise>

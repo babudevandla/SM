@@ -32,6 +32,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.sm.portal.constants.URLCONSTANT;
 import com.sm.portal.constants.WebDavServerConstant;
 import com.sm.portal.digilocker.model.DigiLockerAddressBar;
+import com.sm.portal.digilocker.model.DigiLockerEnum;
+import com.sm.portal.digilocker.model.DigiLockerFileTypeEnum;
 import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
 import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
@@ -215,6 +217,7 @@ public class FileManagementController  extends CommonController{
 		newFolder.setFolderStatus(DigiLockerStatusEnum.ACTIVE.toString());
 		newFolder.setChildFolders(null);
 		newFolder.setLocalFilesInfo(null);
+		newFolder.setOrigin(DigiLockerEnum.LOCKER.toString());
 		digilockerService.storeNewFileOrFolderInfo(newFolder, new Integer(""+newFolder.getfId()), userid);
 		
 		List<FolderInfo>	getUpdatedFolderList=digilockerService.getDigiLockerHomeData(new Long(userid));
@@ -237,6 +240,7 @@ public class FileManagementController  extends CommonController{
 		String filePath = folderPath+fileName.replaceAll(" ", "_");
 		
 		boolean uploadStatus=fileUploadServices.uploadWebDavServer(multipart,folderPath);
+		String fileType =this.getFileType(multipart);
 		if(uploadStatus){
 			mvc.addObject("message","file uploaded successfully!");
 			FilesInfo newFileInfo = new FilesInfo();
@@ -246,6 +250,8 @@ public class FileManagementController  extends CommonController{
 			newFileInfo.setFilePath(filePath);
 			newFileInfo.setFileStatus(DigiLockerStatusEnum.ACTIVE.toString());
 			newFileInfo.setCreateddate(new Date());
+			newFileInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
+			newFileInfo.setFileType(fileType);
 			FolderInfo newFolder = new FolderInfo();
 			
 			List<FilesInfo> localFilesInfo = new ArrayList<>();
@@ -265,6 +271,8 @@ public class FileManagementController  extends CommonController{
 		return mvc;
 	}
 	
+	
+
 	private Integer getNewId() {
 		// TODO Auto-generated method stub
 		return null;
@@ -352,6 +360,31 @@ public class FileManagementController  extends CommonController{
 		return mvc;
 	}//closing getDigiLockerHomeData() 
 	
+	@GetMapping(value="/openGallery/{fid}")
+	public ModelAndView openGallery(@PathVariable Integer fid,@RequestParam Integer userid,Principal principal,HttpServletRequest request){
+		ModelAndView mvc = new ModelAndView("/customer/gallery_content");
+		
+		FolderInfo folderInfo =digilockerService.getGallerContent(userid, null);
+		
+		mvc.addObject("galleryContent", folderInfo);
+		mvc.addObject("fileType", "ALL");
+		mvc.addObject("fid", fid);
+		mvc.addObject("userid", userid);
+		return mvc;
+	}//openGallery() closing
+	
+	
+	@GetMapping(value="/getGallerContent")
+	public ModelAndView getGallerContent(@RequestParam Integer userid,Principal principal,
+			@RequestParam(name="filesType", required=false) String filesType,HttpServletRequest request){
+		ModelAndView mvc = new ModelAndView("/customer/gallery_content");
+		
+		FolderInfo folderInfo =digilockerService.getGallerContent(userid, filesType);
+		mvc.addObject("galleryContent", folderInfo);
+		mvc.addObject("fileType", filesType);
+		
+		return mvc;
+	}//getGallerContent() closing
 	public synchronized Integer gerUniqueKey(HttpServletRequest request){
 		int newValue=0;
 		
@@ -375,5 +408,48 @@ public class FileManagementController  extends CommonController{
 		return newValue;
 	}//closing
 	
+	private String getFileType(MultipartFile multipart) {
+		List<String> imageList = new ArrayList<>();
+		List<String> audioList = new ArrayList<>();
+		List<String> videoList = new ArrayList<>();
+		List<String> documentList = new ArrayList<>();
+		imageList.add("jpg");
+		imageList.add("jpeg");
+		imageList.add("png");
+		
+		audioList.add("wav");
+		audioList.add("mp3");
+		
+		videoList.add("avi");
+		videoList.add("flv");
+		videoList.add("wmv");
+		videoList.add("mov");
+		videoList.add("mp4");
+		
+		documentList.add("pdf");
+		documentList.add("xml");
+		documentList.add("xlsx");
+		documentList.add("doc");
+		documentList.add("docx");
+		documentList.add("json");
+		documentList.add("pptx");
+		
+		
+		String fileName = multipart.getName();
+		String fileExtention = fileName.substring(fileName.lastIndexOf(".")+1);
+		if(imageList.contains(fileExtention.toLowerCase()))
+			return DigiLockerFileTypeEnum.IMAGE.toString();
+		else if(audioList.contains(fileExtention.toLowerCase()))
+			return DigiLockerFileTypeEnum.AUDIO.toString();
+		else if(videoList.contains(fileExtention.toLowerCase()))
+			return DigiLockerFileTypeEnum.VIDEO.toString();
+		else if(documentList.contains(fileExtention.toLowerCase()))
+			return DigiLockerFileTypeEnum.DOCUMENT.toString();
+		else 
+			return DigiLockerFileTypeEnum.UNKNOWN.toString();
+		
+	}//getFileType() closing
+
+
 	
 }//class closing

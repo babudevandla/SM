@@ -155,6 +155,7 @@ public class EDairyController {
 		//mvc.addObject("showPageNo", 1);
 		mvc.addObject("userId", userId);
 		mvc.addObject("dairyInfo", dairyInfo);
+		mvc.addObject("pages", dairyInfo.getPages());
 		mvc.addObject("pagelist", gson.toJson(dairyInfo.getPages()));
 		return mvc;
 	}//getUserDairiesList() closing
