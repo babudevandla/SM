@@ -1,7 +1,5 @@
 package com.sm.portal.edairy.model;
 
-import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
-
 public enum EdairyStatusEnum {
 
 	ACTIVE(1,"ACTIVE"),

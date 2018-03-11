@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -144,16 +145,36 @@ public class EDairyController {
 		return mvc;
 	}//getUserDairiesList() closing
 	
+	@RequestMapping(value="/getUserDairyCoverPage/{userId}/{dairyId}", method=RequestMethod.GET)
+	public ModelAndView getUserDairyCoverPage(Principal principal, @PathVariable("userId") Integer userId,
+			@PathVariable("dairyId") Integer dairyId){
+		logger.debug("getUserDairyCoverPage");
+		
+		ModelAndView mvc = new ModelAndView("/customer/edairy_home");
+		mvc.addObject("userId", userId);
+		mvc.addObject("dairyId", dairyId);
+		return mvc;
+	}//getUserDairiesList() closing
+	
 	@RequestMapping(value="/getDairyInfo/{userId}/{dairyId}", method=RequestMethod.GET)
 	public ModelAndView getDairyInfo(Principal principal, @PathVariable("userId") Integer userId,
-			@PathVariable("dairyId") Integer dairyId){
+			@PathVariable("dairyId") Integer dairyId,@RequestParam String actionBy,@RequestParam(name="defaultPageNo", required=false) int defaultPageNo
+			,@RequestParam(name="edit", required=false) String goToEditPage){
 		logger.debug(" show user profile ...");
 		
 		Gson gson = new Gson();
-		ModelAndView mvc = new ModelAndView("/customer/dairy_content");
-		DairyInfo  dairyInfo=edairyServiceImpl.getDairyInfo(userId, dairyId);
+		ModelAndView mvc = null;
+		if(goToEditPage!=null && goToEditPage.equals("YES")){
+			mvc =new ModelAndView("/customer/edit_edairy");
+		}else{
+			mvc =new ModelAndView("/customer/dairy_content");
+		}
+		
+		DairyInfo  dairyInfo=edairyServiceImpl.getDairyInfo(userId, dairyId,actionBy,defaultPageNo);
+		
 		//mvc.addObject("showPageNo", 1);
 		mvc.addObject("userId", userId);
+		mvc.addObject("dairyId", dairyId);
 		mvc.addObject("dairyInfo", dairyInfo);
 		mvc.addObject("pages", dairyInfo.getPages());
 		mvc.addObject("pagelist", gson.toJson(dairyInfo.getPages()));
@@ -170,11 +191,16 @@ public class EDairyController {
 		page.setContent(content);
 		logger.debug(" show user profile ...");
 		ModelAndView mvc = new ModelAndView("/customer/edit_edairy");
-		DairyInfo  dairyInfo=edairyServiceImpl.editPageContent(userId, dairyId, page);
+		//DairyInfo  dairyInfo=edairyServiceImpl.editPageContent(userId, dairyId, page);
+		DairyInfo  dairyInfo=new DairyInfo();
+		List<DairyPage> pages = new ArrayList<DairyPage>();
+		pages.add(page);
+		dairyInfo.setPages(pages);
 		mvc.addObject("showPageNo", page.getPageNo());
 		mvc.addObject("userId", userId);
 		mvc.addObject("dairyId", dairyId);
 		mvc.addObject("dairyInfo", dairyInfo);
+		mvc.addObject("page",page);
 		return mvc;
 	}//getUserDairiesList() closing
 	
@@ -185,6 +211,8 @@ public class EDairyController {
 		logger.debug(" show user profile ...");
 		ModelAndView mvc = new ModelAndView("/customer/dairy_content");
 		DairyInfo  dairyInfo=edairyServiceImpl.savePageContent(userId, dairyId, dairyInfo1.getPages().get(0));
+		//DairyPage defaultPage =new DairyPage();
+		//defaultPage =
 		mvc.addObject("showPageNo", dairyInfo1.getPages().get(0).getPageNo());
 		mvc.addObject("userId", userId);
 		mvc.addObject("dairyId", dairyId);

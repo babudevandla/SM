@@ -67,27 +67,6 @@ $(document).ready(function() {
 	  			});
 	  		});
 	  
-	  
-	 
-	  $('.nextBtn').click(function(event){
-			event.preventDefault();
-		var json=${pagelist};
-		var pageid=$(this).attr("data-pageid");
-		 
-		for(var i = 0; i < json.length; i++) {
-		    var obj = json[i];
-
-		    console.log(obj.pageNo);
-		}
-
-		/*document.getElementById("pageContent").innerHTML = x;
-		
-		 $.each(list, function(index, value ) {
-			$("#pageContent").html(list[1].pageName);
-		}); */
-	 });
-		
-	  
 });
 
 

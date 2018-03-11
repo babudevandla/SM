@@ -11,6 +11,7 @@ public class DairyInfo {
 	private String coverImage;
 	private Date lastModifiedDate;
 	private List<DairyPage> pages;
+	private DairyPage defaultPage;
 	
 	public int getUserId() {
 		return userId;
@@ -47,6 +48,12 @@ public class DairyInfo {
 	}
 	public void setPages(List<DairyPage> pages) {
 		this.pages = pages;
+	}
+	public DairyPage getDefaultPage() {
+		return defaultPage;
+	}
+	public void setDefaultPage(DairyPage defaultPage) {
+		this.defaultPage = defaultPage;
 	}
 	
     	

@@ -29,7 +29,7 @@
         <tbody>
         <c:forEach items="${userDairies.dairyList}" var="dairy" varStatus="status">
             <tr>            
-            	<td><a href="${contextPath}/sm/getDairyInfo/${userDairies.userId}/${dairy.dairyId}" >${dairy.name}</a>  </td>              
+            	<td><a href="${contextPath}/sm/getUserDairyCoverPage/${userDairies.userId}/${dairy.dairyId}" >${dairy.name}</a>  </td>              
             </tr>
           </c:forEach>  
        </tbody>

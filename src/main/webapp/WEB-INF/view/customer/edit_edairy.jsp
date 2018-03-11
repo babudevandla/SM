@@ -7,19 +7,31 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <%@taglib prefix="defaultTemplate" tagdir="/WEB-INF/tags"%>
-
+ <%@ page import="com.sm.portal.edairy.model.EdairyActionEnum" %>
+ <script src="${contextPath}/resources/default/js/jquery-3.1.1.min.js"></script>
 <defaultTemplate:defaultDecorator>
 <jsp:attribute name="title">E-Dairy</jsp:attribute>
 <jsp:body>
  <h1>Edit Dairy :</h1>  <br/>
  
- <form:form action="${contextPath}/sm/savePageContent" method="post" modelAttribute="savePageContent">
- 	<form:hidden path="${userId}"/>
- 	<form:hidden path="${ dairyId}"/>
+ <a class="btn btn-primary pull-left" id="prevBtn"  ><i class="fa fa-chevron-left" aria-hidden="true"></i> PRE </a>
+	<a class="btn btn-primary pull-right nextBtn" id="nextBtn" >NEXT <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+    <table id="navigatorTable" class="table" cellspacing="0" style ="width: 100%">
+	    <tbody>
+	    	<tr>
+	    		<td ><label>Date:</label></td><td id="pageDateId">${dairyInfo.defaultPage.date}</td>
+	    		<td><label>Page:</label></td><td id="pageNoId">${dairyInfo.defaultPage.pageNo}</td>
+	    		<td><label>Select Date:</label></td><td id="sectedDateId"></td>
+	    		<td><a id="viewDairyId" data-href="${pageContext.request.contextPath}/sm/getDairyInfo/${userId}/${dairyId}" data-actionBy="${EdairyActionEnum.VIEW_PAGE}" data-userId="${userId}" data-dairyId="${dairyId}">VIEW</a></td>
+	    	</tr>
+	    </tbody>
+    </table>
+ 
+ <form:form action="${contextPath}/sm/savePageContent" method="post" modelAttribute="dairyInfo1">
+ 	<%-- <form:hidden path="${userId}"/>
+ 	<form:hidden path="${ dairyId}"/> --%>
  	<input name="upload" type="button"	class="btn btn-primary uploadMultipleFiles1" value="Uploadfiles" />
- 	<input type="text" name="userId" value="${dairyInfo.userId }"/>
- 	<input type="text" name="dairyId" value="${dairyInfo.dairyId }"/>
-	<textarea id="editor" name="dairy_content">${edairyDto.dairy_content}</textarea><br/>
+	<textarea id="editor" class="abc" name="defaultPage">${dairyInfo.defaultPage.content}</textarea><br/>
 	 <input name="submit" type="submit"	class="btn btn-primary" value="Update" />
 </form:form>
 
@@ -27,7 +39,7 @@
 
 <div class="modal fade" id="UploadfilesModel" role="dialog">
     <div class="modal-dialog">
-    <form action="${contextPath}/sm/uploadMultipleFile" id="uploadMultiFiles" enctype="multipart/form-data" method="post">
+    <form action="${contextPath}/sm/uploadMultipleFile" id="uploadMultiFiles" enctype="multipart/form-data" method="post" >
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
@@ -74,6 +86,78 @@ function AddMoreFile(tableID) {
     col1.appendChild(colInput);
 }
 
+$(document).ready(function() {
+	// var list=${pagelist};
+	// console.log(list);
+	 // var list=$.parseJSON("${pagelist}");
+	// var list=${pagelist};
+	  /* $.each(list,function( index, value ) {
+		 
+		  if(value.pageNo==2){
+			  alert(value.pageName);
+			$("#pageContent").html(value.pageName);
+			
+			return false;
+		  }
+	});   */
+	
+	/* $("#nextBtn1").click(function(){
+		//$(".abc").html("some thing");
+		tinymce.editors[0].setContent("hello world");
+		
+	}); */
+ $("#nextBtn").click(function(){
+	 var list=${pagelist};
+	var currentPageNo= $("#pageNoId").html();
+	var nextPageNo=parseInt(currentPageNo)+1;
+	//alert(nextPageNo);
+	 $.each(list,function( index, value ) {
+		 
+		  if(value.pageNo==nextPageNo){
+			  //alert(value.pageName);
+			//$("#editor").html(value.pageName);
+			//$("#editor").html("some thing");
+			tinymce.editors[0].setContent(value.content);
+			$("#pageNoId").html(value.pageNo);
+			$("#pageDateId").html(value.date);
+			return false;
+		  }
+	}); 
+});
+	
+$("#prevBtn").click(function(){
+	 var list=${pagelist};
+	var currentPageNo= $("#pageNoId").html();
+	var previousPageNo=parseInt(currentPageNo)-1;
+	//alert(nextPageNo);
+	 $.each(list,function( index, value ) {
+		 
+		  if(value.pageNo==previousPageNo){
+			  //alert(value.pageName);
+			//$("#editor").html(value.pageName);
+			tinymce.editors[0].setContent(value.content);
+			$("#pageNoId").html(value.pageNo);
+			$("#pageDateId").html(value.date);
+			return false;
+		  }
+	}); 
+}); 
+  	  
+$("#viewDairyId").click(function(){
+	 //var list=${pagelist};
+	 var href=$(this).attr("data-href");
+	var currentPageNo= $("#pageNoId").html();
+	var actionBy =$(this).attr("data-actionBy");
+	//var userId=$(this).attr("data-userId");
+	//var dairyId=$(this).attr("data-dairyId");
+	var pageContent=$("#pageContent").html();
+	window.location.href=href+"?defaultPageNo="+currentPageNo+"&actionBy="+actionBy;
+	
+});    
+ }); 
+ 
+ 
+
 /* function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -94,10 +178,7 @@ function AddMoreFile(tableID) {
 	    	
 	   
 	  	  
-	  	  
-	    
- }); */
- 
+*/	
  </script>
 	  	  
 </jsp:body>
