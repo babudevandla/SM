@@ -17,6 +17,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.sm.portal.constants.CollectionsConstant;
+import com.sm.portal.digilocker.model.DigiLockerEnum;
 import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
 import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
@@ -107,6 +108,48 @@ public class DigiLockerMongoDao {
 		return folderInfoList;
 	}//getDigiLockerHomeData() closing
 
+	public void storeFilesInGallery(FolderInfo newFolderInfo, Integer userId){
+		
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.DIGILOCKER_MONGO_COLLETION);
+		Bson filter = Filters.eq("userId", userId);
+		
+		FindIterable<Document> folderInfoVos=coll.find(filter);
+		if(null != folderInfoVos){
+			for (Document cur :  folderInfoVos ) {
+				
+				boolean isFolderAlreadyExists =false;
+				FolderInfoVo folderInfoVo = gson.fromJson(cur.toJson(), FolderInfoVo.class);
+				List<FolderInfo> folderInfoList=folderInfoVo.getFoldersList();
+				for(FolderInfo folderInfo :folderInfoList){
+					if(folderInfo.getOrigin().equals(DigiLockerEnum.GALLERY.toString())){
+						List<FilesInfo>  fileList=folderInfo.getLocalFilesInfo();
+						if(fileList!=null){
+							fileList.add(newFolderInfo.getLocalFilesInfo().get(0));
+						}else{
+							fileList = new ArrayList<>();
+							if(newFolderInfo.getLocalFilesInfo().size()> 0)
+								fileList.add(newFolderInfo.getLocalFilesInfo().get(0));
+							folderInfo.setLocalFilesInfo(fileList);
+						}
+						isFolderAlreadyExists=true;
+						break;
+					}//if closing
+				}//for closing
+				
+				if(!isFolderAlreadyExists){
+					newFolderInfo.setLocalFilesInfo(new ArrayList<>());
+					folderInfoList.add(newFolderInfo);
+				}//if closing
+				String folderInfoVoJson = gson.toJson(folderInfoVo);
+				Document folderInfoVoJsonDoc = Document.parse(folderInfoVoJson);
+				coll.findOneAndUpdate(filter,new Document("$set", folderInfoVoJsonDoc),new FindOneAndUpdateOptions().upsert(true)) ;
+				
+			}//outer for closing
+		}
+		
+	}//storeFilesInGallery() closing
+	
 	public void storeNewFileOrFolderInfo(FolderInfo newFolderInfo, Integer folderId,Integer userId) {
 		
 		MongoCollection<Document> coll = null;
@@ -277,5 +320,28 @@ public class DigiLockerMongoDao {
 		gallerInfo.setFiles(galleryFiles);
 		return gallerInfo;
 	}//getGallerContent() closing
+
+	public FolderInfo getGalleryDetails(Integer userId) {
+
+		FolderInfo gallerFolder = null;
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.DIGILOCKER_MONGO_COLLETION);
+		Bson filter = Filters.and(Filters.eq("userId", userId), Filters.elemMatch("foldersList", new Document("origin",DigiLockerEnum.GALLERY.toString())));
+		FindIterable<Document> folderInfoVos=coll.find(filter);
+		if(null != folderInfoVos){
+			for (Document cur :  folderInfoVos ) {
+				FolderInfoVo folderInfoVo = gson.fromJson(cur.toJson(), FolderInfoVo.class);
+				List<FolderInfo> folderInfoList=folderInfoVo.getFoldersList();
+				for(FolderInfo folderInfo :folderInfoList){
+					if(folderInfo.getOrigin().equals(DigiLockerEnum.GALLERY.toString())){
+						gallerFolder=folderInfo;
+						break;
+					}
+				}//inner for closing
+			}//outer for closing
+		}//if closing
+		
+		return gallerFolder;
+	}//getGalleryDetails() closing
 	
 }//class closing

@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +24,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.sm.portal.constants.URLCONSTANT;
+import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
+import com.sm.portal.digilocker.model.FilesInfo;
+import com.sm.portal.digilocker.model.FolderInfo;
+import com.sm.portal.digilocker.service.DigilockerService;
+import com.sm.portal.digilocker.utils.DigiLockeUtils;
 import com.sm.portal.edairy.model.DairyInfo;
 import com.sm.portal.edairy.model.DairyPage;
+import com.sm.portal.edairy.model.EdairyActionEnum;
 import com.sm.portal.edairy.model.UserDairies;
 import com.sm.portal.edairy.service.EdairyServiceImpl;
 import com.sm.portal.model.EDairyDto;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.EDairyService;
+import com.sm.portal.service.FileUploadServices;
 import com.sm.portal.service.UserService;
 
 @RestController
@@ -44,6 +54,14 @@ public class EDairyController {
 	
 	@Autowired
 	EdairyServiceImpl edairyServiceImpl;
+	
+	@Autowired
+	FileUploadServices fileUploadServices;
+	
+	@Autowired
+	DigilockerService digilockerService;
+	
+	
 	
 	@RequestMapping(value="/e_dairy_list", method=RequestMethod.GET)
 	public ModelAndView eDairyLists(Principal principal){
@@ -133,6 +151,56 @@ public class EDairyController {
 
 	} 
 	
+	@RequestMapping(value = "/storeFilesInGallery", method = RequestMethod.POST)
+	public ModelAndView  storeFilesInGallery(@RequestParam("userId") Integer userId,
+			 @RequestParam("dairyId") Integer dairyId,
+			 @RequestParam("pageNo") Integer pageNo,
+			 @RequestParam("pagecontent") String pagecontent,
+			 @RequestParam("files") MultipartFile multipartList[],
+			 HttpServletRequest request) {
+		FolderInfo gallery =digilockerService.getGalleryDetails(userId);
+		String fileURL=null;
+		List<String> fileUrlList=new ArrayList<>();
+		List<FilesInfo> newFileList = new ArrayList<>();
+		FilesInfo filesInfo = null;
+		DigiLockeUtils digiLockerUtils = new DigiLockeUtils();
+		for (int i=0;i<multipartList.length;i++) {	
+            if (!multipartList[i].isEmpty()) {
+            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
+            	if(fileURL!=null){
+	            	fileUrlList.add(fileURL);
+	            	filesInfo =new FilesInfo();
+	            	String fileName = multipartList[i].getOriginalFilename();
+	        		//String filePath = multipartList[i]+fileName.replaceAll(" ", "_");
+	            	filesInfo.setFileId(digiLockerUtils.gerUniqueKey(request));
+	            	filesInfo.setFileName(fileName);
+	            	filesInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
+	            	//String filePath = gallery.getFolderPath()+fileName.replaceAll(" ", "_");
+	            	filesInfo.setFilePath(gallery.getFolderPath()+fileName.replaceAll(" ", "_"));
+	            	filesInfo.setFileStatus(DigiLockerStatusEnum.ACTIVE.toString());
+	            	filesInfo.setCreateddate(new Date());
+	            	filesInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
+	            	filesInfo.setFileType(digiLockerUtils.getFileType(multipartList[i]));
+	            	newFileList.add(filesInfo);
+            	}//if closing
+            }//if closing
+		}//for closing
+		if(fileUrlList.size()>0){
+			gallery.setLocalFilesInfo(newFileList);
+			digilockerService.storeNewFileOrFolderInfo(gallery, gallery.getFolderId(), userId);
+			
+			String updatedPageContent =edairyServiceImpl.getContentAfterFileUpload(pagecontent, fileUrlList);
+			DairyPage page=new DairyPage();
+			page.setPageNo(pageNo);
+			page.setContent(updatedPageContent);
+			boolean result=edairyServiceImpl.savePageContent(userId, dairyId, page);
+		}
+		ModelAndView mvc= new ModelAndView();
+		EdairyActionEnum.EDIT_PAGE.toString();
+		mvc.setViewName("redirect:/sm/getDairyInfo/"+userId+"/"+dairyId+"?actionBy="+EdairyActionEnum.EDIT_PAGE.toString()+"&defaultPageNo="+pageNo+"&edit="+"YES");
+		
+		return mvc;
+	}//storeFilesInGallery() closing
 	@RequestMapping(value="/getUserDairiesList", method=RequestMethod.GET)
 	public ModelAndView getUserDairiesList(Principal principal){
 		logger.debug(" show user profile ...");
@@ -157,9 +225,12 @@ public class EDairyController {
 	}//getUserDairiesList() closing
 	
 	@RequestMapping(value="/getDairyInfo/{userId}/{dairyId}", method=RequestMethod.GET)
-	public ModelAndView getDairyInfo(Principal principal, @PathVariable("userId") Integer userId,
-			@PathVariable("dairyId") Integer dairyId,@RequestParam String actionBy,@RequestParam(name="defaultPageNo", required=false) int defaultPageNo
-			,@RequestParam(name="edit", required=false) String goToEditPage){
+	public ModelAndView getDairyInfo(Principal principal, 
+						@PathVariable("userId") Integer userId,
+						@PathVariable("dairyId") Integer dairyId,
+						@RequestParam String actionBy,
+						@RequestParam(name="defaultPageNo", required=false) int defaultPageNo,
+						@RequestParam(name="edit", required=false) String goToEditPage){
 		logger.debug(" show user profile ...");
 		
 		Gson gson = new Gson();
@@ -191,8 +262,8 @@ public class EDairyController {
 		page.setContent(content);
 		logger.debug(" show user profile ...");
 		ModelAndView mvc = new ModelAndView("/customer/edit_edairy");
-		//DairyInfo  dairyInfo=edairyServiceImpl.editPageContent(userId, dairyId, page);
-		DairyInfo  dairyInfo=new DairyInfo();
+		DairyInfo  dairyInfo=edairyServiceImpl.editPageContent(userId, dairyId, page);
+		//DairyInfo  dairyInfo=new DairyInfo();
 		List<DairyPage> pages = new ArrayList<DairyPage>();
 		pages.add(page);
 		dairyInfo.setPages(pages);
@@ -205,17 +276,27 @@ public class EDairyController {
 	}//getUserDairiesList() closing
 	
 	
-	@RequestMapping(value="/savePageContent", method=RequestMethod.GET)
-	public ModelAndView savePageContent(Principal principal, @PathVariable("userId") Integer userId,
-			@PathVariable("dairyId") Integer dairyId, @ModelAttribute DairyInfo dairyInfo1){
+	@RequestMapping(value="/savePageContent/{userId}/{dairyId}", method=RequestMethod.GET)
+	public ModelAndView savePageContent(Principal principal,
+			@PathVariable Integer userId, 
+			@PathVariable Integer dairyId, 
+			@RequestParam Integer currentPageNo,
+			@RequestParam String pageContent,
+			@ModelAttribute DairyInfo dairyInfo1){
 		logger.debug(" show user profile ...");
 		ModelAndView mvc = new ModelAndView("/customer/dairy_content");
-		DairyInfo  dairyInfo=edairyServiceImpl.savePageContent(userId, dairyId, dairyInfo1.getPages().get(0));
+		DairyInfo  dairyInfo = null;
+		DairyPage page= new DairyPage();
+		page.setPageNo(currentPageNo);
+		page.setContent(pageContent);
+		
+		boolean result=edairyServiceImpl.savePageContent(userId, dairyId, page);
+		dairyInfo =edairyServiceImpl.getDairyInfo(userId, dairyId, EdairyActionEnum.VIEW_PAGE.toString(), page.getPageNo());
 		//DairyPage defaultPage =new DairyPage();
 		//defaultPage =
 		mvc.addObject("showPageNo", dairyInfo1.getPages().get(0).getPageNo());
-		mvc.addObject("userId", userId);
-		mvc.addObject("dairyId", dairyId);
+		mvc.addObject("userId", dairyInfo1.getUserId());
+		mvc.addObject("dairyId", dairyInfo1.getDairyId());
 		mvc.addObject("dairyInfo", dairyInfo);
 		return mvc;
 	}//getUserDairiesList() closing

@@ -1,16 +1,19 @@
 package com.sm.portal.edairy.service;
 
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sm.portal.constants.WebDavServerConstant;
 import com.sm.portal.edairy.model.DairyInfo;
 import com.sm.portal.edairy.model.DairyPage;
 import com.sm.portal.edairy.model.EdairyActionEnum;
 import com.sm.portal.edairy.model.UserDairies;
 import com.sm.portal.edairy.mongo.dao.EdairyDao;
+
 
 @Service
 public class EdairyServiceImpl implements EdairyService{
@@ -44,6 +47,8 @@ public class EdairyServiceImpl implements EdairyService{
 				defaultPage =pagesList.stream().filter(p->p.getPageNo()==defaultPageNo).findFirst().orElse(new DairyPage());
 			}else if(actionBy.equals(EdairyActionEnum.VIEW_PAGE.toString())){
 				defaultPage =pagesList.stream().filter(p->p.getPageNo()==defaultPageNo).findFirst().orElse(new DairyPage());
+			}else{
+				defaultPage =pagesList.stream().filter(p->p.getPageNo()==defaultPageNo).findFirst().orElse(new DairyPage());
 			}
 			dairyInfo.setDefaultPage(defaultPage);
 		}//if closing
@@ -56,11 +61,24 @@ public class EdairyServiceImpl implements EdairyService{
 	}
 
 	@Override
-	public DairyInfo savePageContent(int userId, int dairyId, DairyPage dairyPage) {
+	public boolean savePageContent(int userId, int dairyId, DairyPage dairyPage) {
 
 		boolean result =EdairyDaoImpl.savePageContent(userId, dairyId, dairyPage);
+		return result;
 		//if(result)
-			return EdairyDaoImpl.editPageContent(userId, dairyId, dairyPage);
+			//return EdairyDaoImpl.editPageContent(userId, dairyId, dairyPage);
 	}
 
-}
+	public String getContentAfterFileUpload(String pagecontent, List<String> fileUrlList) {
+		
+		if(pagecontent!=null && fileUrlList.size()>0 ){
+			String updatedImageString = MessageFormat.format(WebDavServerConstant.HTML_IMAGE_TAG,fileUrlList.get(0));
+			String updatedPageContent = pagecontent+updatedImageString;
+			return updatedPageContent;
+			
+		}else{
+			return pagecontent;
+		}
+		
+	}//getContentAfterFileUpload() closing
+}//class closing

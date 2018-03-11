@@ -9,5 +9,5 @@ public interface EdairyService {
 	public UserDairies gerUserDairies(int userId);
 	public  DairyInfo getDairyInfo(int userId, int dairyId, String actionBy, int defaultPageNo);
 	public DairyInfo editPageContent(int userId, int dairyId, DairyPage dairyPage);
-	public DairyInfo savePageContent(int userId, int dairyId, DairyPage dairyPage);
+	public boolean savePageContent(int userId, int dairyId, DairyPage dairyPage);
 }

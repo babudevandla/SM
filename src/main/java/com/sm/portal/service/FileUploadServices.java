@@ -23,8 +23,9 @@ public class FileUploadServices {
 	
 	static Sardine sardine = SardineFactory.begin();
 	  private static final String FILE_PATTERN ="([^\\s]+(\\.(?i)(jpg|png|gif|bmp|pdf|xls))$)";
-	public boolean uploadWebDavServer(MultipartFile multipartFile, String folderPath) {
+	public String uploadWebDavServer(MultipartFile multipartFile, String folderPath) {
 		boolean status=false;
+		String fileURL=null;
 		String filename=multipartFile.getOriginalFilename().replaceAll(" ", "_");
 		File file =new File(filename);
 		System.out.println("file name::"+file.getAbsolutePath());
@@ -40,14 +41,15 @@ public class FileUploadServices {
 			sardine.put(directoryPath+"/"+filename, fis);
 			//sardine.delete("http://104.155.27.172:8081/caweb_admin/images/actions/delete.png");
 			System.out.println("file stored successfully!");
-			status=true;
+			//status=true;
+			fileURL=directoryPath+"/"+filename;
 		
 		} catch (Exception e) {	
 			e.printStackTrace();
-			status=false;
+			fileURL=null;;
 		}
 		
-		return status;
+		return fileURL;
 	}
 
 	/*private void unCreatedFolder(String folderPath) {

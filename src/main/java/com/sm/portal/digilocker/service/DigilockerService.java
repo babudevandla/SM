@@ -23,4 +23,8 @@ public interface DigilockerService {
 
 	public FolderInfo getGallerContent(Integer userid, String filesType);
 
+	public void storeFilesInGallery(FolderInfo newFolderInfo, Integer userId);
+
+	public FolderInfo getGalleryDetails(Integer userId);
+
 }

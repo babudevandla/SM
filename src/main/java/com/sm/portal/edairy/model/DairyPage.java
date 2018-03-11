@@ -9,6 +9,7 @@ public class DairyPage {
 	private Date date;
 	private String content;
 	private String pageStatus;
+	
 	public int getPageNo() {
 		return pageNo;
 	}

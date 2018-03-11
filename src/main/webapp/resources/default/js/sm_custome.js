@@ -51,22 +51,7 @@ $(document).ready(function() {
 		    
 		});
 	  
-	  $(".uploadMultipleFiles1").click(function(e){
-	  		e.preventDefault();
-	  		
-	  		var pageContent=$("#editor").val();
-	  		console.log(pageContent);
-	  		$("#pageContentIdVal").val(pageContent);
-	  		$("#pageContentId").html(pageContent);
-	  		$("#UploadfilesModel").modal({
-	  			backdrop: 'static', 
-	        	keyboard: false,
-	        	show:true,
-	        	height:'100%',
-	        	width:'100%'
-	  			});
-	  		});
-	  
+	
 });
 
 

@@ -1,12 +1,14 @@
 package com.sm.portal.edairy.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DairyInfo {
+@SuppressWarnings("serial")
+public class DairyInfo implements Serializable{
 
-	private int userId;
-	private int dairyId;
+	private Integer userId;
+	private Integer dairyId;
 	private String dairyName;
 	private String coverImage;
 	private Date lastModifiedDate;

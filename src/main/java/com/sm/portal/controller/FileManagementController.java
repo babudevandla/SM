@@ -239,9 +239,9 @@ public class FileManagementController  extends CommonController{
 		String fileName = multipart.getOriginalFilename();
 		String filePath = folderPath+fileName.replaceAll(" ", "_");
 		
-		boolean uploadStatus=fileUploadServices.uploadWebDavServer(multipart,folderPath);
+		String fileURL=fileUploadServices.uploadWebDavServer(multipart,folderPath);
 		String fileType =this.getFileType(multipart);
-		if(uploadStatus){
+		if(fileURL!=null){
 			mvc.addObject("message","file uploaded successfully!");
 			FilesInfo newFileInfo = new FilesInfo();
 			newFileInfo.setFileId(gerUniqueKey(request));

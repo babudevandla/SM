@@ -50,6 +50,10 @@ public class DigilockerServiceImpl implements DigilockerService{
 	public void storeNewFileOrFolderInfo(FolderInfo newFolderInfo, Integer folderId, Integer userId) {
 		digiLockerMongoDao.storeNewFileOrFolderInfo(newFolderInfo,folderId, userId);
 	}//storeFileInfoInDB() closing
+	@Override
+	public void storeFilesInGallery(FolderInfo newFolderInfo, Integer userId){
+		digiLockerMongoDao.storeFilesInGallery(newFolderInfo, userId);
+	}//storeFilesInGallery() closing
 	
 	@Override
 	public void updateFileOrFolderSatus(String deleteInfo, String action, Integer folderId,Integer fileId,Integer userId) {
@@ -77,5 +81,14 @@ public class DigilockerServiceImpl implements DigilockerService{
 		
 		return galleryContent;
 	}//getGallerContent() closing
+
+
+	@Override
+	public FolderInfo getGalleryDetails(Integer userId) {
+
+		FolderInfo gallery = digiLockerMongoDao.getGalleryDetails(userId);
+		
+		return gallery;
+	}//getGalleryDetails() closinig
 
 }//class closing

@@ -14,6 +14,8 @@
 <jsp:body>
  <h1>Edit Dairy :</h1>  <br/>
  
+ <label id="userId" style="display:none">${userId}</label>
+  <label id="dairyId" style="display:none">${dairyId}</label>
  <a class="btn btn-primary pull-left" id="prevBtn"  ><i class="fa fa-chevron-left" aria-hidden="true"></i> PRE </a>
 	<a class="btn btn-primary pull-right nextBtn" id="nextBtn" >NEXT <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
     <table id="navigatorTable" class="table" cellspacing="0" style ="width: 100%">
@@ -27,19 +29,23 @@
 	    </tbody>
     </table>
  
- <form:form action="${contextPath}/sm/savePageContent" method="post" modelAttribute="dairyInfo1">
+ <form:form action="${contextPath}/sm/savePageContent"  id="savePageId" method="post" modelAttribute="dairyInfo1">
  	<%-- <form:hidden path="${userId}"/>
  	<form:hidden path="${ dairyId}"/> --%>
- 	<input name="upload" type="button"	class="btn btn-primary uploadMultipleFiles1" value="Uploadfiles" />
-	<textarea id="editor" class="abc" name="defaultPage">${dairyInfo.defaultPage.content}</textarea><br/>
-	 <input name="submit" type="submit"	class="btn btn-primary" value="Update" />
+ 	<input name="upload" type="button"	class="btn btn-primary uploadMultipleFiles1"  value="Uploadfiles" />
+	<textarea id="editor"  name="defaultPage.content">${dairyInfo.defaultPage.content}</textarea><br/>
+	<input type="text" name="dairyId" class="dairyId">
+	<input type="text" name="userId" class="userId">
+	<input type="text" name="defaultPage.pageNo" class="pageNo">
+	 <!-- <input name="submit" type="submit"	class="btn btn-primary" value="Update" /> -->
+	 <input type="button" value="Update" id="savePageContentId"  class="btn btn-primary"   data-href="${contextPath}/sm/savePageContent/${userId}/${dairyId}" />
 </form:form>
 
 
 
 <div class="modal fade" id="UploadfilesModel" role="dialog">
     <div class="modal-dialog">
-    <form action="${contextPath}/sm/uploadMultipleFile" id="uploadMultiFiles" enctype="multipart/form-data" method="post" >
+    <form action="${contextPath}/sm/storeFilesInGallery" id="storeFilesInGallery" enctype="multipart/form-data" method="post" >
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
@@ -56,9 +62,12 @@
 	   			 </tr>
  
    		 </table>
- 
-    <br>   <input  type="button" value="Add More File"  onclick="AddMoreFile('fuTable')">
+ 		<br>
+       <input  type="button" value="Add More File"  onclick="AddMoreFile('fuTable')">
             <div class="modal-body">
+				<input type="text" name="dairyId" class="dairyId">
+				<input type="text" name="userId" class="userId">
+				<input type="text" name="pageNo" class="pageNo">
 				<input type="text" name="pagecontent" id="pageContentIdVal">
 				<!-- <span id="pageContentId"></span> -->
             </div>
@@ -87,6 +96,33 @@ function AddMoreFile(tableID) {
 }
 
 $(document).ready(function() {
+	
+	  $(".uploadMultipleFiles1").click(function(e){
+	  		e.preventDefault();
+	  		
+	  		var pageContent=$("#editor").val();
+	  		var currentPageNo= $("#pageNoId").html();
+	  		var dairyId= $("#dairyId").html();
+	  		var userId= $("#userId").html();
+	  		
+	  		$(".dairyId").val(dairyId);
+			$(".userId").val(userId);
+			$(".pageNo").val(currentPageNo);
+	  		
+	  		
+	  		console.log(pageContent);
+	  		$("#pageContentIdVal").val(pageContent);
+	  		$("#pageContentId").html(pageContent);
+	  		$("#UploadfilesModel").modal({
+	  			backdrop: 'static', 
+	        	keyboard: false,
+	        	show:true,
+	        	height:'100%',
+	        	width:'100%'
+	  			});
+	  		});
+	  
+	
 	// var list=${pagelist};
 	// console.log(list);
 	 // var list=$.parseJSON("${pagelist}");
@@ -154,6 +190,19 @@ $("#viewDairyId").click(function(){
 	window.location.href=href+"?defaultPageNo="+currentPageNo+"&actionBy="+actionBy;
 	
 });    
+
+$("#savePageContentId").click(function(){
+	 //var list=${pagelist};
+	 var href=$(this).attr("data-href");
+	var currentPageNo= $("#pageNoId").html();
+	var actionBy =$(this).attr("data-actionBy");
+	//var userId=$(this).attr("data-userId");
+	//var dairyId=$(this).attr("data-dairyId");
+	var pageContent=$("#editor").html();
+	var formData= $("#savePageId").serialize();
+	window.location.href=href+"?currentPageNo="+currentPageNo+"&pageContent="+pageContent;
+	
+});
  }); 
  
  
