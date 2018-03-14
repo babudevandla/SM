@@ -118,6 +118,32 @@ public class UserDaoImpl implements UserDao {
 			logger.info("UserDaoImpl === updateUsers == end ");
 	}
 
+	@Override
+	public void updatedUserPassword(UsersDto users) {
+		if(logger.isTraceEnabled())logger.info("UserDaoImpl === updatedUserPassword == end");
+		
+		sessionFactory.getCurrentSession().createQuery("update Users set password=:password where userId=:userId")
+		.setParameter("password", users.getPassword())
+		.setParameter("userId", users.getUserId()).executeUpdate();
+		
+		if(logger.isTraceEnabled())logger.info("UserDaoImpl === updatedUserPassword == end");
+	}
+
+	@Override
+	public boolean checkOldPasssword(String oldpassword,Integer userId) {
+		boolean userStatus=false;
+		Users user=(Users) sessionFactory.getCurrentSession().createQuery("from Users where password=:password and userId=:userId")
+				.setParameter("password", oldpassword)
+				.setParameter("userId", userId)
+				.uniqueResult();
+		if(user!=null){
+			userStatus=true;
+		}
+		if(logger.isTraceEnabled())
+			logger.info("UserDaoImpl === isUserExist == end");
+		return userStatus;
+	}
+
 	
 
 	

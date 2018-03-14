@@ -30,6 +30,7 @@ public class MessangerController {
 		ModelAndView mvc = new ModelAndView("/customer/messanger");
 		Users user =userService.findUserByUserName(principal.getName());
 		mvc.addObject("user", user);
+		mvc.addObject("msgActive", true);
 		return mvc;
 	}
 }

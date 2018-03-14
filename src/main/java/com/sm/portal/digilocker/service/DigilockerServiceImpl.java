@@ -68,8 +68,8 @@ public class DigilockerServiceImpl implements DigilockerService{
 
 
 	@Override
-	public void storeFolderInfo(FolderInfo newFolder, Integer folderid, Integer userId) {
-		digiLockerMongoDao.storeFolderInfo(newFolder,folderid,userId);	
+	public void storeFolderInfo(List<FolderInfo> folderlist, Integer userId) {
+		digiLockerMongoDao.storeFolderInfo(folderlist,userId);	
 	}
 
 

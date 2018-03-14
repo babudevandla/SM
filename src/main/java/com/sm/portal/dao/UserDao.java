@@ -18,4 +18,8 @@ public interface UserDao {
 	public void updateUserInfo(UsersDto userDto);
 	public void updateDynamicCode(String dynamicCode, UsersDto users);
 
+	public void updatedUserPassword(UsersDto users);
+
+	public boolean checkOldPasssword(String oldpassword, Integer userId);
+
 }

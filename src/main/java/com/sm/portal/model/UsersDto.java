@@ -37,6 +37,8 @@ public class UsersDto {
 	private boolean dynamic_status;
 	private String gender;
 	
+	private String oldpassword;
+	private String confirmpassword;
 	
 	
 	public String getUsername() {
@@ -269,6 +271,22 @@ public class UsersDto {
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	public String getOldpassword() {
+		return oldpassword;
+	}
+
+	public void setOldpassword(String oldpassword) {
+		this.oldpassword = oldpassword;
+	}
+
+	public String getConfirmpassword() {
+		return confirmpassword;
+	}
+
+	public void setConfirmpassword(String confirmpassword) {
+		this.confirmpassword = confirmpassword;
 	}
 
 	

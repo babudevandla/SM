@@ -17,7 +17,7 @@
    	<div class="col-md-3 col-sm-3">
          <div class="form-group">
            	<a href="${contextPath}/sm/create_edairy" class="btn btn-primary pull-right">
-           		 Create New E-Dairy 
+           		 Create New E-Diary 
            	</a>
          </div>
          </div>

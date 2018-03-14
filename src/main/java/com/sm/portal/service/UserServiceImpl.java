@@ -75,7 +75,7 @@ public class UserServiceImpl  implements UserService {
 		
 		Integer  userId=userDao.saveUser(info);
 		
-		
+		List<FolderInfo> folderlist=new ArrayList<>();
 		FolderInfo newFolder =new FolderInfo();
 		newFolder.setfId(0);
 		newFolder.setfName("");
@@ -83,11 +83,27 @@ public class UserServiceImpl  implements UserService {
 		newFolder.setFolderNamePath("home");
 		newFolder.setFolderPath("/"+userId+"/"+newFolder.getfId()+"/");
 		newFolder.setFolderStatus(DigiLockerStatusEnum.ACTIVE.toString());
+		newFolder.setOrigin("LOCKER");
 		newFolder.setChildFolders(null);
-		newFolder.setLocalFilesInfo(null);
-		List<FilesInfo> fileList = new ArrayList<>();
-		newFolder.setLocalFilesInfo(fileList);
-		digilockerService.storeFolderInfo(newFolder, new Integer(""+newFolder.getfId()), userId);
+		newFolder.setLocalFilesInfo(new ArrayList<FilesInfo>());
+		
+		
+		//Gallery defalut doc creating 
+		FolderInfo galFolder =new FolderInfo();
+		galFolder.setfId(gerUniqueKey(request));
+		galFolder.setfName("Gallery");
+		galFolder.setParentId(0);
+		galFolder.setFolderNamePath("home/"+galFolder.getfName());
+		galFolder.setFolderPath("/"+userId+"/"+galFolder.getfId()+"/");
+		galFolder.setFolderStatus(DigiLockerStatusEnum.ACTIVE.toString());
+		galFolder.setOrigin("GALLERY");
+		galFolder.setChildFolders(null);
+		galFolder.setLocalFilesInfo(new ArrayList<FilesInfo>());
+		
+		folderlist.add(newFolder);
+		folderlist.add(galFolder);
+		
+		digilockerService.storeFolderInfo(folderlist,  userId);
 		
 		return userId;
 	}
@@ -120,21 +136,30 @@ public class UserServiceImpl  implements UserService {
 
 
 	
-	public Integer gerUniqueKey(HttpServletRequest request){
+	public  synchronized Integer gerUniqueKey(HttpServletRequest request){
 		int newValue=0;
-		InputStream input = request.getServletContext().getResourceAsStream("/WEB-INF/uniquekey.properties");
 		Properties properties = new Properties();
-		try{
+		try(InputStream input = request.getServletContext().getResourceAsStream("/WEB-INF/uniquekey.properties");){
 			properties.load(input);
 			String uniqueKey=properties.getProperty("uniqueId");
 			newValue= Integer.parseInt(uniqueKey)+1;
 			properties.setProperty("uniqueId", ""+newValue);
 			properties.store(new FileOutputStream(request.getServletContext().getRealPath("/WEB-INF/uniquekey.properties")),null);
 		}catch(Exception e){
-			
+			properties = null;
 		}
 		
 		return newValue;
 	}//closing
+
+	@Override
+	public void updatedUserPassword(UsersDto users) {
+		userDao.updatedUserPassword(users);
+	}
+
+	@Override
+	public boolean checkOldPasssword(String oldpassword,Integer userId) {
+		return userDao.checkOldPasssword(oldpassword,userId);
+	}
 	
 }

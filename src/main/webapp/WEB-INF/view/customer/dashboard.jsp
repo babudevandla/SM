@@ -12,6 +12,7 @@
 <jsp:attribute name="title">Dashboard</jsp:attribute>
 <jsp:body>
    
+   <h3 align="center"> Welcome to SM portal!</h3>
      
   </jsp:body>
  </defaultTemplate:defaultDecorator>

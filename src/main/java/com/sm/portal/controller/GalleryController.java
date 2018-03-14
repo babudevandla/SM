@@ -30,6 +30,7 @@ public class GalleryController {
 		ModelAndView mvc = new ModelAndView("/customer/gallery");
 		Users user =userService.findUserByUserName(principal.getName());
 		mvc.addObject("user", user);
+		mvc.addObject("galleryActive", true);
 		return mvc;
 	}
 }

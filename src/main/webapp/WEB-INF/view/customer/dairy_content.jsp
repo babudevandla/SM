@@ -80,17 +80,31 @@
 	
  
 </script>
+<style type="text/css">
 
+#pageContent{
+	width: 100%;
+    background-color: #FBF6F5;
+    padding-left: 15px;
+    border-color: darkgrey;
+    /* color: black; */
+    border-style: solid;
+    border-top-width: 11px;
+    padding-top: 18px;
+    padding-left: 24px;
+    padding-right: 18px;
+}
+</style>
  <div class="create-post">
    <div class="row">
    
-   	<div class="col-md-3 col-sm-3">
+   	<%-- <div class="col-md-3 col-sm-3">
          <div class="form-group">
            	<a href="${contextPath}/sm/create_edairy" class="btn btn-primary pull-right">
-           		 Create New E-Dairy 
+           		 Create New E-Diary 
            	</a>
          </div>
-         </div>
+         </div> --%>
        </div>
    	</div>
    	<a class="btn btn-primary pull-left" id="prevBtn"  ><i class="fa fa-chevron-left" aria-hidden="true"></i> PRE </a>
@@ -101,7 +115,11 @@
 	    		<td ><label>Date:</label></td><td id="pageDateId">${dairyInfo.defaultPage.date}</td>
 	    		<td><label>Page:</label></td><td id="pageNoId">${dairyInfo.defaultPage.pageNo}</td>
 	    		<td><label>Select Date:</label></td><td id="sectedDateId"></td>
-	    		<td><a id="editDairyId" data-href="${pageContext.request.contextPath}/sm/getDairyInfo/${userId}/${dairyId}" data-actionBy="${EdairyActionEnum.EDIT_PAGE}" data-userId="${userId}" data-dairyId="${dairyId}">WRITE</a></td>
+	    		<td align="right">
+	    			<a id="editDairyId" data-href="${pageContext.request.contextPath}/sm/getDairyInfo/${userId}/${dairyId}" data-actionBy="${EdairyActionEnum.EDIT_PAGE}" data-userId="${userId}" data-dairyId="${dairyId}" class="btn btn-warning">
+	    				<i class="fa fa-edit"></i> WRITE
+	    			</a>
+	    		</td>
 	    	</tr>
 	    </tbody>
     </table>
@@ -112,10 +130,8 @@
         	</tr>
        </tbody>
     </table>  --%> 
-    <div id="pageContent" style="height: 400px; width: 100%; background-color: #FBF6F5;">
-    
+    <div id="pageContent" >
     	${dairyInfo.defaultPage.content}
-    
     </div>
 
 <%-- <c:forEach items="${pages}" var="page" varStatus="status">

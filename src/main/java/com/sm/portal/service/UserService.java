@@ -15,4 +15,6 @@ public interface UserService {
 	boolean isUserExist(UsersDto user);
 	Integer saveUser(UsersDto usersDto,HttpServletRequest request);
 	Users getUserByUsernamePassword(UsersDto usersDto);
+	void updatedUserPassword(UsersDto users);
+	boolean checkOldPasssword(String oldpassword, Integer userId);
 }

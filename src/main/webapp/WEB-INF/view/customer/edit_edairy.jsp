@@ -10,9 +10,9 @@
  <%@ page import="com.sm.portal.edairy.model.EdairyActionEnum" %>
  <script src="${contextPath}/resources/default/js/jquery-3.1.1.min.js"></script>
 <defaultTemplate:defaultDecorator>
-<jsp:attribute name="title">E-Dairy</jsp:attribute>
+<jsp:attribute name="title">E-Diary</jsp:attribute>
 <jsp:body>
- <h1>Edit Dairy :</h1>  <br/>
+ <h2>Edit Diary :</h2>  <br/>
  
  <label id="userId" style="display:none">${userId}</label>
   <label id="dairyId" style="display:none">${dairyId}</label>
@@ -24,21 +24,26 @@
 	    		<td ><label>Date:</label></td><td id="pageDateId">${dairyInfo.defaultPage.date}</td>
 	    		<td><label>Page:</label></td><td id="pageNoId">${dairyInfo.defaultPage.pageNo}</td>
 	    		<td><label>Select Date:</label></td><td id="sectedDateId"></td>
-	    		<td><a id="viewDairyId" data-href="${pageContext.request.contextPath}/sm/getDairyInfo/${userId}/${dairyId}" data-actionBy="${EdairyActionEnum.VIEW_PAGE}" data-userId="${userId}" data-dairyId="${dairyId}">VIEW</a></td>
+	    		<td align="right">
+	    			<a id="viewDairyId" data-href="${pageContext.request.contextPath}/sm/getDairyInfo/${userId}/${dairyId}" data-actionBy="${EdairyActionEnum.VIEW_PAGE}" data-userId="${userId}" data-dairyId="${dairyId}" class="btn btn-success">
+	    			<i class="fa fa-eye"></i> VIEW	</a>
+	    		</td>
 	    	</tr>
 	    </tbody>
     </table>
  
- <form:form action="${contextPath}/sm/savePageContent"  id="savePageId" method="post" modelAttribute="dairyInfo1">
+ <form:form action="${contextPath}/sm/savePageContent"  id="savePageId" method="post" modelAttribute="eDairyPageDto">
  	<%-- <form:hidden path="${userId}"/>
  	<form:hidden path="${ dairyId}"/> --%>
  	<input name="upload" type="button"	class="btn btn-primary uploadMultipleFiles1"  value="Uploadfiles" />
-	<textarea id="editor"  name="defaultPage.content">${dairyInfo.defaultPage.content}</textarea><br/>
-	<input type="text" name="dairyId" class="dairyId">
-	<input type="text" name="userId" class="userId">
-	<input type="text" name="defaultPage.pageNo" class="pageNo">
+	<textarea id="editor"  name="content">${dairyInfo.defaultPage.content}</textarea><br/>
+	<input type="hidden" name="dairyId" class="dairyId" value="${dairyId}">
+	<input type="hidden" name="userId" class="userId" value="${userId}">
+	<input type="hidden" name="pageNo" class="pageNo">
+	<input type="hidden" name="currentPageNo" class="pageNo">
 	 <!-- <input name="submit" type="submit"	class="btn btn-primary" value="Update" /> -->
-	 <input type="button" value="Update" id="savePageContentId"  class="btn btn-primary"   data-href="${contextPath}/sm/savePageContent/${userId}/${dairyId}" />
+	 <input type="button" value="Update" id="savePageContentId"  class="btn btn-primary"  
+	  data-href="${contextPath}/sm/savePageContent/${userId}/${dairyId}" />
 </form:form>
 
 
@@ -51,24 +56,24 @@
                 <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
                 <h4 class="modal-title filename"></h4>
             </div>
-             <table id="fuTable"  border="1">
+             <table id="fuTable"  border="1" style="margin-left: 25px;margin-top: 12px;">
 	    		<tr>
 	        		<td> 
 	        		<!-- <input name="files" type="file" multiple onchange="readURL(this);">
 	        			<img id="blah" src="#" alt="your image" /> -->
-	        		<input name="files" type="file" multiple>
-	        		
+	        			<input name="files" type="file" multiple>
 	        		</td>
 	   			 </tr>
- 
    		 </table>
  		<br>
-       <input  type="button" value="Add More File"  onclick="AddMoreFile('fuTable')">
+ 			<div align="right">
+       			<input  type="button" value="Add More File"  onclick="AddMoreFile('fuTable')" style="margin-top: -60px;">
+       		</div>
             <div class="modal-body">
-				<input type="text" name="dairyId" class="dairyId">
-				<input type="text" name="userId" class="userId">
-				<input type="text" name="pageNo" class="pageNo">
-				<input type="text" name="pagecontent" id="pageContentIdVal">
+				<input type="hidden" name="dairyId" class="dairyId">
+				<input type="hidden" name="userId" class="userId">
+				<input type="hidden" name="pageNo" class="pageNo">
+				<input type="hidden" name="pagecontent" id="pageContentIdVal">
 				<!-- <span id="pageContentId"></span> -->
             </div>
             <div class="modal-footer">
@@ -191,18 +196,28 @@ $("#viewDairyId").click(function(){
 	
 });    
 
-$("#savePageContentId").click(function(){
+/* $("#savePageContentId").click(function(){
 	 //var list=${pagelist};
 	 var href=$(this).attr("data-href");
 	var currentPageNo= $("#pageNoId").html();
 	var actionBy =$(this).attr("data-actionBy");
-	//var userId=$(this).attr("data-userId");
-	//var dairyId=$(this).attr("data-dairyId");
-	var pageContent=$("#editor").html();
+	var pageContent=$("#editor").val();
 	var formData= $("#savePageId").serialize();
 	window.location.href=href+"?currentPageNo="+currentPageNo+"&pageContent="+pageContent;
 	
-});
+}); */
+ 
+ 
+	$("#savePageContentId").click(function(){
+		var currentPageNo= $("#pageNoId").html();
+		$(".pageNo").val(currentPageNo);
+		if(currentPageNo!='' && currentPageNo!=null){
+			$("#savePageId").submit();
+		}
+		
+	});
+ 
+ 
  }); 
  
  

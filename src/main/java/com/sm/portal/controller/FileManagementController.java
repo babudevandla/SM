@@ -86,6 +86,7 @@ public class FileManagementController  extends CommonController{
 			e.printStackTrace();
 		}
 		//mvc.addObject("currentFolderPath", "home");
+		mvc.addObject("digiLockActive", true);
 		return mvc;
 	}//closing getDigiLockerHomeData() 
 	
@@ -110,7 +111,7 @@ public class FileManagementController  extends CommonController{
 			
 			
 			//fileUploadServices.createFolderName(folderInfo.getFolderPath());
-			
+			mvc.addObject("digiLockActive", true);
 			mvc.addObject("WEBDAV_SERVER_URL", WebDavServerConstant.WEBDAV_SERVER_URL);
 			//System.out.println(user);			
 		}catch(Exception e){e.printStackTrace();}
@@ -223,7 +224,7 @@ public class FileManagementController  extends CommonController{
 		List<FolderInfo>	getUpdatedFolderList=digilockerService.getDigiLockerHomeData(new Long(userid));
 		httpSession.setAttribute("allFoldersData", getUpdatedFolderList);
 		httpSession.setAttribute("userid", userid);
-		
+		mvc.addObject("digiLockActive", true);
 		mvc.setViewName("redirect:/sm/getfolderinfo/"+currentFolderId);
 		return mvc;
 	}
@@ -301,7 +302,7 @@ public class FileManagementController  extends CommonController{
 		}
 		this.reseteFolderInfoInSession(request, userid);
 		mvc.setViewName("redirect:/sm/getfolderinfo/"+parentId);
-		
+		mvc.addObject("digiLockActive", true);
 		return mvc;
 	}//deleteFile() closing
 	
@@ -336,6 +337,7 @@ public class FileManagementController  extends CommonController{
 			e.printStackTrace();
 		}
 		this.reseteFolderInfoInSession(request, userid);
+		mvc.addObject("digiLockActive", true);
 		mvc.setViewName("redirect:/sm/getfolderinfo/"+folderId);
 		
 		return mvc;
@@ -370,6 +372,7 @@ public class FileManagementController  extends CommonController{
 		mvc.addObject("fileType", "ALL");
 		mvc.addObject("fid", fid);
 		mvc.addObject("userid", userid);
+		mvc.addObject("digiLockActive", true);
 		return mvc;
 	}//openGallery() closing
 	
@@ -382,7 +385,7 @@ public class FileManagementController  extends CommonController{
 		FolderInfo folderInfo =digilockerService.getGallerContent(userid, filesType);
 		mvc.addObject("galleryContent", folderInfo);
 		mvc.addObject("fileType", filesType);
-		
+		mvc.addObject("digiLockActive", true);
 		return mvc;
 	}//getGallerContent() closing
 	public synchronized Integer gerUniqueKey(HttpServletRequest request){

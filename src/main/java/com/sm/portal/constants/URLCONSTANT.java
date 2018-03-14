@@ -34,6 +34,12 @@ public class URLCONSTANT {
 	/*  Massanger Tab url's   */
 	public static final String MESSANGER_HOME						=	"/messanger" ;
 	
+	// PA Tab url's
 	
+	public static final String PERSONAL_LIST						=	"/personallist" ;
+	public static final String NEW_JOB_SETTING_CREATE				=	"/new_job_settings" ;
+	
+	// Settings Tab url's
+	public static final String USER_SETTINGS						=	"/settings" ;
 	
 }

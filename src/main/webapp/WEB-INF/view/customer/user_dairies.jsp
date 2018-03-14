@@ -9,7 +9,7 @@
 <%@taglib prefix="defaultTemplate" tagdir="/WEB-INF/tags"%>
 
 <defaultTemplate:defaultDecorator>
-<jsp:attribute name="title">E-Dairy</jsp:attribute>
+<jsp:attribute name="title">E-Diary</jsp:attribute>
 <jsp:body>
 
  <div class="create-post">
@@ -17,19 +17,21 @@
    	<div class="col-md-3 col-sm-3">
          <div class="form-group">
            	<a href="${contextPath}/sm/create_edairy" class="btn btn-primary pull-right">
-           		 Create New E-Dairy 
+           		 Create New E-Diary 
            	</a>
          </div>
          </div>
        </div>
    	</div>
-
     <table id="example" class="table  table-bordered" cellspacing="0" style="width: 100%">
-        
         <tbody>
         <c:forEach items="${userDairies.dairyList}" var="dairy" varStatus="status">
             <tr>            
-            	<td><a href="${contextPath}/sm/getUserDairyCoverPage/${userDairies.userId}/${dairy.dairyId}" >${dairy.name}</a>  </td>              
+            	<td>
+            		<a href="${contextPath}/sm/getUserDairyCoverPage/${userDairies.userId}/${dairy.dairyId}" > 
+            			<i class="fa fa-calendar" aria-hidden="true"></i> ${dairy.name}
+            		</a>  
+            	</td>              
             </tr>
           </c:forEach>  
        </tbody>

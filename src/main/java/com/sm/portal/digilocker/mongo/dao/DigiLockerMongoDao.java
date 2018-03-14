@@ -266,7 +266,7 @@ public class DigiLockerMongoDao {
 		}//if closing
 	}//showHiddenFoldersAndFiles() closing
 
-	public void storeFolderInfo(FolderInfo newFolder, Integer folderid, Integer userId) {
+	public void storeFolderInfo(List<FolderInfo> folderlist, Integer userId) {
 		MongoCollection<Document> coll = null;
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.DIGILOCKER_MONGO_COLLETION);
 		
@@ -274,15 +274,20 @@ public class DigiLockerMongoDao {
 		mainDocu.append("userId", userId);
 		
 		List<Document> foldersList=new ArrayList<Document>();
-		Document folderDoc=new Document();
-		folderDoc.append("folderId", newFolder.getfId());
-		folderDoc.append("folderName", "");
-		folderDoc.append("parentId", newFolder.getParentId());
-		folderDoc.append("folderPath", newFolder.getFolderPath());
-		folderDoc.append("folderNamePath", newFolder.getFolderNamePath());
-		folderDoc.append("folderStatus", newFolder.getFolderStatus());
-		folderDoc.append("files", new ArrayList<>());
-		foldersList.add(folderDoc);
+		for(FolderInfo newFolder:folderlist){
+			Document folderDoc1=new Document();
+			folderDoc1.append("folderName", newFolder.getFolderName());
+			folderDoc1.append("folderId", newFolder.getfId());
+			folderDoc1.append("folderPath", newFolder.getFolderPath());
+			folderDoc1.append("parentId", newFolder.getParentId());
+			folderDoc1.append("folderNamePath", newFolder.getFolderNamePath());
+			folderDoc1.append("folderStatus", newFolder.getFolderStatus());
+			folderDoc1.append("origin", newFolder.getOrigin());
+			folderDoc1.append("files", new ArrayList<>());
+			
+			foldersList.add(folderDoc1);
+		}
+		
 		mainDocu.append("foldersList", foldersList);
 		
 		coll.insertOne(mainDocu);

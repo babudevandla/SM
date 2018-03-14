@@ -31,6 +31,7 @@ import com.sm.portal.digilocker.service.DigilockerService;
 import com.sm.portal.digilocker.utils.DigiLockeUtils;
 import com.sm.portal.edairy.model.DairyInfo;
 import com.sm.portal.edairy.model.DairyPage;
+import com.sm.portal.edairy.model.EDairyPageDto;
 import com.sm.portal.edairy.model.EdairyActionEnum;
 import com.sm.portal.edairy.model.UserDairies;
 import com.sm.portal.edairy.service.EdairyServiceImpl;
@@ -72,6 +73,7 @@ public class EDairyController {
 		List<EDairyDto>  dairyList=eDairyService.getEDairyList(user.getUserId());
 		mvc.addObject("user", user);
 		mvc.addObject("dairyList", dairyList);
+		mvc.addObject("diaryActive", true);
 		return mvc;
 	}
 	
@@ -81,6 +83,7 @@ public class EDairyController {
 		logger.debug(" show user profile ...");
 		ModelAndView mvc = new ModelAndView("/customer/create_edairy");
 		mvc.addObject("edairyDto",eDairyDto);
+		mvc.addObject("diaryActive", true);
 		return mvc;
 	}
 	
@@ -104,6 +107,7 @@ public class EDairyController {
 		ModelAndView mvc = new ModelAndView("/customer/edit_edairy");
 		EDairyDto eDairyDto=eDairyService.getEDairyDataById(dairyId);
 		mvc.addObject("edairyDto",eDairyDto);
+		mvc.addObject("diaryActive", true);
 		return mvc;
 	}
 	
@@ -210,6 +214,7 @@ public class EDairyController {
 		UserDairies  userDairies=edairyServiceImpl.gerUserDairies(user.getUserId());
 		mvc.addObject("user", user);
 		mvc.addObject("userDairies", userDairies);
+		mvc.addObject("diaryActive", true);
 		return mvc;
 	}//getUserDairiesList() closing
 	
@@ -221,6 +226,7 @@ public class EDairyController {
 		ModelAndView mvc = new ModelAndView("/customer/edairy_home");
 		mvc.addObject("userId", userId);
 		mvc.addObject("dairyId", dairyId);
+		mvc.addObject("diaryActive", true);
 		return mvc;
 	}//getUserDairiesList() closing
 	
@@ -249,6 +255,7 @@ public class EDairyController {
 		mvc.addObject("dairyInfo", dairyInfo);
 		mvc.addObject("pages", dairyInfo.getPages());
 		mvc.addObject("pagelist", gson.toJson(dairyInfo.getPages()));
+		mvc.addObject("diaryActive", true);
 		return mvc;
 	}//getUserDairiesList() closing
 	
@@ -272,32 +279,29 @@ public class EDairyController {
 		mvc.addObject("dairyId", dairyId);
 		mvc.addObject("dairyInfo", dairyInfo);
 		mvc.addObject("page",page);
+		mvc.addObject("diaryActive", true);
 		return mvc;
 	}//getUserDairiesList() closing
 	
 	
-	@RequestMapping(value="/savePageContent/{userId}/{dairyId}", method=RequestMethod.GET)
-	public ModelAndView savePageContent(Principal principal,
-			@PathVariable Integer userId, 
-			@PathVariable Integer dairyId, 
-			@RequestParam Integer currentPageNo,
-			@RequestParam String pageContent,
-			@ModelAttribute DairyInfo dairyInfo1){
+	@RequestMapping(value="/savePageContent", method=RequestMethod.POST)
+	public ModelAndView savePageContent(@ModelAttribute("eDairyPageDto") EDairyPageDto eDairyPageDto){
 		logger.debug(" show user profile ...");
 		ModelAndView mvc = new ModelAndView("/customer/dairy_content");
 		DairyInfo  dairyInfo = null;
 		DairyPage page= new DairyPage();
-		page.setPageNo(currentPageNo);
-		page.setContent(pageContent);
+		page.setPageNo(eDairyPageDto.getPageNo());
+		page.setContent(eDairyPageDto.getContent());
 		
-		boolean result=edairyServiceImpl.savePageContent(userId, dairyId, page);
-		dairyInfo =edairyServiceImpl.getDairyInfo(userId, dairyId, EdairyActionEnum.VIEW_PAGE.toString(), page.getPageNo());
+		boolean result=edairyServiceImpl.savePageContent(eDairyPageDto.getUserId(), eDairyPageDto.getDairyId(), page);
+		dairyInfo =edairyServiceImpl.getDairyInfo(eDairyPageDto.getUserId(), eDairyPageDto.getDairyId(), EdairyActionEnum.VIEW_PAGE.toString(), page.getPageNo());
 		//DairyPage defaultPage =new DairyPage();
 		//defaultPage =
-		mvc.addObject("showPageNo", dairyInfo1.getPages().get(0).getPageNo());
-		mvc.addObject("userId", dairyInfo1.getUserId());
-		mvc.addObject("dairyId", dairyInfo1.getDairyId());
+		mvc.addObject("showPageNo", eDairyPageDto.getPageNo());
+		mvc.addObject("userId", eDairyPageDto.getUserId());
+		mvc.addObject("dairyId", eDairyPageDto.getDairyId());
 		mvc.addObject("dairyInfo", dairyInfo);
+		mvc.setViewName("redirect:/sm/getDairyInfo/"+eDairyPageDto.getUserId()+"/"+eDairyPageDto.getDairyId()+"?actionBy=&defaultPageNo="+eDairyPageDto.getPageNo());
 		return mvc;
 	}//getUserDairiesList() closing
 	private Users getUserInfo(Principal principal){

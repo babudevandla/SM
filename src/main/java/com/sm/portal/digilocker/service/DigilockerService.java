@@ -19,7 +19,7 @@ public interface DigilockerService {
 
 	public void showHiddenFoldersAndFiles(Integer fid, Integer userid);
 
-	public void storeFolderInfo(FolderInfo newFolder, Integer integer, Integer userId);
+	public void storeFolderInfo(List<FolderInfo> folderlist, Integer userId);
 
 	public FolderInfo getGallerContent(Integer userid, String filesType);
 

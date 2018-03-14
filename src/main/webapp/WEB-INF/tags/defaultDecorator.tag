@@ -86,14 +86,15 @@ body {
             <div class="profile-card">
             	<img src="${contextPath}/resources/default/images/avatar.png" alt="user" class="profile-photo" />
             	<h5><a class="text-white">${user.firstname}&nbsp;${user.lastname}</a></h5>
-            	<a  class="text-white"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp; ${user.mobile_no}</a>
+            	<a  class="text-white"><i class="fa fa-phone" aria-hidden="true"></i> ${user.mobile_no}</a>
             </div><!--profile card ends-->
             <ul class="nav-news-feed">
-              <li><i class="icon ion-lock-combination"></i><div><a href="${contextPath}/sm/file_management/${user.userId}">Digi Locker</a></div></li>
-              <li><i class="fa fa-calendar" aria-hidden="true"></i><div><a href="${contextPath}/sm/getUserDairiesList">E Dairy</a></div></li>
-              <li><i class="icon ion-chatboxes"></i><div><a href="${contextPath}/sm/messanger">Messanger</a></div></li>
-              <li><i class="icon ion-images"></i><div><a href="${contextPath}/sm/gallery">Gallery</a></div></li>
-               <li><i class="fa fa-bell-o" aria-hidden="true"></i><div><a href="#">Personal Assistant</a></div></li>
+              <li class="${digiLockActive?'active':''}"><i class="icon ion-lock-combination"></i><div><a href="${contextPath}/sm/file_management/${user.userId}">Digi Locker</a></div></li>
+              <li class="${diaryActive?'active':''}"><i class="fa fa-calendar" aria-hidden="true"></i><div><a href="${contextPath}/sm/getUserDairiesList">E Diary</a></div></li>
+              <li class="${msgActive?'active':''}"><i class="icon ion-chatboxes"></i><div><a href="${contextPath}/sm/messanger">Messanger</a></div></li>
+              <li class="${galleryActive?'active':''}"><i class="icon ion-images"></i><div><a href="${contextPath}/sm/gallery">Gallery</a></div></li>
+              <li class="${paActive?'active':''}"><i class="fa fa-bell-o" aria-hidden="true"></i><div><a href="${contextPath}/sm/personallist">Personal Assistant (PA)</a></div></li>
+              <li class="${settActive?'active':''}"><i class="fa  fa-cog" aria-hidden="true"></i><div><a href="${contextPath}/sm/settings">Settings</a></div></li>
               <!-- <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li> -->
             </ul>
             <!-- <div id="chat-block">
@@ -123,9 +124,9 @@ body {
     <footer id="footer">
       <div class="container">
       	<div class="row">
-          <div class="footer-wrapper">
-            <div class="col-md-3 col-sm-3">
-              <a href="#"><img src="${contextPath}/resources/default/images/logo-black.png" alt="" class="footer-logo" /></a>
+          <%-- <div class="footer-wrapper">
+            <div class="col-md-3 col-sm-3" >
+              <a href="#" style="font-size: 30px;" > SM Portal</a>
               <ul class="list-inline social-icons">
               	<li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
               	<li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
@@ -133,15 +134,15 @@ body {
               	<li><a href="#"><i class="icon ion-social-pinterest"></i></a></li>
               	<li><a href="#"><i class="icon ion-social-linkedin"></i></a></li>
               </ul>
-            </div>
-            <%-- <div class="col-md-2 col-sm-2">
+            </div> 
+            <div class="col-md-2 col-sm-2">
               <h5>For individuals</h5>
               <ul class="footer-links">
                 <li><a href="${contextPath}/signup">Signup</a></li>
                 <li><a href="${contextPath}/login">login</a></li>
               </ul>
-            </div> --%>
-            <!-- <div class="col-md-2 col-sm-2">
+            </div>
+             <div class="col-md-2 col-sm-2">
               <h5>For businesses</h5>
               <ul class="footer-links">
                 <li><a href="#">Business signup</a></li>
@@ -161,20 +162,20 @@ body {
                 <li><a href="#">Terms</a></li>
                 <li><a href="#">Help</a></li>
               </ul>
-            </div> -->
-            <!-- <div class="col-md-3 col-sm-3">
+            </div>
+             <div class="col-md-3 col-sm-3">
               <h5>Contact Us</h5>
               <ul class="contact">
                 <li><i class="icon ion-ios-telephone-outline"></i>+1 (234) 222 0754</li>
                 <li><i class="icon ion-ios-email-outline"></i>info@thunder-team.com</li>
                 <li><i class="icon ion-ios-location-outline"></i>228 Park Ave S NY, USA</li>
               </ul>
-            </div> -->
-          </div>
+            </div> 
+          </div> --%>
       	</div>
       </div>
       <div class="copyright">
-        <p>Thunder Team Â© 2016. All rights reserved</p>
+        <p>SM Team © 2018. All rights reserved</p>
       </div>
 		</footer>
     <!--preloader-->
@@ -196,11 +197,14 @@ body {
 <script src="${contextPath}/resources/default/tinymce/plugins/compat3x/plugin.min.js"></script>
 
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.js"></script>
-
+<script src="${contextPath}/resources/default/datatables/media/js/jquery.dataTables.min.js"></script>
+<script src="${contextPath}/resources/default/_mod/datatables/jquery.dataTables.bootstrap.min.js"></script>
+<script src="${contextPath}/resources/default/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript">
 	
  $(document).ready(function() {
 	    $('#example').DataTable();
+	    $('#dynamic-table').DataTable();
 	} );
 	
 	
