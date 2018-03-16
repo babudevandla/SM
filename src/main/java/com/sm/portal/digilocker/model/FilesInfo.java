@@ -16,6 +16,7 @@ public class FilesInfo implements Serializable {
 	 private Date updateddate;
 	 private String statusAtGallery;
 	 private Boolean favoritePage;
+	 private String fileExtension;
 	 
 	public String getFileName() {
 		return fileName;
@@ -76,6 +77,12 @@ public class FilesInfo implements Serializable {
 	}
 	public void setFavoritePage(Boolean favoritePage) {
 		this.favoritePage = favoritePage;
+	}
+	public String getFileExtension() {
+		return fileExtension;
+	}
+	public void setFileExtension(String fileExtension) {
+		this.fileExtension = fileExtension;
 	}
 	
 }

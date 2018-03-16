@@ -51,9 +51,10 @@
               </div>
               </form>
              
+               	<a href="${contextPath}/sm/getGallerContent?userid=${userId}" class="btn btn-primary pull-right"><i class="fa fa-image" aria-hidden="true"></i> GALLERY</button></a>
             </div>
         </div>
-        <%--  <c:set  value="" var="currentFolderPath"/> --%>
+      
          <div class="pull-right"><a href="${contextPath}/sm/showHiddenFoldersAndFiles/${folderInfo.fId}?userid=${userid}"><label style="color:red">show hidden files and folders</label></a></div>
         
         <a href="${contextPath}/sm/file_management/${userid}" style="cursor: pointer;"	class="user-link">Home &nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></a>
@@ -242,31 +243,10 @@
                 	</c:when>
                 	<c:otherwise>
                 		 <c:forEach items="${digiLockerHomeData}" var="folders" varStatus="status">
-                		 <c:if test="${not empty folders.fName}">
+                		 	<c:if test="${not empty folders.fName}">
 			                
 			                	<c:choose>
-			                		<c:when test="${folders.origin eq 'GALLERY' }">
-			                			<tr>
-						                <td>
-							                <a href="${contextPath}/sm/getGallerContent?userid=${userId}" style="cursor: pointer;"	class="user-link">
-				                				<strong style="color: black;"><i class="fa fa-folder"></i> &nbsp;${folders.fName} </strong>
-							                 </a>	
-						                 </td>
-						                 <td>
-		                					10 kb
-			                				</td>
-			                				<td>
-			                					2018-02-28
-			                				</td>
-			                				<td>
-			                					${user.firstname}
-			                				</td>
-							                <td>
-							                        
-							                </td>
-					                 	</tr>
-			                		</c:when>
-			                		<c:otherwise>
+			                		<c:when test="${folders.origin eq 'LOCKER' }">
 					                	<tr>
 						                <td>
 							                <a href="${contextPath}/sm/getfolderinfo/${folders.fId}" style="cursor: pointer;"	class="user-link">
@@ -286,7 +266,7 @@
 							                        
 							                </td>
 					                 	</tr>
-			                 </c:otherwise>
+			                 		</c:when>
 			                	</c:choose>
 			                	
 			                 </c:if>

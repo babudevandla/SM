@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,6 +81,8 @@ public class FileManagementController  extends CommonController{
 			httpSession.setAttribute("userid", userId);
 			List<FolderInfo>	rootFolderList=digilockerService.getRootFoldersList(allFolderList);
 			mvc.addObject("digiLockerHomeData", rootFolderList);
+			List<FolderInfo> galleryData=rootFolderList.stream().filter(folder -> folder.origin.equals("GALLERY")).collect(Collectors.toList());
+			mvc.addObject("galleryData", galleryData);
 			System.out.println(user);	
 			mvc.addObject("WEBDAV_SERVER_URL", WebDavServerConstant.WEBDAV_SERVER_URL);
 		}catch(Exception e){
@@ -242,6 +245,7 @@ public class FileManagementController  extends CommonController{
 		
 		String fileURL=fileUploadServices.uploadWebDavServer(multipart,folderPath);
 		String fileType =this.getFileType(multipart);
+		String fileExtension=fileName.substring(fileName.lastIndexOf(".")+1);;
 		if(fileURL!=null){
 			mvc.addObject("message","file uploaded successfully!");
 			FilesInfo newFileInfo = new FilesInfo();
@@ -253,6 +257,7 @@ public class FileManagementController  extends CommonController{
 			newFileInfo.setCreateddate(new Date());
 			newFileInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
 			newFileInfo.setFileType(fileType);
+			newFileInfo.setFileExtension(fileExtension);
 			FolderInfo newFolder = new FolderInfo();
 			
 			List<FilesInfo> localFilesInfo = new ArrayList<>();
@@ -411,47 +416,7 @@ public class FileManagementController  extends CommonController{
 		return newValue;
 	}//closing
 	
-	private String getFileType(MultipartFile multipart) {
-		List<String> imageList = new ArrayList<>();
-		List<String> audioList = new ArrayList<>();
-		List<String> videoList = new ArrayList<>();
-		List<String> documentList = new ArrayList<>();
-		imageList.add("jpg");
-		imageList.add("jpeg");
-		imageList.add("png");
-		
-		audioList.add("wav");
-		audioList.add("mp3");
-		
-		videoList.add("avi");
-		videoList.add("flv");
-		videoList.add("wmv");
-		videoList.add("mov");
-		videoList.add("mp4");
-		
-		documentList.add("pdf");
-		documentList.add("xml");
-		documentList.add("xlsx");
-		documentList.add("doc");
-		documentList.add("docx");
-		documentList.add("json");
-		documentList.add("pptx");
-		
-		
-		String fileName = multipart.getName();
-		String fileExtention = fileName.substring(fileName.lastIndexOf(".")+1);
-		if(imageList.contains(fileExtention.toLowerCase()))
-			return DigiLockerFileTypeEnum.IMAGE.toString();
-		else if(audioList.contains(fileExtention.toLowerCase()))
-			return DigiLockerFileTypeEnum.AUDIO.toString();
-		else if(videoList.contains(fileExtention.toLowerCase()))
-			return DigiLockerFileTypeEnum.VIDEO.toString();
-		else if(documentList.contains(fileExtention.toLowerCase()))
-			return DigiLockerFileTypeEnum.DOCUMENT.toString();
-		else 
-			return DigiLockerFileTypeEnum.UNKNOWN.toString();
-		
-	}//getFileType() closing
+	
 
 
 	
