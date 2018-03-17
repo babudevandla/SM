@@ -10,6 +10,9 @@ public class CollectionsConstant {
 	public static String EDAIRY_MONGO_USER_DAIRIES 		="userdairies";
 	public static String EDAIRY 		="edairy";
 	
+	public static String EBOOK_LIST_MONGO_COLLECTON ="ebook_list";
+	public static String EBOOK_MONGO_COLLECTION ="ebook";
+	
 	
 	
 }
