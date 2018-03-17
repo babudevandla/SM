@@ -1,5 +1,6 @@
 package com.sm.portal.ebook.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -17,7 +18,9 @@ import com.sm.portal.ebook.model.Ebook;
 import com.sm.portal.ebook.model.EbookPage;
 import com.sm.portal.ebook.model.EbookPageBean;
 import com.sm.portal.ebook.service.EbookServiceImpl;
+import com.sm.portal.model.Users;
 import com.sm.portal.service.FileUploadServices;
+import com.sm.portal.service.UserService;
 
 @RestController
 @RequestMapping(URLCONSTANT.BASE_URL)
@@ -30,10 +33,13 @@ public class EbookController {
 	@Autowired
     private EbookServiceImpl ebookServiceImple;
 	
+	@Autowired
+    private UserService userService;
+	
 	@RequestMapping(value="/eBooklist", method=RequestMethod.GET)
-	public ModelAndView getEbookList(@RequestParam Integer userId){
-		ModelAndView mav = new ModelAndView();
-		
+	public ModelAndView getEbookList(@RequestParam(name="userId", required=false) Integer userId, Principal principal){
+		ModelAndView mav = new ModelAndView("/ebook/ebook_home");
+		Users user =userService.findUserByUserName(principal.getName());
 		List<Ebook> ebookList = ebookServiceImple.getEbookList(userId);
 		return mav;
 	}//getEbookList() closing
