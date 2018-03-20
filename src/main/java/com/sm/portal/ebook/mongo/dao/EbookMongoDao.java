@@ -20,6 +20,7 @@ import com.sm.portal.ebook.enums.EbookStatusEnum;
 import com.sm.portal.ebook.model.Ebook;
 import com.sm.portal.ebook.model.EbookPage;
 import com.sm.portal.ebook.model.EbookPageBean;
+import com.sm.portal.ebook.model.EbookPageDto;
 import com.sm.portal.ebook.model.UserBook;
 import com.sm.portal.ebook.model.UserBooks;
 import com.sm.portal.mongo.MongoDBUtil;
@@ -104,6 +105,29 @@ public class EbookMongoDao {
 		
 	}//createEbook
 
+	public void saveEbookPageContent(EbookPageDto eBookPageDto) {
+
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_LIST_MONGO_COLLECTON);
+		Bson filter=Filters.and(Filters.eq("userId",eBookPageDto.getUserId()), Filters.eq("bookId",eBookPageDto.getBookId()));
+		MongoCursor<Document> cursor = null;
+		cursor =coll.find(filter).iterator();
+		Document ebookDoc =null;
+		while(cursor.hasNext()){
+			ebookDoc =cursor.next();
+			List<Document> ebookPageDocs= (List<Document>) ebookDoc.get("ebookPages");
+			for(Document pageDoc: ebookPageDocs){
+				if(pageDoc.getInteger("pageNo").intValue()==eBookPageDto.getPageNo().intValue()){
+					pageDoc.put("content", eBookPageDto.getContent());
+				}
+			}//for closing
+			
+		}//while closing
+		
+		coll.findOneAndUpdate(filter,new Document("$set", ebookDoc),new FindOneAndUpdateOptions().upsert(true)) ;
+		
+	}//saveEbookPageContent() closing
+	
 	@SuppressWarnings("unchecked")
 	private Document getUserBookDocument(Ebook ebook, MongoCollection<Document> coll) {
 		//Document userBookDoc = new Document();
@@ -156,6 +180,47 @@ public class EbookMongoDao {
 		return userBookDoc;
 	}//getUserBookDocumentByUserId() closing
 
+	public Ebook getEbookContent(Integer userId, Integer bookId) {
+		MongoCursor<Document> cursor = null;
+		MongoCollection<Document> coll=null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_LIST_MONGO_COLLECTON);
+		Bson filter =Filters.and(Filters.eq("userId", userId), Filters.eq("bookId", bookId));
+		cursor =coll.find(filter).iterator();
+		
+		Ebook ebook =null;
+		Document ebookDoc=null;
+		List<Document> ebookPages =new ArrayList<>();
+		EbookPage ebookPage =null;
+		List<EbookPage> pageList = new ArrayList<>();
+		while(cursor.hasNext()){
+			ebookDoc =cursor.next();
+			ebook =new Ebook();
+			ebook.setUserId(ebookDoc.getInteger("userId"));
+			ebook.setBookId(ebookDoc.getInteger("bookId"));
+			ebook.setBookTitle(ebookDoc.getString("bookTitle"));
+			ebook.setCoverImage(ebookDoc.getString("coverImage"));
+			ebook.setBookSize(ebookDoc.getInteger("bookSize"));
+			ebook.setPageSize(ebookDoc.getInteger("pageSize"));
+			
+			ebookPages = (List<Document>) ebookDoc.get("ebookPages");
+			for(Document pageDoc: ebookPages){
+				ebookPage =new EbookPage();
+				ebookPage.setPageNo(pageDoc.getInteger("pageNo"));
+				ebookPage.setChapterName(pageDoc.getString("chapterName"));
+				ebookPage.setContent(pageDoc.getString("content"));
+				ebookPage.setChaperType(pageDoc.getString("chaperType"));
+				pageList.add(ebookPage);
+			}//for closing
+			ebook.setEbookPages(pageList);
+			
+		}//while closing
+		
+		
+		
+		return ebook;
+	}//getEbookContent() closing
+	
+	
 	public void creatChapter(EbookPageBean ebookPageBean) {
 
 		MongoCollection<Document> coll = null;
@@ -180,4 +245,8 @@ public class EbookMongoDao {
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_MONGO_COLLECTION);
 	}
 
-}
+	
+
+	
+
+}//class closing

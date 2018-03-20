@@ -18,7 +18,7 @@
 	</br>
 	<c:forEach items="${userBooks.books }" var="book" >
 	
-		<a href="" >${book.bookTitle}</a></br>
+		<a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}" >${book.bookTitle}</a></br>
 	</c:forEach>
 </jsp:body>
  </defaultTemplate:defaultDecorator>

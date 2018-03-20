@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sm.portal.ebook.model.Ebook;
+import com.sm.portal.ebook.model.EbookPage;
 import com.sm.portal.ebook.model.EbookPageBean;
+import com.sm.portal.ebook.model.EbookPageDto;
 import com.sm.portal.ebook.model.UserBooks;
 import com.sm.portal.ebook.mongo.dao.EbookMongoDao;
 
@@ -47,6 +49,21 @@ public class EbookServiceImpl implements EbookService{
 
 		ebookMongoDao.updateEbookDetails(ebook);
 	}
+
+	@Override
+	public Ebook getEbookContent(Integer userId, Integer bookId) {
+
+		Ebook ebook=ebookMongoDao.getEbookContent(userId,bookId );
+		EbookPage ep=ebook.getEbookPages().get(0);
+		ebook.setDefaultPage(ep);
+		return ebook;
+	}//getEbookContent() closing
+	@Override
+	public void saveEbookPageContent(EbookPageDto eBookPageDto) {
+
+		ebookMongoDao.saveEbookPageContent(eBookPageDto);
+		
+	}//saveEbookPageContent() closing
 	
 	
 	

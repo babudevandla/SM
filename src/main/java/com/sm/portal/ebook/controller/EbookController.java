@@ -1,6 +1,8 @@
 package com.sm.portal.ebook.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,18 +15,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.sm.portal.constants.URLCONSTANT;
 import com.sm.portal.controller.EDairyController;
+import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
+import com.sm.portal.digilocker.model.FilesInfo;
+import com.sm.portal.digilocker.model.FolderInfo;
+import com.sm.portal.digilocker.service.DigilockerService;
 import com.sm.portal.digilocker.utils.DigiLockeUtils;
 import com.sm.portal.ebook.enums.BookSizeEnum;
 import com.sm.portal.ebook.enums.PageSizeEnum;
 import com.sm.portal.ebook.model.Ebook;
 import com.sm.portal.ebook.model.EbookPage;
 import com.sm.portal.ebook.model.EbookPageBean;
+import com.sm.portal.ebook.model.EbookPageDto;
 import com.sm.portal.ebook.model.UserBooks;
 import com.sm.portal.ebook.service.EbookServiceImpl;
+import com.sm.portal.edairy.model.DairyPage;
+import com.sm.portal.edairy.model.EdairyActionEnum;
+import com.sm.portal.edairy.service.EdairyServiceImpl;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.FileUploadServices;
 import com.sm.portal.service.UserService;
@@ -43,6 +55,12 @@ public class EbookController {
 	
 	@Autowired
     private UserService userService;
+	
+	@Autowired
+	DigilockerService digilockerService;
+	
+	@Autowired
+	EdairyServiceImpl edairyServiceImpl;
 	
 	@RequestMapping(value="/eBooklist", method=RequestMethod.GET)
 	public ModelAndView getEbookList(@RequestParam(name="userId", required=false) Integer userId, Principal principal){
@@ -76,12 +94,128 @@ public class EbookController {
 		return mav;
 	}//getEbookList() closing
 	
+	@RequestMapping(value="/getEbookContent", method=RequestMethod.GET)
+	public ModelAndView getEbookContent(@RequestParam Integer userId, @RequestParam Integer bookId,
+			@RequestParam(required=false) Integer  defaultPageNo){
+		ModelAndView mav = new ModelAndView("/ebook/ebook_content");
+		Gson gson = new Gson();
+		
+		Ebook ebook =ebookServiceImple.getEbookContent(userId, bookId);
+		if(defaultPageNo!=null){
+			for(EbookPage ep:ebook.getEbookPages()){
+				if(ep.getPageNo()==defaultPageNo.intValue()){
+					ebook.setDefaultPage(ep);
+					break;
+				}//if closing
+			}//for closing
+		}
+		mav.addObject("pagelist", gson.toJson(ebook.getEbookPages()));
+		mav.addObject("eBook", ebook);
+		return mav;
+	}//getEbookContent() closing
+	
+	
+	@RequestMapping(value="/editEbookContent", method=RequestMethod.GET)
+	public ModelAndView editEbookContent(@RequestParam Integer userId, 
+										 @RequestParam Integer bookId,
+										 @RequestParam Integer defaultPageNo){
+		ModelAndView mav = new ModelAndView("/ebook/edit_content");
+		Gson gson = new Gson();
+		
+		Ebook ebook =ebookServiceImple.getEbookContent(userId, bookId);
+		for(EbookPage ep:ebook.getEbookPages()){
+			if(ep.getPageNo()==defaultPageNo.intValue()){
+				ebook.setDefaultPage(ep);
+				break;
+			}//if closing
+		}//for closing
+		mav.addObject("pagelist", gson.toJson(ebook.getEbookPages()));
+		mav.addObject("eBook", ebook);
+		return mav;
+	}//getEbookContent() closing
+	
+	@RequestMapping(value="/saveEbookPageContent", method=RequestMethod.POST)
+	public ModelAndView saveEbookPageContent(@ModelAttribute("eBookPageDto") EbookPageDto eBookPageDto){
+		ModelAndView mav = new ModelAndView();
+		/*eBookPageDto.setUserId(1);
+		eBookPageDto.setBookId(60002);
+		eBookPageDto.setContent("content update-2");
+		eBookPageDto.setPageNo(2);*/
+		ebookServiceImple.saveEbookPageContent(eBookPageDto);
+		
+		
+		mav.setViewName("redirect:/sm/getEbookContent?userId="+eBookPageDto.getUserId()+"&bookId="+eBookPageDto.getBookId()+"&defaultPageNo="+eBookPageDto.getPageNo());
+		return mav;
+	}//saveEbookPageContent() closing
+	
+	
+	@RequestMapping(value = "/storeFilesInGalleryFromEbook", method = RequestMethod.POST)
+	public ModelAndView  storeFilesInGalleryFromEbook(@RequestParam("userId") Integer userId,
+			 @RequestParam("bookId") Integer bookId,
+			 @RequestParam("pageNo") Integer pageNo,
+			 @RequestParam("bookPagecontent") String pagecontent,
+			 @RequestParam("files") MultipartFile multipartList[],
+			 HttpServletRequest request) {
+		FolderInfo gallery =digilockerService.getGalleryDetails(userId);
+		String fileURL=null;
+		List<String> fileUrlList=new ArrayList<>();
+		List<FilesInfo> newFileList = new ArrayList<>();
+		FilesInfo filesInfo = null;
+		DigiLockeUtils digiLockerUtils = new DigiLockeUtils();
+		for (int i=0;i<multipartList.length;i++) {	
+            if (!multipartList[i].isEmpty()) {
+            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
+            	if(fileURL!=null){
+	            	fileUrlList.add(fileURL);
+	            	filesInfo =new FilesInfo();
+	            	String fileName = multipartList[i].getOriginalFilename();
+	        		//String filePath = multipartList[i]+fileName.replaceAll(" ", "_");
+	            	filesInfo.setFileId(digiLockerUtils.gerUniqueKey(request));
+	            	filesInfo.setFileName(fileName);
+	            	filesInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
+	            	//String filePath = gallery.getFolderPath()+fileName.replaceAll(" ", "_");
+	            	filesInfo.setFilePath(gallery.getFolderPath()+fileName.replaceAll(" ", "_"));
+	            	filesInfo.setFileStatus(DigiLockerStatusEnum.ACTIVE.toString());
+	            	filesInfo.setCreateddate(new Date());
+	            	filesInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
+	            	filesInfo.setFileType(digiLockerUtils.getFileType(multipartList[i]));
+	            	newFileList.add(filesInfo);
+            	}//if closing
+            }//if closing
+		}//for closing
+		if(fileUrlList.size()>0){
+			gallery.setLocalFilesInfo(newFileList);
+			digilockerService.storeNewFileOrFolderInfo(gallery, gallery.getFolderId(), userId);
+			
+			String updatedPageContent =edairyServiceImpl.getContentAfterFileUpload(pagecontent, fileUrlList);
+			/*EbookPage page=new EbookPage();
+			page.setPageNo(pageNo);
+			page.setContent(updatedPageContent);*/
+			
+			EbookPageDto ebookPageDto =new EbookPageDto();
+			ebookPageDto.setUserId(userId);
+			ebookPageDto.setBookId(bookId);
+			ebookPageDto.setContent(updatedPageContent);
+			ebookPageDto.setPageNo(pageNo);
+			
+			ebookServiceImple.saveEbookPageContent(ebookPageDto);
+		}
+		ModelAndView mvc= new ModelAndView();
+		EdairyActionEnum.EDIT_PAGE.toString();
+		mvc.setViewName("redirect:/sm/editEbookContent?userId="+userId+"&bookId="+bookId+"&defaultPageNo="+pageNo);
+		
+		return mvc;
+	}//storeFilesInGalleryFromEbook() closing
+	
 	@RequestMapping(value="/updateEbookDetails", method=RequestMethod.POST)
 	public ModelAndView updateEbookDetails(@ModelAttribute Ebook ebook){
 		ModelAndView mav = new ModelAndView();
 		ebookServiceImple.updateEbookDetails(ebook);
 		return mav;
 	}//getEbookList() closing
+	
+
+	
 	
 	@RequestMapping(value="/creatChapter", method=RequestMethod.POST)
 	public ModelAndView creatChapter(@ModelAttribute EbookPageBean ebookPageBean){
@@ -106,4 +240,5 @@ public class EbookController {
 		return mav;
 		
 	}//creatChapter() closing
+	
 }//class closing

@@ -16,6 +16,7 @@ public class Ebook implements Serializable {
 	private Integer bookSize;
 	private Integer pageSize;
 	List<EbookPage> ebookPages;
+	private EbookPage defaultPage;
 	
 	public Integer getBookId() {
 		return bookId;
@@ -58,6 +59,12 @@ public class Ebook implements Serializable {
 	}
 	public void setEbookPages(List<EbookPage> ebookPages) {
 		this.ebookPages = ebookPages;
+	}
+	public EbookPage getDefaultPage() {
+		return defaultPage;
+	}
+	public void setDefaultPage(EbookPage defaultPage) {
+		this.defaultPage = defaultPage;
 	}
 	
 	
