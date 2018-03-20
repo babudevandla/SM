@@ -15,5 +15,10 @@
 <jsp:body>
 	Ebook home page
 	<a href="${contextPath}/sm/creatEbook?userId=${userId}">Create Book</a>
+	</br>
+	<c:forEach items="${userBooks.books }" var="book" >
+	
+		<a href="" >${book.bookTitle}</a></br>
+	</c:forEach>
 </jsp:body>
  </defaultTemplate:defaultDecorator>

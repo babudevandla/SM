@@ -23,6 +23,7 @@ import com.sm.portal.ebook.enums.PageSizeEnum;
 import com.sm.portal.ebook.model.Ebook;
 import com.sm.portal.ebook.model.EbookPage;
 import com.sm.portal.ebook.model.EbookPageBean;
+import com.sm.portal.ebook.model.UserBooks;
 import com.sm.portal.ebook.service.EbookServiceImpl;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.FileUploadServices;
@@ -47,8 +48,10 @@ public class EbookController {
 	public ModelAndView getEbookList(@RequestParam(name="userId", required=false) Integer userId, Principal principal){
 		ModelAndView mav = new ModelAndView("/ebook/ebook_home");
 		Users user =userService.findUserByUserName(principal.getName());
-		List<Ebook> ebookList = ebookServiceImple.getEbookList(userId);
-		mav.addObject("EbookList", ebookList);
+		if(userId==null)userId=user.getUserId();
+		UserBooks userBooks = ebookServiceImple.getEbookList(userId);
+		//mav.addObject("EbookList", userBooks.getBooks());
+		mav.addObject("userBooks",userBooks);
 		if(user.getUserId()!=null)mav.addObject("userId",user.getUserId());
 		else mav.addObject("userId",userId);
 		return mav;

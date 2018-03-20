@@ -2,7 +2,7 @@ package com.sm.portal.ebook.model;
 
 import java.util.Date;
 
-public class BookVo {
+public class UserBook {
 
 	private Integer bookId;
 	private String bookTitle;

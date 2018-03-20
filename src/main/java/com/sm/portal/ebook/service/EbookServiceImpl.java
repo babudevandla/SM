@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.sm.portal.ebook.model.Ebook;
 import com.sm.portal.ebook.model.EbookPageBean;
+import com.sm.portal.ebook.model.UserBooks;
 import com.sm.portal.ebook.mongo.dao.EbookMongoDao;
 
 @Service
@@ -15,10 +16,10 @@ public class EbookServiceImpl implements EbookService{
 	@Autowired
 	public EbookMongoDao ebookMongoDao;
 	@Override
-	public List<Ebook> getEbookList(Integer userId) {
+	public UserBooks getEbookList(Integer userId) {
 
-		ebookMongoDao.getEbookList(userId);
-		return null;
+		UserBooks userBooks = ebookMongoDao.getEbookList(userId);
+		return userBooks;
 	}
 
 	@Override
