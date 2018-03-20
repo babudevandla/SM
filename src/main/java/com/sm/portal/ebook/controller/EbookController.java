@@ -71,7 +71,7 @@ public class EbookController {
 		ModelAndView mav = new ModelAndView();
 		DigiLockeUtils digiLockerUtils = new DigiLockeUtils();
 		eBook.setBookId(digiLockerUtils.gerUniqueKey(request));
-		ebookServiceImple.createEbook(eBook);
+		ebookServiceImple.createUserBook(eBook);
 		mav.setViewName("redirect:/sm/eBooklist?userId="+eBook.getUserId());
 		return mav;
 	}//getEbookList() closing

@@ -8,7 +8,7 @@ import com.sm.portal.ebook.model.UserBooks;
 
 public interface EbookService {
 	public UserBooks getEbookList(Integer userId);
-	public void createEbook(Ebook ebook);
+	public void createUserBook(Ebook ebook);
 	void creatChapter(EbookPageBean ebookPageBean);
 	void updateChapter(EbookPageBean ebookPageBean);
 	void updateEbookPage(EbookPageBean ebookPageBean);

@@ -7,6 +7,7 @@ public class EbookPage implements Serializable{
 	private Integer pageNo;
 	private String chapterName;
 	private String chaperType;
+	private String content;
 	
 	public Integer getPageNo() {
 		return pageNo;
@@ -25,6 +26,12 @@ public class EbookPage implements Serializable{
 	}
 	public void setChaperType(String chaperType) {
 		this.chaperType = chaperType;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 	

@@ -15,8 +15,10 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.sm.portal.constants.CollectionsConstant;
+import com.sm.portal.ebook.enums.EbookChapterTypeEnum;
 import com.sm.portal.ebook.enums.EbookStatusEnum;
 import com.sm.portal.ebook.model.Ebook;
+import com.sm.portal.ebook.model.EbookPage;
 import com.sm.portal.ebook.model.EbookPageBean;
 import com.sm.portal.ebook.model.UserBook;
 import com.sm.portal.ebook.model.UserBooks;
@@ -56,14 +58,51 @@ public class EbookMongoDao {
 		return userBooks;
 	}//getEbookList() closing
 
-	public void createEbook(Ebook ebook) {
+	public void createUserBook(Ebook ebook) {
 
 		MongoCollection<Document> coll = null;
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_MONGO_COLLECTION);
 		Bson filter=Filters.and(Filters.eq("userId",ebook.getUserId()));
 		Document userBookDoc =this.getUserBookDocument(ebook,coll);
 		coll.findOneAndUpdate(filter,new Document("$set", userBookDoc),new FindOneAndUpdateOptions().upsert(true)) ;
+		this.createEbook(ebook);
 	}
+
+	public void createEbook(Ebook ebook) {
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_LIST_MONGO_COLLECTON);
+		Bson filter=Filters.and(Filters.eq("userId",ebook.getUserId()), Filters.eq("bookId",ebook.getBookId()));
+		
+		Document ebookDoc = new Document();
+		ebookDoc.put("userId", ebook.getUserId());
+		ebookDoc.put("bookId", ebook.getBookId());
+		ebookDoc.put("bookTitle", ebook.getBookTitle());
+		ebookDoc.put("coverImage", ebook.getCoverImage());
+		ebookDoc.put("bookSize", ebook.getBookSize());
+		ebookDoc.put("pageSize", ebook.getPageSize());
+		
+		List<Document> ebookPageDocs = new ArrayList<>();
+		
+		Document ebookPageDoc =null;
+		
+		for(int i=1;i<=ebook.getBookSize();i++){
+			ebookPageDoc =new Document();
+			ebookPageDoc.put("pageNo", i);
+			ebookPageDoc.put("chapterName", "Chapter-1");
+			ebookPageDoc.put("content", "");
+			if(i==1)				
+				ebookPageDoc.put("chaperType", EbookChapterTypeEnum.CHAPTER_NAME.toString());
+			else
+				ebookPageDoc.put("chaperType", EbookChapterTypeEnum.PAGE_CONTENT.toString());
+			ebookPageDocs.add(ebookPageDoc);
+			
+		}//for closing
+		
+		
+		ebookDoc.put("ebookPages", ebookPageDocs);
+		coll.findOneAndUpdate(filter,new Document("$set", ebookDoc),new FindOneAndUpdateOptions().upsert(true)) ;
+		
+	}//createEbook
 
 	@SuppressWarnings("unchecked")
 	private Document getUserBookDocument(Ebook ebook, MongoCollection<Document> coll) {

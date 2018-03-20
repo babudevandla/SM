@@ -23,9 +23,9 @@ public class EbookServiceImpl implements EbookService{
 	}
 
 	@Override
-	public void createEbook(Ebook ebook) {
+	public void createUserBook(Ebook ebook) {
 
-		ebookMongoDao.createEbook(ebook);
+		ebookMongoDao.createUserBook(ebook);
 	}
 	@Override
 	public void creatChapter(EbookPageBean ebookPageBean) {

@@ -16,6 +16,7 @@ public class Ebook implements Serializable {
 	private Integer bookSize;
 	private Integer pageSize;
 	List<EbookPage> ebookPages;
+	
 	public Integer getBookId() {
 		return bookId;
 	}
