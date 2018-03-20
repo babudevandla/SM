@@ -14,5 +14,6 @@
 <jsp:attribute name="title">E-Diary</jsp:attribute>
 <jsp:body>
 	Ebook home page
+	<a href="${contextPath}/sm/creatEbook?userId=${userId}">Create Book</a>
 </jsp:body>
  </defaultTemplate:defaultDecorator>

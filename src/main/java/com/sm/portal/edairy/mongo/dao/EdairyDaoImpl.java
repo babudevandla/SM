@@ -118,15 +118,10 @@ public class EdairyDaoImpl implements EdairyDao{
 		boolean isPageUpdated=false;
 		MongoCollection<Document> coll = null;
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EDAIRY);
-		//cursor = coll.find(Filters.and(Filters.eq("userId",userId), Filters.eq("dairyId",dairyId))).iterator();
 		DairyInfo dairyInfoVo =this.getDairyInfo(userId, dairyId);
 		Bson filter=Filters.and(Filters.eq("userId",userId), Filters.eq("dairyId",dairyId));
 		Date lastModifiedDate = new Date();
 		dairyInfoVo.setLastModifiedDate(lastModifiedDate);
-		/*FindIterable<Document> DairyInfoVos=coll.find(filter);
-		if(null != DairyInfoVos){
-			for (Document cur :  DairyInfoVos ) {
-				DairyInfo dairyInfoVo = gson.fromJson(cur.toJson(), DairyInfo.class);*/
 				List<DairyPage> pagesList=dairyInfoVo.getPages();
 				for(DairyPage page: pagesList){
 					if(page.getPageNo()==dairyPage.getPageNo()){
@@ -134,11 +129,8 @@ public class EdairyDaoImpl implements EdairyDao{
 						isPageUpdated=true;
 						break;
 					}
-					
 				}//for closing
 				Document dairyInfoVoDoc =this.getEdairyDocument(dairyInfoVo);
-				/*String dairyInfoVoJson = gson.toJson(dairyInfoVo);
-				Document dairyInfoVoJsonDoc = Document.parse(dairyInfoVoJson);*/
 				coll.findOneAndUpdate(filter,new Document("$set", dairyInfoVoDoc),new FindOneAndUpdateOptions().upsert(true)) ;
 				
 			//}//outer for closing
