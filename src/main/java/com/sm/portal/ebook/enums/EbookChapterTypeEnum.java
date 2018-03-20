@@ -1,4 +1,4 @@
-package com.sm.portal.ebook.model;
+package com.sm.portal.ebook.enums;
 
 import com.sm.portal.digilocker.model.DigiLockerEnum;
 
