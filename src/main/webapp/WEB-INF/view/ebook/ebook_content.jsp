@@ -82,13 +82,13 @@
 </script>
 <style type="text/css">
 
-#pageContent{
+#ebookPageContent{
 	width: 100%;
     background-color: #FBF6F5;
     padding-left: 15px;
     border-color: darkgrey;
     /* color: black; */
-    border-style: solid;
+    border-style: dotted;
     border-top-width: 11px;
     padding-top: 18px;
     padding-left: 24px;

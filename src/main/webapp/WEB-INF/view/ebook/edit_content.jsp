@@ -32,7 +32,7 @@
 	    </tbody>
     </table>
  
- <form:form action="${contextPath}/sm/saveEbookPageContent"  id="saveEbookPageContentId" method="post" modelAttribute="eBookPageDto">
+ <form:form action="${contextPath}/sm/saveEbookPageContent"  id="saveEbookPageId" method="post" modelAttribute="eBookPageDto">
  	<%-- <form:hidden path="${userId}"/>
  	<form:hidden path="${ dairyId}"/> --%>
  	<input name="upload" type="button"	class="btn btn-primary uploadMultipleFiles1"  value="Uploadfiles" />

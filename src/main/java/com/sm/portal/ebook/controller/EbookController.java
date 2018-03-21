@@ -136,7 +136,7 @@ public class EbookController {
 	
 	@RequestMapping(value="/saveEbookPageContent", method=RequestMethod.POST)
 	public ModelAndView saveEbookPageContent(@ModelAttribute("eBookPageDto") EbookPageDto eBookPageDto){
-		ModelAndView mav = new ModelAndView();
+		ModelAndView mav = new ModelAndView("/ebook/edit_content");
 		/*eBookPageDto.setUserId(1);
 		eBookPageDto.setBookId(60002);
 		eBookPageDto.setContent("content update-2");
