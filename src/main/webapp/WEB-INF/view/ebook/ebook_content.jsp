@@ -94,6 +94,12 @@
     padding-left: 24px;
     padding-right: 18px;
 }
+div#ebookPageContent {
+    /* float: left; */
+    /* width: 967px; */
+    overflow-y: auto;
+    height: 600px;
+}
 </style>
  <div class="create-post">
    <div class="row">
