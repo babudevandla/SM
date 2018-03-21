@@ -48,13 +48,14 @@
               </div>
               </form>
               
-            </div>
+            </div><br/>
             <div align="right">
             	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=ALL" > ALL</a>  &nbsp; | &nbsp; &nbsp;
             	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=IMAGE" ><i class="fa fa-image" aria-hidden="true"></i> IMAGE</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
             	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=AUDIO" ><i class="fa fa-file-audio-o" aria-hidden="true"></i> AUDIO</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
             	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=VIDEO" ><i class="fa fa-file-video-o" aria-hidden="true"></i> VIDEO</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
-	            <a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=DOCUMENT" ><i class="fa fa-file-text" aria-hidden="true"></i> DOCUMENTS</a> 
+	            <a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=DOCUMENT" ><i class="fa fa-file-text" aria-hidden="true"></i> DOCUMENTS</a> &nbsp; &nbsp;|  &nbsp; &nbsp;
+	            <a href="${contextPath}/sm/getGallerContent?userid=${userid}&fileStatus=DELETED" ><img alt="" src="${contextPath}/resources/default/images/bin-blue-icon.png"> RECYCLE BIN</a> 
             </div>
         </div>
          
@@ -63,18 +64,21 @@
    	<div class="row js-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": ".grid-sizer", "percentPosition": true }'>
       <c:forEach items="${galleryContent}" var="files" varStatus="status">
     	<div class="grid-item col-md-4 col-sm-4" >
-          	<div class="media-grid" style="height: 225px;">
+          	<div class="media-grid" style="height: 240px;">
                   <div class="img-wrapper" data-toggle="modal"  data-target=".modal-${status.count}">
                   <c:choose>
 				      <c:when test="${files.fileType eq 'IMAGE' }">
                     		<img src="${WebDav_Server_Url}${files.filePath}" alt="" class="img-responsive post-image" style="height: 134px;"/>
                    	  </c:when> 
-                   	  <c:when test="${files.fileType eq 'DOCUMENT' }">
-              				<embed src="${WebDav_Server_Url}${files.filePath}" style="height: 134px;">
+                   	  <c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'pdf' }">
+              				<embed src="${WebDav_Server_Url}${files.filePath}" style="height: 134px;"/>
+              		  </c:when>
+              		  <c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'xlsx' }">
+              				<iframe src="${WebDav_Server_Url}${files.filePath}" ></iframe>
               		  </c:when>
               		  <c:when test="${files.fileType eq 'VIDEO' }">
               				<video  height="134" controls>
-							  <source src="${WebDav_Server_Url}${files.filePath}" type="video/mp4" style="height: 134px;">
+							  <source src="${WebDav_Server_Url}${files.filePath}" type="video/mp4" style="height: 134px;"/>
 							</video>
               			</c:when>
               			<c:when test="${files.fileType eq 'AUDIO' }">
@@ -83,7 +87,7 @@
 							</audio>
               			</c:when>
               			<c:when test="${files.fileType eq 'doc' }">
-              				<img alt="" src="${contextPath}/resources/default/images/doc_icon.png" style="height: 134px;">
+              				<img alt="" src="${contextPath}/resources/default/images/doc_icon.png" style="height: 134px;"/>
               			</c:when>
               			<c:otherwise>
               				<i class="fa fa-file" aria-hidden="true"></i>
@@ -133,10 +137,12 @@
 								  <source src="${WebDav_Server_Url}${files.filePath}" type="audio/mpeg"  style="height: 134px;">
 								</audio>
 	              			</c:when>
-	              			<c:when test="${files.fileType eq 'DOCUMENT' }">
-	              				<%-- <iframe src="${WebDav_Server_Url}${files.filePath}"></iframe> --%>
-	              				<embed src="${WebDav_Server_Url}${files.filePath}"   frameborder="0" width="100%" height="600px">
+	              			<c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'pdf' }">
+	              				<embed src="${WebDav_Server_Url}${files.filePath}"   frameborder="0" width="100%" height="600px"/>
 	              		  </c:when>
+	              		  <c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'xlsx' }">
+              				<iframe src="${WebDav_Server_Url}${files.filePath}" ></iframe>
+              		  	  </c:when>
                       </c:choose> 
                      </div>
                    </div>

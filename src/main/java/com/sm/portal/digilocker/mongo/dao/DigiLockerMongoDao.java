@@ -87,8 +87,10 @@ public class DigiLockerMongoDao {
 							filesInfo.setFileStatus(fileDocument.getString("fileStatus"));
 							//filesInfo.setCreateddate(fileDocument.getDate("createddate"));
 							//filesInfo.setUpdateddate(fileDocument.getDate("updateddate"));
-							
-							if(filesInfo.getFileName().endsWith(".jpg") || filesInfo.getFileName().endsWith(".png") || 
+							filesInfo.setFileType(fileDocument.getString("fileType"));
+							filesInfo.setStatusAtGallery(fileDocument.getString("statusAtGallery"));
+							filesInfo.setFileExtension(fileDocument.getString("fileExtension"));
+							/*if(filesInfo.getFileName().endsWith(".jpg") || filesInfo.getFileName().endsWith(".png") || 
 									filesInfo.getFileName().endsWith(".jpeg") ||  filesInfo.getFileName().endsWith(".gif")){
 								filesInfo.setFileType("img");
 							}else if(filesInfo.getFileName().endsWith(".pdf") ){
@@ -99,7 +101,7 @@ public class DigiLockerMongoDao {
 								filesInfo.setFileType("txt");
 							}else if(filesInfo.getFileName().endsWith(".doc") || filesInfo.getFileName().endsWith(".docx") ){
 								filesInfo.setFileType("doc");
-							}
+							}*/
 							filesInfoList.add(filesInfo);
 						}
 					}//inner for closing
@@ -333,7 +335,7 @@ public class DigiLockerMongoDao {
 */
 	
 	
-	public List<GalleryDetails> getGallerContent(Integer userId, String filesType) throws ParseException {
+	public List<GalleryDetails> getGallerContent(Integer userId, String filesType, String fileStatus) throws ParseException {
 		List<GalleryDetails> gallerInfo = new ArrayList<GalleryDetails>();
 		AggregateIterable<Document> folderInfoVos=null;
 		MongoCollection<Document> coll = null;
@@ -348,6 +350,10 @@ public class DigiLockerMongoDao {
 		if(filesType!=null && !filesType.equals("ALL")){
 			Document match2 = new Document();
 			match2.append("$match", new Document("foldersList.files.fileType", filesType));
+			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2));
+		}else if(fileStatus!=null){
+			Document match2 = new Document();
+			match2.append("$match", new Document("foldersList.files.fileStatus", fileStatus));
 			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2));
 		}else{
 			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2));

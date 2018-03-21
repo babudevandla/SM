@@ -373,7 +373,7 @@ public class FileManagementController  extends CommonController{
 		ModelAndView mvc = new ModelAndView("/customer/gallery_content");
 		
 		try {
-			List<GalleryDetails> gallerylist = digilockerService.getGallerContent(userid, null);
+			List<GalleryDetails> gallerylist = digilockerService.getGallerContent(userid, null,null);
 			mvc.addObject("galleryContent", gallerylist);
 			mvc.addObject("fileType", "ALL");
 			mvc.addObject("fid", fid);
@@ -388,10 +388,11 @@ public class FileManagementController  extends CommonController{
 	
 	@GetMapping(value="/getGallerContent")
 	public ModelAndView getGallerContent(@RequestParam Integer userid,Principal principal,
-			@RequestParam(name="filesType", required=false) String filesType,HttpServletRequest request){
+			@RequestParam(name="filesType", required=false) String filesType,@RequestParam(name="fileStatus", required=false) String fileStatus
+			,HttpServletRequest request){
 		ModelAndView mvc = new ModelAndView("/customer/gallery_content");
 		try {
-			List<GalleryDetails> gallerylist = digilockerService.getGallerContent(userid, filesType);
+			List<GalleryDetails> gallerylist = digilockerService.getGallerContent(userid, filesType,fileStatus);
 			mvc.addObject("galleryContent", gallerylist);
 			mvc.addObject("fileType", filesType);
 			mvc.addObject("userid", userid);

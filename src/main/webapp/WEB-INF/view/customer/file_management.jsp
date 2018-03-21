@@ -153,30 +153,38 @@
 				                <td>
 				                	<a href="${WEBDAV_SERVER_URL}${files.filePath}"  target="_blank" style="cursor: pointer;"	class="user-link">
 				                		<c:choose>
-				                			<c:when test="${files.fileType eq 'img' }">
-				                				<img src="${WebDav_Server_Url}${files.filePath}" alt="" class="profile-photo-sm pull-left" style="height: 37px; width: 45px;border-radius: 26%;"/>
+				                			<c:when test="${files.fileType eq 'IMAGE' }">
+				                				<img src="${WebDav_Server_Url}${files.filePath}" alt="" class="digilocker-photo-sm " />
 				                				<%-- <img alt="" src="${contextPath}/resources/default/images/img_icon.png" style="width: 20px;margin-top: -3px;"> --%>
 				                			</c:when>
-				                			<c:when test="${files.fileType eq 'pdf' }">
+				                			<c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'pdf' }">
 				                				<!-- <i class="fa fa-file-pdf-o" aria-hidden="true"></i> -->
 				                				<img alt="" src="${contextPath}/resources/default/images/pdf_icon.png" style="width: 20px;margin-top: -3px;">
 				                			</c:when>
-				                			<c:when test="${files.fileType eq 'xls' }">
-				                				<!-- <i class="fa fa-file-excel-o" aria-hidden="true"></i> -->
-				                				<img alt="" src="${contextPath}/resources/default/images/excel_icon.png" style="width: 25px;margin-top: -3px;">
+				                			<c:when test="${files.fileType eq 'VIDEO' }">
+				                				<i class="fa fa-file-video-o" aria-hidden="true"></i>
+				                				<%-- <img alt="" src="${contextPath}/resources/default/images/excel_icon.png" style="width: 25px;margin-top: -3px;"> --%>
 				                			</c:when>
-				                			<c:when test="${files.fileType eq 'doc' }">
+				                			<c:when test="${files.fileType eq 'AUDIO' }">
+				                				<i class="fa fa-file-audio-o" aria-hidden="true"></i>
+				                				<%-- <img alt="" src="${contextPath}/resources/default/images/excel_icon.png" style="width: 25px;margin-top: -3px;"> --%>
+				                			</c:when>
+				                			<c:when test="${files.fileExtension eq 'xls' || files.fileExtension eq 'xlsx' }">
+				                				 <img alt="" src="${contextPath}/resources/default/images/excel_icon.png" style="width: 25px;margin-top: -3px;"> 
+				                			</c:when>
+				                			<c:when test="${files.fileExtension eq 'doc' }">
 				                				<img alt="" src="${contextPath}/resources/default/images/doc_icon.png" style="width: 25px;margin-top: -3px;">
 				                			</c:when>
-				                			<c:when test="${files.fileType eq 'txt' }">
+				                			<c:when test="${files.fileExtension eq 'txt' }">
 				                				<img alt="" src="${contextPath}/resources/default/images/text-icon.png" style="width: 25px;margin-top: -3px;"> 
 				                			</c:when>
 				                			<c:otherwise>
 				                				<i class="fa fa-file" aria-hidden="true"></i>
 				                			</c:otherwise>
 				                		</c:choose>
+				                		${files.fileName}
                 					</a>
-                					<span>${files.fileName}</span>
+                					
                 				</td>
                 				<%-- <td>
                 					<a href="${contextPath}/sm/deleteOrHidefile?folderId=${folders.fId}&deleteInfo=File&&parentId=${folderInfo.fId}&userid=${userid}&action=Delete&fileId=${files.fileId}" style="cursor: pointer;"	class="user-link">

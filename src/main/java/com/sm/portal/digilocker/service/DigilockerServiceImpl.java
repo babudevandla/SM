@@ -76,9 +76,9 @@ public class DigilockerServiceImpl implements DigilockerService{
 
 
 	@Override
-	public List<GalleryDetails> getGallerContent(Integer userid, String filesType) throws ParseException {
+	public List<GalleryDetails> getGallerContent(Integer userid, String filesType,String fileStatus) throws ParseException {
 
-		List<GalleryDetails> galleryContent = digiLockerMongoDao.getGallerContent(userid, filesType);
+		List<GalleryDetails> galleryContent = digiLockerMongoDao.getGallerContent(userid, filesType,fileStatus);
 		
 		return galleryContent;
 	}//getGallerContent() closing

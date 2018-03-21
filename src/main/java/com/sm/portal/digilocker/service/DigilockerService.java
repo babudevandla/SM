@@ -23,7 +23,7 @@ public interface DigilockerService {
 
 	public void storeFolderInfo(List<FolderInfo> folderlist, Integer userId);
 
-	public List<GalleryDetails> getGallerContent(Integer userid, String filesType) throws ParseException;
+	public List<GalleryDetails> getGallerContent(Integer userid, String filesType, String fileStatus) throws ParseException;
 
 	public void storeFilesInGallery(FolderInfo newFolderInfo, Integer userId);
 
