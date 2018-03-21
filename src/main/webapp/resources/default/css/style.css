@@ -155,7 +155,9 @@ section .wrapper{
 }
 
 .btn-secondary{
-	background: linear-gradient(to bottom, rgba(109,110,113,1), rgba(0,0,0,1));
+	/* background: linear-gradient(to bottom, rgba(109,110,113,1), rgba(0,0,0,1)); */
+    background-color: #6c757d;
+    border-color: #6c757d;
 	padding: 0 40px;
 	border: none;
 	min-height: 36px;
@@ -1229,8 +1231,8 @@ ul.online-users li span.online-dot{
 
 .people-nearby .nearby-user{
   padding: 20px 0;
-  border-top: 1px solid #f1f2f2;
-  border-bottom: 1px solid #f1f2f2;
+  border-top: 1px solid green;
+  /* border-bottom: 1px solid #f1f2f2; */
   margin-bottom: 20px;
 }
 

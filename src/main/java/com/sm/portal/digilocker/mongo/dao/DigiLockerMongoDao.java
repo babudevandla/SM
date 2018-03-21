@@ -1,6 +1,9 @@
 package com.sm.portal.digilocker.mongo.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.google.gson.Gson;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -22,6 +26,7 @@ import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
 import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
 import com.sm.portal.digilocker.model.FolderInfoVo;
+import com.sm.portal.digilocker.model.GalleryDetails;
 import com.sm.portal.mongo.MongoDBUtil;
 
 
@@ -294,7 +299,7 @@ public class DigiLockerMongoDao {
 		logger.info(" saved the data to the collection ");
 	}
 
-	public FolderInfo getGallerContent(Integer userId, String filesType) {
+	/*public FolderInfo getGallerContent(Integer userId, String filesType) {
 		FolderInfo gallerInfo = new FolderInfo();
 		List<FilesInfo> galleryFiles = new ArrayList<>();
 		
@@ -325,6 +330,66 @@ public class DigiLockerMongoDao {
 		gallerInfo.setFiles(galleryFiles);
 		return gallerInfo;
 	}//getGallerContent() closing
+*/
+	
+	
+	public List<GalleryDetails> getGallerContent(Integer userId, String filesType) throws ParseException {
+		List<GalleryDetails> gallerInfo = new ArrayList<GalleryDetails>();
+		AggregateIterable<Document> folderInfoVos=null;
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.DIGILOCKER_MONGO_COLLETION);
+		
+		Document match = new Document();
+		match.append("$match", new Document("userId", userId));
+		Document unwind1 = new Document();
+		unwind1.append("$unwind", "$foldersList");
+		Document unwind2 = new Document();
+		unwind2.append("$unwind", "$foldersList.files");
+		if(filesType!=null && !filesType.equals("ALL")){
+			Document match2 = new Document();
+			match2.append("$match", new Document("foldersList.files.fileType", filesType));
+			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2));
+		}else{
+			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2));
+		}
+		if(null != folderInfoVos){
+			for (Document cur :  folderInfoVos ) {
+				GalleryDetails details=setGalleryDetailsData(cur);
+				gallerInfo.add(details);
+				
+			}//for closing
+		}//if closing
+		
+		return gallerInfo;
+	}//getGallerContent() closing
+	
+	private GalleryDetails setGalleryDetailsData(Document cur) throws ParseException {
+		GalleryDetails details=new GalleryDetails();
+		//folder details
+		Document folderDoc = (Document) cur.get("foldersList");
+		details.setFolderId(folderDoc.getInteger("folderId"));
+		details.setFolderName(folderDoc.getString("folderName"));
+		details.setFolderPath(folderDoc.getString("folderPath"));
+		details.setFolderNamePath(folderDoc.getString("folderNamePath"));
+		details.setFolderStatus(folderDoc.getString("folderStatus"));
+		details.setOrigin(folderDoc.getString("origin"));
+		details.setParentId(folderDoc.getInteger("parentId"));
+		
+		Document fileDoc =(Document) folderDoc.get("files");
+		// files details
+		details.setFileId(fileDoc.getInteger("fileId"));
+		details.setFileName(fileDoc.getString("fileName"));
+		details.setDumy_filename(fileDoc.getString("dumy_filename"));
+		details.setFilePath(fileDoc.getString("filePath"));
+		details.setFileStatus(fileDoc.getString("fileStatus"));
+		details.setFileType(fileDoc.getString("fileType"));
+		SimpleDateFormat format=new SimpleDateFormat();
+	//	details.setCreateddate(format.parse(fileDoc.getString("createddate")));
+		details.setStatusAtGallery(fileDoc.getString("statusAtGallery"));
+		details.setFileExtension(fileDoc.getString("fileExtension"));
+		
+		return details;
+	}
 
 	public FolderInfo getGalleryDetails(Integer userId) {
 

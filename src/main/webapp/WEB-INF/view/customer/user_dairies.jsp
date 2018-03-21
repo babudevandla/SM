@@ -17,13 +17,13 @@
    	<div class="col-md-3 col-sm-3">
          <div class="form-group">
            	<a href="${contextPath}/sm/create_edairy" class="btn btn-primary pull-right">
-           		 Create New E-Diary 
+           		 <i class="fa fa-calendar" aria-hidden="true"></i> &nbsp;Create New E-Diary 
            	</a>
          </div>
          </div>
        </div>
    	</div>
-    <table id="example" class="table  table-bordered" cellspacing="0" style="width: 100%">
+   <%--  <table id="example" class="table  table-bordered" cellspacing="0" style="width: 100%">
         <tbody>
         <c:forEach items="${userDairies.dairyList}" var="dairy" varStatus="status">
             <tr>            
@@ -35,6 +35,34 @@
             </tr>
           </c:forEach>  
        </tbody>
-    </table>  
+    </table>   --%>
+     <div class="people-nearby">
+       <c:forEach items="${userDairies.dairyList}" var="dairy" varStatus="status">
+         <div class="nearby-user">
+           <div class="row">
+             <div class="col-md-3 col-sm-3">
+              <a href="${contextPath}/sm/getUserDairyCoverPage/${userDairies.userId}/${dairy.dairyId}">
+             	 <img src="${contextPath}/resources/default/images/diary_icon.png" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+              </a> 
+             </div>
+             <div class="col-md-9 col-sm-9">
+             	<h5><a href="${contextPath}/sm/getUserDairyCoverPage/${userDairies.userId}/${dairy.dairyId}" class="profile-link">${dairy.name}</a></h5>
+               <p><f:formatDate value="${dairy.createdDate}" type="both"/> </p>
+               <c:choose>
+               		<c:when test="${dairy.status eq 'ACTIVE'}">
+               			<span class="label label-success">${dairy.status}</span>
+               		</c:when>
+               		<c:when test="${dairy.status eq 'HIDE'}">
+               			<span class="label label-warning">${dairy.status}</span>
+               		</c:when>
+               		<c:otherwise>
+               			<span class="label label-danger">${dairy.status}</span>
+               		</c:otherwise>
+               </c:choose>
+             </div>
+           </div>
+         </div>
+       </c:forEach>
+       </div>
 </jsp:body>
  </defaultTemplate:defaultDecorator>

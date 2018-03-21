@@ -1,5 +1,6 @@
 package com.sm.portal.digilocker.service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
+import com.sm.portal.digilocker.model.GalleryDetails;
 import com.sm.portal.digilocker.mongo.dao.DigiLockerMongoDao;
 
 @Service
@@ -74,10 +76,9 @@ public class DigilockerServiceImpl implements DigilockerService{
 
 
 	@Override
-	public FolderInfo getGallerContent(Integer userid, String filesType) {
+	public List<GalleryDetails> getGallerContent(Integer userid, String filesType) throws ParseException {
 
-		FolderInfo galleryContent = null;
-		galleryContent =digiLockerMongoDao.getGallerContent(userid, filesType);
+		List<GalleryDetails> galleryContent = digiLockerMongoDao.getGallerContent(userid, filesType);
 		
 		return galleryContent;
 	}//getGallerContent() closing

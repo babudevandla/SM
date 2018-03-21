@@ -1,3 +1,7 @@
+<%@ page import="com.sm.portal.constants.WebDavServerConstant" %>
+<% 
+	pageContext.setAttribute("WebDav_Server_Url", WebDavServerConstant.WEBDAV_SERVER_URL);
+%>
 <%@ page pageEncoding="ISO-8859-1"  contentType="text/html; charset=UTF-8" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -150,7 +154,7 @@
 				                	<a href="${WEBDAV_SERVER_URL}${files.filePath}"  target="_blank" style="cursor: pointer;"	class="user-link">
 				                		<c:choose>
 				                			<c:when test="${files.fileType eq 'img' }">
-				                				<i class="icon ion-images"></i>
+				                				<img src="${WebDav_Server_Url}${files.filePath}" alt="" class="profile-photo-sm pull-left" style="height: 37px; width: 45px;border-radius: 26%;"/>
 				                				<%-- <img alt="" src="${contextPath}/resources/default/images/img_icon.png" style="width: 20px;margin-top: -3px;"> --%>
 				                			</c:when>
 				                			<c:when test="${files.fileType eq 'pdf' }">
@@ -171,8 +175,8 @@
 				                				<i class="fa fa-file" aria-hidden="true"></i>
 				                			</c:otherwise>
 				                		</c:choose>
-											${files.fileName}
                 					</a>
+                					<span>${files.fileName}</span>
                 				</td>
                 				<%-- <td>
                 					<a href="${contextPath}/sm/deleteOrHidefile?folderId=${folders.fId}&deleteInfo=File&&parentId=${folderInfo.fId}&userid=${userid}&action=Delete&fileId=${files.fileId}" style="cursor: pointer;"	class="user-link">

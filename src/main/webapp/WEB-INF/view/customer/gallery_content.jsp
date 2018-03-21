@@ -50,26 +50,27 @@
               
             </div>
             <div align="right">
-            	<a href="${contextPath}/sm/getGallerContent?userid=${userId}&filesType=ALL" > ALL</a>  &nbsp; | &nbsp; &nbsp;
-            	<a href="${contextPath}/sm/getGallerContent?userid=${userId}&filesType=IMAGE" ><i class="fa fa-image" aria-hidden="true"></i> IMAGE</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
-            	<a href="${contextPath}/sm/getGallerContent?userid=${userId}&filesType=VIDEO" ><i class="fa fa-file-video-o" aria-hidden="true"></i> VIDEO</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
-	            <a href="${contextPath}/sm/getGallerContent?userid=${userId}&filesType=DOCUMENT" ><i class="fa fa-file-text" aria-hidden="true"></i> DOCUMENTS</a> 
+            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=ALL" > ALL</a>  &nbsp; | &nbsp; &nbsp;
+            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=IMAGE" ><i class="fa fa-image" aria-hidden="true"></i> IMAGE</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
+            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=AUDIO" ><i class="fa fa-file-audio-o" aria-hidden="true"></i> AUDIO</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
+            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=VIDEO" ><i class="fa fa-file-video-o" aria-hidden="true"></i> VIDEO</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
+	            <a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=DOCUMENT" ><i class="fa fa-file-text" aria-hidden="true"></i> DOCUMENTS</a> 
             </div>
         </div>
          
     
    <div class="media">
    	<div class="row js-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": ".grid-sizer", "percentPosition": true }'>
-      <c:forEach items="${galleryContent.files}" var="files" varStatus="status">
+      <c:forEach items="${galleryContent}" var="files" varStatus="status">
     	<div class="grid-item col-md-4 col-sm-4" >
-          	<div class="media-grid" >
-                  <div class="img-wrapper" data-toggle="modal" data-target=".modal-4" >
+          	<div class="media-grid" style="height: 225px;">
+                  <div class="img-wrapper" data-toggle="modal"  data-target=".modal-${status.count}">
                   <c:choose>
 				      <c:when test="${files.fileType eq 'IMAGE' }">
                     		<img src="${WebDav_Server_Url}${files.filePath}" alt="" class="img-responsive post-image" style="height: 134px;"/>
                    	  </c:when> 
                    	  <c:when test="${files.fileType eq 'DOCUMENT' }">
-              				<img alt="" src="${contextPath}/resources/default/images/pdf_icon.png" style="height: 134px;">
+              				<embed src="${WebDav_Server_Url}${files.filePath}" style="height: 134px;">
               		  </c:when>
               		  <c:when test="${files.fileType eq 'VIDEO' }">
               				<video  height="134" controls>
@@ -97,13 +98,51 @@
                     <div class="user-info">
                       <img src="${WebDav_Server_Url}${files.filePath}" alt="" class="profile-photo-sm pull-left" />
                       <div class="user">
-                        <h6><a href="#" class="profile-link">John Doe</a></h6>
-                        <a class="text-green" href="#">Friend</a>
+                        <h6>${files.fileName}</h6>
+                        <h6>Origin: ${files.origin} </h6>
+                        <c:choose>
+		               		<c:when test="${files.statusAtGallery eq 'ACTIVE'}">
+		               			<span class="label label-success">${files.statusAtGallery}</span>
+		               		</c:when>
+		               		<c:when test="${files.statusAtGallery eq 'HIDE'}">
+		               			<span class="label label-warning">${files.statusAtGallery}</span>
+		               		</c:when>
+		               		<c:otherwise>
+		               			<span class="label label-danger">${files.statusAtGallery}</span>
+		               		</c:otherwise>
+		               </c:choose>
                       </div>
                     </div>
                   </div>
                 </div>
-            </div>   
+                <div class="modal fade modal-${status.count}" tabindex="-1" role="dialog" aria-hidden="true">
+                 <div class="modal-dialog modal-lg">
+                   <div class="modal-content">
+                     <div class="post-content">
+                     <c:choose>
+					      <c:when test="${files.fileType eq 'IMAGE' }">
+	                       	<img src="${WebDav_Server_Url}${files.filePath}" alt="post-image" class="img-responsive post-image" />
+	                       </c:when>
+	                       <c:when test="${files.fileType eq 'VIDEO' }">
+	             				<video controls>
+							  <source src="${WebDav_Server_Url}${files.filePath}" type="video/mp4" style="height: 134px;">
+							</video>
+	              			</c:when>
+	              			<c:when test="${files.fileType eq 'AUDIO' }">
+	              				<audio  controls>
+								  <source src="${WebDav_Server_Url}${files.filePath}" type="audio/mpeg"  style="height: 134px;">
+								</audio>
+	              			</c:when>
+	              			<c:when test="${files.fileType eq 'DOCUMENT' }">
+	              				<%-- <iframe src="${WebDav_Server_Url}${files.filePath}"></iframe> --%>
+	              				<embed src="${WebDav_Server_Url}${files.filePath}"   frameborder="0" width="100%" height="600px">
+	              		  </c:when>
+                      </c:choose> 
+                     </div>
+                   </div>
+                 </div>
+               </div> 
+            </div> 
           </c:forEach>   
      </div>
     </div>

@@ -1,9 +1,11 @@
 package com.sm.portal.digilocker.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
+import com.sm.portal.digilocker.model.GalleryDetails;
 
 public interface DigilockerService {
 
@@ -21,7 +23,7 @@ public interface DigilockerService {
 
 	public void storeFolderInfo(List<FolderInfo> folderlist, Integer userId);
 
-	public FolderInfo getGallerContent(Integer userid, String filesType);
+	public List<GalleryDetails> getGallerContent(Integer userid, String filesType) throws ParseException;
 
 	public void storeFilesInGallery(FolderInfo newFolderInfo, Integer userId);
 

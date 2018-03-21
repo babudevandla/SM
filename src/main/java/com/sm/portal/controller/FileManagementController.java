@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,10 +35,10 @@ import com.sm.portal.constants.URLCONSTANT;
 import com.sm.portal.constants.WebDavServerConstant;
 import com.sm.portal.digilocker.model.DigiLockerAddressBar;
 import com.sm.portal.digilocker.model.DigiLockerEnum;
-import com.sm.portal.digilocker.model.DigiLockerFileTypeEnum;
 import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
 import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
+import com.sm.portal.digilocker.model.GalleryDetails;
 import com.sm.portal.digilocker.service.DigilockerService;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.FileManagementService;
@@ -371,12 +372,15 @@ public class FileManagementController  extends CommonController{
 	public ModelAndView openGallery(@PathVariable Integer fid,@RequestParam Integer userid,Principal principal,HttpServletRequest request){
 		ModelAndView mvc = new ModelAndView("/customer/gallery_content");
 		
-		FolderInfo folderInfo =digilockerService.getGallerContent(userid, null);
-		
-		mvc.addObject("galleryContent", folderInfo);
-		mvc.addObject("fileType", "ALL");
-		mvc.addObject("fid", fid);
-		mvc.addObject("userid", userid);
+		try {
+			List<GalleryDetails> gallerylist = digilockerService.getGallerContent(userid, null);
+			mvc.addObject("galleryContent", gallerylist);
+			mvc.addObject("fileType", "ALL");
+			mvc.addObject("fid", fid);
+			mvc.addObject("userid", userid);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		mvc.addObject("digiLockActive", true);
 		return mvc;
 	}//openGallery() closing
@@ -386,13 +390,18 @@ public class FileManagementController  extends CommonController{
 	public ModelAndView getGallerContent(@RequestParam Integer userid,Principal principal,
 			@RequestParam(name="filesType", required=false) String filesType,HttpServletRequest request){
 		ModelAndView mvc = new ModelAndView("/customer/gallery_content");
-		
-		FolderInfo folderInfo =digilockerService.getGallerContent(userid, filesType);
-		mvc.addObject("galleryContent", folderInfo);
-		mvc.addObject("fileType", filesType);
+		try {
+			List<GalleryDetails> gallerylist = digilockerService.getGallerContent(userid, filesType);
+			mvc.addObject("galleryContent", gallerylist);
+			mvc.addObject("fileType", filesType);
+			mvc.addObject("userid", userid);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		mvc.addObject("digiLockActive", true);
 		return mvc;
 	}//getGallerContent() closing
+	
 	public synchronized Integer gerUniqueKey(HttpServletRequest request){
 		int newValue=0;
 		

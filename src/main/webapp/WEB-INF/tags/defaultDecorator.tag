@@ -61,7 +61,7 @@ body {
               <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="${contextPath}/sm/dashboard"><strong style="color: white;"> 
-            	<img src="${contextPath}/resources/default/images/sm_logo.jpg" alt="Folder" style="width: 60px;"> </strong>
+            	<img src="${contextPath}/resources/default/images/sm_logo.png" alt="Folder" style="width: 60px;"> </strong>
             </a>
           </div>
 

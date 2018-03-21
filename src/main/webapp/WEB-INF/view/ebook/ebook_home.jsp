@@ -11,14 +11,51 @@
  <script src="${contextPath}/resources/default/js/jquery-3.1.1.min.js"></script>
 
 <defaultTemplate:defaultDecorator>
-<jsp:attribute name="title">E-Diary</jsp:attribute>
+<jsp:attribute name="title">E-Book</jsp:attribute>
 <jsp:body>
-	Ebook home page
-	<a href="${contextPath}/sm/creatEbook?userId=${userId}">Create Book</a>
+	
+	
 	</br>
-	<c:forEach items="${userBooks.books }" var="book" >
+	<%-- <c:forEach items="${userBooks.books }" var="book" >
 	
 		<a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}" >${book.bookTitle}</a></br>
-	</c:forEach>
+	</c:forEach> --%>
+	
+	<div class="create-post">
+      	<div class="row">
+      		<a href="${contextPath}/sm/creatEbook?userId=${userId}"  class="btn btn-secondary" style="padding-top: 5px;">
+      			<i class="fa fa-book" aria-hidden="true"></i>&nbsp; Create E-Book
+      		</a>
+      	</div>
+      </div>
+     <div class="people-nearby">
+       <c:forEach items="${userBooks.books }" var="book" >
+         <div class="nearby-user">
+           <div class="row">
+             <div class="col-md-3 col-sm-3">
+             	<a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}">
+              	 <img src="${contextPath}/resources/default/images/Book_icon.png" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+               </a>
+             </div>
+             <div class="col-md-9 col-sm-9">
+             	<h5><a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}" class="profile-link">${book.bookTitle}</a></h5>
+               <p><f:formatDate value="${book.createdDate}" type="both"/> </p>
+               <c:choose>
+               		<c:when test="${book.status eq 'ACTIVE'}">
+               			<span class="label label-success">${book.status}</span>
+               		</c:when>
+               		<c:when test="${book.status eq 'HIDE'}">
+               			<span class="label label-warning">${book.status}</span>
+               		</c:when>
+               		<c:otherwise>
+               			<span class="label label-danger">${book.status}</span>
+               		</c:otherwise>
+               </c:choose>
+             </div>
+           </div>
+         </div>
+       </c:forEach>
+       </div>
+        
 </jsp:body>
  </defaultTemplate:defaultDecorator>

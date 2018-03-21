@@ -83,11 +83,11 @@
 <style type="text/css">
 
 #ebookPageContent{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	width: 100%;
     background-color: #FBF6F5;
     padding-left: 15px;
     border-color: darkgrey;
-    /* color: black; */
     border-style: dotted;
     border-top-width: 11px;
     padding-top: 18px;
@@ -99,6 +99,7 @@ div#ebookPageContent {
     /* width: 967px; */
     overflow-y: auto;
     height: 600px;
+    overflow-x: hidden;
 }
 </style>
  <div class="create-post">
