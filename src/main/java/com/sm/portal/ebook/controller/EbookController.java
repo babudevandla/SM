@@ -62,6 +62,9 @@ public class EbookController {
 	@Autowired
 	EdairyServiceImpl edairyServiceImpl;
 	
+	@Autowired
+	DigiLockeUtils digiLockerUtils;
+	
 	@RequestMapping(value="/eBooklist", method=RequestMethod.GET)
 	public ModelAndView getEbookList(@RequestParam(name="userId", required=false) Integer userId, Principal principal){
 		ModelAndView mav = new ModelAndView("/ebook/ebook_home");
@@ -87,7 +90,7 @@ public class EbookController {
 	@RequestMapping(value="/creatEbook", method=RequestMethod.POST)
 	public ModelAndView creatEbookSubmit(@ModelAttribute Ebook eBook,BindingResult result, HttpServletRequest request){
 		ModelAndView mav = new ModelAndView();
-		DigiLockeUtils digiLockerUtils = new DigiLockeUtils();
+		
 		eBook.setBookId(digiLockerUtils.gerUniqueKey(request));
 		ebookServiceImple.createUserBook(eBook);
 		mav.setViewName("redirect:/sm/eBooklist?userId="+eBook.getUserId());

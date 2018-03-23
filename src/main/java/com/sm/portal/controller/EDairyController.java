@@ -62,6 +62,8 @@ public class EDairyController {
 	@Autowired
 	DigilockerService digilockerService;
 	
+	@Autowired
+	DigiLockeUtils digiLockerUtils;
 	
 	
 	@RequestMapping(value="/e_dairy_list", method=RequestMethod.GET)
@@ -167,7 +169,7 @@ public class EDairyController {
 		List<String> fileUrlList=new ArrayList<>();
 		List<FilesInfo> newFileList = new ArrayList<>();
 		FilesInfo filesInfo = null;
-		DigiLockeUtils digiLockerUtils = new DigiLockeUtils();
+		
 		for (int i=0;i<multipartList.length;i++) {	
             if (!multipartList[i].isEmpty()) {
             	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());

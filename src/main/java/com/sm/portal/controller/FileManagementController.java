@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +41,9 @@ import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
 import com.sm.portal.digilocker.model.GalleryDetails;
 import com.sm.portal.digilocker.service.DigilockerService;
+import com.sm.portal.digilocker.utils.DigiLockeUtils;
+import com.sm.portal.ebook.model.EbookPageDto;
+import com.sm.portal.edairy.model.EdairyActionEnum;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.FileManagementService;
 import com.sm.portal.service.FileUploadServices;
@@ -66,6 +70,9 @@ public class FileManagementController  extends CommonController{
 	
 	@Autowired
 	DigilockerService digilockerService;
+	
+	@Autowired
+	DigiLockeUtils digiLockerUtils;
 	
 	@GetMapping(value=URLCONSTANT.FILE_MANAGEMENT_HOME)
 	public ModelAndView getDigiLockerHomeData(@PathVariable Integer userId,@RequestParam(name="message",required=false) String message,
@@ -245,7 +252,7 @@ public class FileManagementController  extends CommonController{
 		String filePath = folderPath+fileName.replaceAll(" ", "_");
 		
 		String fileURL=fileUploadServices.uploadWebDavServer(multipart,folderPath);
-		String fileType =this.getFileType(multipart);
+		String fileType =digiLockerUtils.getFileType(multipart);
 		String fileExtension=fileName.substring(fileName.lastIndexOf(".")+1);;
 		if(fileURL!=null){
 			mvc.addObject("message","file uploaded successfully!");
@@ -402,6 +409,47 @@ public class FileManagementController  extends CommonController{
 		mvc.addObject("digiLockActive", true);
 		return mvc;
 	}//getGallerContent() closing
+	
+	
+	@RequestMapping(value = "/storeFilesFromGallery", method = RequestMethod.POST)
+	public ModelAndView  storeFilesFromGallery(@RequestParam("userId") Integer userId,
+			 @RequestParam("folderId") Integer folderId,
+			 @RequestParam("files") MultipartFile multipartList[],
+			 HttpServletRequest request) {
+		FolderInfo gallery =digilockerService.getGalleryDetails(userId);
+		String fileURL=null;
+		List<FilesInfo> newFileList = new ArrayList<>();
+		FilesInfo filesInfo = null;
+		for (int i=0;i<multipartList.length;i++) {	
+            if (!multipartList[i].isEmpty()) {
+            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
+            	if(fileURL!=null){
+	            	filesInfo =new FilesInfo();
+	            	String fileName = multipartList[i].getOriginalFilename();
+	        		//String filePath = multipartList[i]+fileName.replaceAll(" ", "_");
+	            	filesInfo.setFileId(digiLockerUtils.gerUniqueKey(request));
+	            	filesInfo.setFileName(fileName);
+	            	filesInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
+	            	//String filePath = gallery.getFolderPath()+fileName.replaceAll(" ", "_");
+	            	filesInfo.setFilePath(gallery.getFolderPath()+fileName.replaceAll(" ", "_"));
+	            	filesInfo.setFileStatus(DigiLockerStatusEnum.ACTIVE.toString());
+	            	filesInfo.setCreateddate(new Date());
+	            	filesInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
+	            	filesInfo.setFileType(digiLockerUtils.getFileType(multipartList[i]));
+	            	newFileList.add(filesInfo);
+            	}//if closing
+            }//if closing
+		}//for closing
+		if(newFileList.size()>0){
+			gallery.setLocalFilesInfo(newFileList);
+			digilockerService.storeNewFileOrFolderInfo(gallery, gallery.getFolderId(), userId);
+		}
+		ModelAndView mvc= new ModelAndView();
+		
+		mvc.setViewName("redirect:/sm/getGallerContent?userid="+userId);
+		
+		return mvc;
+	}//storeFilesInGalleryFromEbook() closing
 	
 	public synchronized Integer gerUniqueKey(HttpServletRequest request){
 		int newValue=0;

@@ -13,12 +13,13 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sm.portal.digilocker.model.DigiLockerFileTypeEnum;
 
-//@Service
+@Component
 public class DigiLockeUtils {
 
 	private static ResourceBundle rb = ResourceBundle.getBundle("uniquekey");
@@ -26,24 +27,7 @@ public class DigiLockeUtils {
 	static Properties prop = new Properties();
 	static OutputStream output = null;
 	static InputStream input = null;
-	public static void main(String[] args) {
 
-		
-		try{
-			input = new FileInputStream("uniquekey.properties");
-			prop.load(input);
-			gerUniqueId();
-
-			// get the property value and print it out
-			System.out.println(prop.getProperty("uniqueId"));
-		}catch(Exception e){
-			e.printStackTrace();	
-		}
-		
-		/*String browser = rb.getString("uniqueId");
-        System.out.println(browser);*/
-		
-	}
 	
 	private static Integer readCurrentValue(){
 		
@@ -129,9 +113,11 @@ public class DigiLockeUtils {
 		documentList.add("docx");
 		documentList.add("json");
 		documentList.add("pptx");
+		documentList.add("ppt");
+		documentList.add("txt");
+		documentList.add("log");
 		
-		
-		String fileName = multipart.getName();
+		String fileName = multipart.getOriginalFilename();
 		String fileExtention = fileName.substring(fileName.lastIndexOf(".")+1);
 		if(imageList.contains(fileExtention.toLowerCase()))
 			return DigiLockerFileTypeEnum.IMAGE.toString();
@@ -145,6 +131,24 @@ public class DigiLockeUtils {
 			return DigiLockerFileTypeEnum.UNKNOWN.toString();
 		
 	}//getFileType() closing
+	
+	public String fileExtension(MultipartFile multipart){
+		String fileName = multipart.getOriginalFilename();
+		if(fileName.endsWith(".jpg") || fileName.endsWith(".png") || 
+				fileName.endsWith(".jpeg") ||  fileName.endsWith(".gif")){
+			return "IMG";
+		}else if(fileName.endsWith(".pdf") ){
+			return "PDF";
+		}else if(fileName.endsWith(".xls")|| fileName.endsWith(".xlsx")){
+			return "XLS";
+		}else if(fileName.endsWith(".txt") ){
+			return "TXT";
+		}else if(fileName.endsWith(".doc") || fileName.endsWith(".docx") ){
+			return "DOC"; 
+		}
+		else
+			return "UNKNOWN"; 
+	}
 
 	
 

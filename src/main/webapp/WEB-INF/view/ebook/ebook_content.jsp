@@ -13,6 +13,7 @@
 <defaultTemplate:defaultDecorator>
 <jsp:attribute name="title">E-Dairy</jsp:attribute>
 <jsp:body>
+<link rel="stylesheet" href="${contextPath}/resources/default/css/inline.css" />
 <script>
 	$(document).ready(function() {
 		 var list=${pagelist};
@@ -82,7 +83,7 @@
 </script>
 <style type="text/css">
 
-#ebookPageContent{
+/* #ebookPageContent{
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	width: 100%;
     background-color: #FBF6F5;
@@ -93,17 +94,15 @@
     padding-top: 18px;
     padding-left: 24px;
     padding-right: 18px;
-}
-div#ebookPageContent {
-    /* float: left; */
-    /* width: 967px; */
+} */
+ div#ebookPageContent {
     overflow-y: auto;
     height: 600px;
     overflow-x: hidden;
-}
+} 
 </style>
- <div class="create-post">
-   <div class="row">
+ <div class="create-post" style="min-height: 0px;">
+   <div class="row" >
    
    	<%-- <div class="col-md-3 col-sm-3">
          <div class="form-group">
@@ -114,9 +113,9 @@ div#ebookPageContent {
          </div> --%>
        </div>
    	</div>
-   	<a class="btn btn-primary pull-left" id="ebookPrevBtn"  ><i class="fa fa-chevron-left" aria-hidden="true"></i> PRE </a>
-	<a class="btn btn-primary pull-right nextBtn" id="ebookNextBtn" >NEXT <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
-    <table id="navigatorTable" class="table" cellspacing="0" style ="width: 100%">
+   	<!-- <a class="btn btn-primary pull-left" id="ebookPrevBtn"  ><i class="fa fa-chevron-left" aria-hidden="true"></i> PRE </a>
+	<a class="btn btn-primary pull-right nextBtn" id="ebookNextBtn" >NEXT <i class="fa fa-chevron-right" aria-hidden="true"></i></a> -->
+   <%--  <table id="navigatorTable" class="table" cellspacing="0" style ="width: 100%">
 	    <tbody>
 	    	<tr>
 	    		<td ><label>Chapter:</label></td><td id="ebookPageDateId">${eBook.defaultPage.chapterName}</td>
@@ -130,20 +129,69 @@ div#ebookPageContent {
 	    	</tr>
 	    </tbody>
     </table>
-   <%--  <table id="example" class="table  table-bordered" cellspacing="0" style="width: 100%">
-        <tbody>
-        	<tr >
-        		<td id="pageContent">${dairyInfo.defaultPage.content}</td>
-        	</tr>
-       </tbody>
-    </table>  --%> 
     <div id="ebookPageContent" >
     	${eBook.defaultPage.content}
-    </div>
+    </div> --%>
 
-<%-- <c:forEach items="${pages}" var="page" varStatus="status">
-	${page}
-</c:forEach> --%>
+<div class="container-fluid" >
+<div class="book-read" itemscope="" itemtype="http://schema.org/Book">
+<div class="xol-xs-12">
+<div class="xb-reader" data-caplink="https://www.readanybook.com/ebook-promo/565144" data-hash="true" style="height: 100%;">
+    <div class="reader-vertical-line"></div>
+    <div class="reader-header-outher">
+        <div class="reader-header">
+            <div class="reader-header-left" style="width: 100%;">
+                <h1 class="reader-name-inner" style="overflow-wrap: break-word;">
+                    <a href="javascript:void(0);" title="Chapter Name" id="ebookPageDateId" itemprop="name">${eBook.defaultPage.chapterName}</a>
+                    <a id="editEbookId" data-href="${pageContext.request.contextPath}/sm/editEbookContent?userId=${eBook.userId}&bookId=${eBook.bookId}"  class="btn btn-warning pull-right">
+	    				<i class="fa fa-edit"></i> EDIT
+	    			</a>
+                 </h1>
+                <div class="reader-info-inner" style="overflow-wrap: break-word;">
+                     <a href="javascript:void(0);" id="ebookPageNoId" title="Page No">${eBook.defaultPage.pageNo}</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
+                     <a href="javascript:void(0);" id="sectedDateId" title="Created Date" itemprop="genre"> Mar 22, 2018 12:23:38 PM</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
+                     <a href="javascript:void(0);" title="Read Fantasy books" itemprop="genre">Fantasy</a>                
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="reader-content-outer" >
+        <div class="xb-reader-prev col-sm-1 hidden-xs text-center">
+        	<a  id="ebookPrevBtn"  title="Prev page"><span class="glyphicon glyphicon-chevron-left"></span></a>
+        </div>
+        <div class="reader-content col-xs-12 col-sm-10" >
+        	<div id="ebookPageContent" style="visibility: visible;">
+        		${eBook.defaultPage.content}
+        	</div>
+        </div>
+        <div class="xb-reader-next col-sm-1 hidden-xs text-center">
+        	<a  title="Next page"  id="ebookNextBtn" ><span class="glyphicon glyphicon-chevron-right"></span></a>
+        </div>
+        <div class="clear"></div>
+    </div>
+   <!--  <div class="reader-options collapsed">
+        <div class="col-xs-4">
+            <a href="javascript:;" title="Previous page" class="xb-reader-prev"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Prev</a>
+        </div>
+        <div class="col-xs-4 text-center when-collapsed">
+            <div class="download-panel-bottom hidden-xs">
+                <a rel="nofollow" target="_blank" href="http://desyncs.com/TDS/?sub=124&amp;q=Scarlet&amp;place=read&amp;img=https%3A%2F%2Ffiles.readanybook.com%2F515244%2Ffiles%2Fscarlet.jpg&amp;eid=9782897672492&amp;type=eid" title="Download book">DOWNLOAD</a><span> this page</span>
+            </div>
+            <a href="javascript:;" class="visible-xs files-link" title="Read other files of this book">Files (<span class="xb-reader-files-count">2</span>)</a>
+        </div>
+        <div class="col-xs-4 text-center when-not-collapsed" style="display: none;">
+            <a href="javascript:;" class="files-link files-link-close" title="Close and return to reading">Close</a>
+        </div>
+        <div class="col-xs-4 text-right">
+            <a href="javascript:;" title="Next page" class="xb-reader-next">Next <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+        </div>
+        <div class="clear"></div>
+    </div> -->
+</div>    
+</div>
+</div>   
+ </div>
 
 <span style="display: none;" id="pageListCont">${pagelist}</span>
 
