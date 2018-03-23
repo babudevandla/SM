@@ -40,6 +40,8 @@ import com.sm.portal.model.Users;
 import com.sm.portal.service.EDairyService;
 import com.sm.portal.service.FileUploadServices;
 import com.sm.portal.service.UserService;
+import com.sm.portal.uniquekeys.UniqueKeyDaoImpl;
+import com.sm.portal.uniquekeys.UniqueKeyEnum;
 
 @RestController
 @RequestMapping(URLCONSTANT.BASE_URL)
@@ -65,6 +67,8 @@ public class EDairyController {
 	@Autowired
 	DigiLockeUtils digiLockerUtils;
 	
+	@Autowired
+	UniqueKeyDaoImpl uniqueKeyDaoImpl;
 	
 	@RequestMapping(value="/e_dairy_list", method=RequestMethod.GET)
 	public ModelAndView eDairyLists(Principal principal){
@@ -169,7 +173,7 @@ public class EDairyController {
 		List<String> fileUrlList=new ArrayList<>();
 		List<FilesInfo> newFileList = new ArrayList<>();
 		FilesInfo filesInfo = null;
-		
+		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userId, UniqueKeyEnum.FILES_ID.toString(), multipartList.length);
 		for (int i=0;i<multipartList.length;i++) {	
             if (!multipartList[i].isEmpty()) {
             	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
@@ -178,7 +182,7 @@ public class EDairyController {
 	            	filesInfo =new FilesInfo();
 	            	String fileName = multipartList[i].getOriginalFilename();
 	        		//String filePath = multipartList[i]+fileName.replaceAll(" ", "_");
-	            	filesInfo.setFileId(digiLockerUtils.gerUniqueKey(request));
+	            	filesInfo.setFileId(++fileUniqueKey);
 	            	filesInfo.setFileName(fileName);
 	            	filesInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
 	            	//String filePath = gallery.getFolderPath()+fileName.replaceAll(" ", "_");

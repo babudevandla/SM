@@ -114,14 +114,14 @@
                         <h6>${files.fileName}</h6>
                         <h6>Origin: ${files.origin} </h6>
                         <c:choose>
-		               		<c:when test="${files.statusAtGallery eq 'ACTIVE'}">
-		               			<span class="label label-success">${files.statusAtGallery}</span>
+		               		<c:when test="${files.fileStatus eq 'ACTIVE'}">
+		               			<span class="label label-success">${files.fileStatus}</span>
 		               		</c:when>
-		               		<c:when test="${files.statusAtGallery eq 'HIDE'}">
-		               			<span class="label label-warning">${files.statusAtGallery}</span>
+		               		<c:when test="${files.fileStatus eq 'HIDE'}">
+		               			<span class="label label-warning">${files.fileStatus}</span>
 		               		</c:when>
 		               		<c:otherwise>
-		               			<span class="label label-danger">${files.statusAtGallery}</span>
+		               			<span class="label label-danger">${files.fileStatus}</span>
 		               		</c:otherwise>
 		               </c:choose>
                       </div>

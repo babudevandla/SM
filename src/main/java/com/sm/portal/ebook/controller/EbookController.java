@@ -251,9 +251,9 @@ public class EbookController {
 	}//creatChapter() closing
 	
 	@RequestMapping(value="/getUniqueValue", method=RequestMethod.GET)
-	public UniqueKey getUniqueValue(@RequestParam(name="userId", required=false) Integer userId,
+	public Integer getUniqueValue(@RequestParam(name="userId", required=false) Integer userId,
 			@RequestParam(name="uniqueKeyProperty", required=false) String uniqueKeyProperty){
-		UniqueKey uniqueKey=null;
+		Integer uniqueKey=null;
 		if(userId==null && uniqueKeyProperty==null)
 			 uniqueKey=uniqueKeyDaoImpl.getUniqueKey(1, UniqueKeyEnum.DAIRY_ID.toString(), 1);
 		else if(userId==null)

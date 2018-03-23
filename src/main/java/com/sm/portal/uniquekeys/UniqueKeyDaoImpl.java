@@ -20,7 +20,7 @@ public class UniqueKeyDaoImpl implements UniqueKeyDao{
 	private SessionFactory sessionFactory;
 
 	@Override
-	public UniqueKey getUniqueKey(Integer userId, String uniqueProperty, Integer noOfIds) {
+	public Integer getUniqueKey(Integer userId, String uniqueProperty, Integer noOfIds) {
 
 		UniqueKey uniqueKey = null;
 		Session session=sessionFactory.openSession();;
@@ -35,13 +35,14 @@ public class UniqueKeyDaoImpl implements UniqueKeyDao{
 		 cr.add(Restrictions.eq("uniqueProperty", uniqueProperty));
 		 List<UniqueKey> uniqueKeys=cr.list();
 		 if(uniqueKeys!=null && uniqueKeys.size()>0)uniqueKey= uniqueKeys.get(0);
+		 int mainValue=0;
 		if(uniqueKey==null){
 			try{
-				
+				mainValue =1000;
 				uniqueKey=new UniqueKey();
 				uniqueKey.setUserId(userId);
 				uniqueKey.setUniqueProperty(uniqueProperty);
-				uniqueKey.setUniqueValue(1000);
+				uniqueKey.setUniqueValue(mainValue+noOfIds);
 				session.save(uniqueKey);
 				
 			}catch(Exception e){
@@ -61,7 +62,8 @@ public class UniqueKeyDaoImpl implements UniqueKeyDao{
 		}
 		tx.commit();
 		uniqueKey.setUniqueValue(uniqueKey.getUniqueValue()-noOfIds);
-		return uniqueKey;
+		if(mainValue!=0) return mainValue;
+		return uniqueKey.getUniqueValue();
 	}//getUniqueKey() closings
 
 	@Override

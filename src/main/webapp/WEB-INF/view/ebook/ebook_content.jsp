@@ -148,9 +148,9 @@
 	    			</a>
                  </h1>
                 <div class="reader-info-inner" style="overflow-wrap: break-word;">
-                     <a href="javascript:void(0);" id="ebookPageNoId" title="Page No">${eBook.defaultPage.pageNo}</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
+                     <a href="javascript:void(0);" id="ebookPageNoId" title="Page No">Page : ${eBook.defaultPage.pageNo}</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
                      <a href="javascript:void(0);" id="sectedDateId" title="Created Date" itemprop="genre"> Mar 22, 2018 12:23:38 PM</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
-                     <a href="javascript:void(0);" title="Read Fantasy books" itemprop="genre">Fantasy</a>                
+                     <a href="javascript:void(0);" title="Read Fantasy books" itemprop="genre">Topic name</a>                
                 </div>
             </div>
             <div class="clear"></div>

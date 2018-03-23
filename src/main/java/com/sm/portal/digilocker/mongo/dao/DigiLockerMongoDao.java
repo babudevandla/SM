@@ -347,28 +347,72 @@ public class DigiLockerMongoDao {
 		unwind1.append("$unwind", "$foldersList");
 		Document unwind2 = new Document();
 		unwind2.append("$unwind", "$foldersList.files");
+		Document match2 = new Document();
+		Document sort = new Document();
+		sort.append("$sort", new Document("foldersList.files.createddate",-1));
+		
 		if(filesType!=null && !filesType.equals("ALL")){
-			Document match2 = new Document();
-			match2.append("$match", new Document("foldersList.files.fileType", filesType));
-			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2));
+			Document matchFilter=new Document("foldersList.folderStatus", "ACTIVE");
+			matchFilter.append("foldersList.files.fileType", filesType);
+			match2.append("$match", matchFilter);
+			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2,sort));
 		}else if(fileStatus!=null){
-			Document match2 = new Document();
-			match2.append("$match", new Document("foldersList.files.fileStatus", fileStatus));
-			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2));
+			Document matchFilter=new Document("foldersList.folderStatus",  "ACTIVE");
+			matchFilter.append("foldersList.files.fileStatus", fileStatus);
+			match2.append("$match", matchFilter);
+			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2,sort));
 		}else{
-			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2));
+			match2.append("$match", new Document("foldersList.folderStatus", "ACTIVE"));
+			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2,sort));
 		}
 		if(null != folderInfoVos){
 			for (Document cur :  folderInfoVos ) {
 				GalleryDetails details=setGalleryDetailsData(cur);
 				gallerInfo.add(details);
-				
 			}//for closing
+			
+			//fetching deleted folders
+			if(fileStatus!=null){
+				fetchingDeletedFolder(coll,gallerInfo, match,  unwind1,fileStatus);
+			}
+			
 		}//if closing
 		
 		return gallerInfo;
 	}//getGallerContent() closing
 	
+	private List<GalleryDetails> fetchingDeletedFolder(MongoCollection<Document> coll, List<GalleryDetails> gallerInfo, Document match, Document unwind1,String folderStatus) {
+		
+		AggregateIterable<Document> folderInfoVos=null;
+		
+		Document matchFilter=new Document("foldersList.folderStatus",  folderStatus);
+		matchFilter.append("$match", matchFilter);
+		
+		folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,matchFilter));
+		if(null != folderInfoVos){
+			Document cur =  folderInfoVos.first();
+			/*for (Document cur :  folderInfoVos ) {
+				GalleryDetails details=setDeletedFolderData(cur);
+				gallerInfo.add(details);
+			}//for closing
+*/		}//if closing
+		return gallerInfo;
+	}
+
+	private GalleryDetails setDeletedFolderData(Document cur) {
+		GalleryDetails details=new GalleryDetails();
+		//folder details
+		Document folderDoc = (Document) cur.get("foldersList");
+		details.setFolderId(folderDoc.getInteger("folderId"));
+		details.setFolderName(folderDoc.getString("folderName"));
+		details.setFolderPath(folderDoc.getString("folderPath"));
+		details.setFolderNamePath(folderDoc.getString("folderNamePath"));
+		details.setFolderStatus(folderDoc.getString("folderStatus"));
+		details.setOrigin(folderDoc.getString("origin"));
+		details.setParentId(folderDoc.getInteger("parentId"));
+		return details;
+	}
+
 	private GalleryDetails setGalleryDetailsData(Document cur) throws ParseException {
 		GalleryDetails details=new GalleryDetails();
 		//folder details

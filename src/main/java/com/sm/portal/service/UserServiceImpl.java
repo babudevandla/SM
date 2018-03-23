@@ -1,12 +1,9 @@
 package com.sm.portal.service;
 
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,6 +30,7 @@ public class UserServiceImpl  implements UserService {
 	
 	@Autowired
 	DigilockerService digilockerService;
+	
 	
 	@Override
 	public Users findUserByUserName(String username) {
@@ -87,10 +85,11 @@ public class UserServiceImpl  implements UserService {
 		newFolder.setChildFolders(null);
 		newFolder.setLocalFilesInfo(new ArrayList<FilesInfo>());
 		
+
 		
 		//Gallery defalut doc creating 
 		FolderInfo galFolder =new FolderInfo();
-		galFolder.setfId(gerUniqueKey(request));
+		galFolder.setfId(99999);
 		galFolder.setfName("Gallery");
 		galFolder.setParentId(0);
 		galFolder.setFolderNamePath("home/"+galFolder.getfName());
@@ -136,7 +135,7 @@ public class UserServiceImpl  implements UserService {
 
 
 	
-	public  synchronized Integer gerUniqueKey(HttpServletRequest request){
+	/*public  synchronized Integer gerUniqueKey(HttpServletRequest request){
 		int newValue=0;
 		Properties properties = new Properties();
 		try(InputStream input = request.getServletContext().getResourceAsStream("/WEB-INF/uniquekey.properties");){
@@ -150,7 +149,7 @@ public class UserServiceImpl  implements UserService {
 		}
 		
 		return newValue;
-	}//closing
+	}*///closing
 
 	@Override
 	public void updatedUserPassword(UsersDto users) {

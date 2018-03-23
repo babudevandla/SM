@@ -15,7 +15,7 @@
 										style='font-size: 16px; font-weight: normal; line-height: 22px; margin: 0 0 11px 0;'>Hi, ${user.firstname} ${user.lastname}</h1>
 										<div style='font-size: 12px; line-height: 16px; margin: 0 0 8px 0;'>
 											<br/>
-											<p> Thank you for registering Tutorial portal . Below your login credentials</p>
+											<p> Thank you for registering SM portal . Below your login credentials</p>
 										    </div>
 										   
 										<div style='font-size: 12px; line-height: 16px; margin: 0;'>

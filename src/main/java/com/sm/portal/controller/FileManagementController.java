@@ -49,6 +49,8 @@ import com.sm.portal.service.FileManagementService;
 import com.sm.portal.service.FileUploadServices;
 import com.sm.portal.service.PropertyService;
 import com.sm.portal.service.UserService;
+import com.sm.portal.uniquekeys.UniqueKeyDaoImpl;
+import com.sm.portal.uniquekeys.UniqueKeyEnum;
 
 @RestController
 @RequestMapping(URLCONSTANT.BASE_URL)
@@ -73,6 +75,9 @@ public class FileManagementController  extends CommonController{
 	
 	@Autowired
 	DigiLockeUtils digiLockerUtils;
+	
+	@Autowired
+	UniqueKeyDaoImpl uniqueKeyDaoImpl;
 	
 	@GetMapping(value=URLCONSTANT.FILE_MANAGEMENT_HOME)
 	public ModelAndView getDigiLockerHomeData(@PathVariable Integer userId,@RequestParam(name="message",required=false) String message,
@@ -219,9 +224,9 @@ public class FileManagementController  extends CommonController{
 		
 		//currentFolderPath=currentFolderInfo.getFolderPath();
 		
-		
+		int	folderUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userid, UniqueKeyEnum.FOLDER_ID.toString(), 1);
 		FolderInfo newFolder =new FolderInfo();
-		newFolder.setfId(gerUniqueKey(request));
+		newFolder.setfId(++folderUniqueKey);
 		newFolder.setfName(foldername);
 		newFolder.setParentId(currentFolderId);
 		newFolder.setFolderNamePath(currentFolderInfo.getFolderNamePath()+"/"+foldername);
@@ -253,11 +258,12 @@ public class FileManagementController  extends CommonController{
 		
 		String fileURL=fileUploadServices.uploadWebDavServer(multipart,folderPath);
 		String fileType =digiLockerUtils.getFileType(multipart);
-		String fileExtension=fileName.substring(fileName.lastIndexOf(".")+1);;
+		String fileExtension=fileName.substring(fileName.lastIndexOf(".")+1);
+		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userid, UniqueKeyEnum.FILES_ID.toString(), 1);
 		if(fileURL!=null){
 			mvc.addObject("message","file uploaded successfully!");
 			FilesInfo newFileInfo = new FilesInfo();
-			newFileInfo.setFileId(gerUniqueKey(request));
+			newFileInfo.setFileId(++fileUniqueKey);
 			newFileInfo.setFileName(fileName);
 			newFileInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
 			newFileInfo.setFilePath(filePath);
@@ -420,6 +426,7 @@ public class FileManagementController  extends CommonController{
 		String fileURL=null;
 		List<FilesInfo> newFileList = new ArrayList<>();
 		FilesInfo filesInfo = null;
+		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userId, UniqueKeyEnum.FILES_ID.toString(),multipartList.length);
 		for (int i=0;i<multipartList.length;i++) {	
             if (!multipartList[i].isEmpty()) {
             	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
@@ -427,7 +434,7 @@ public class FileManagementController  extends CommonController{
 	            	filesInfo =new FilesInfo();
 	            	String fileName = multipartList[i].getOriginalFilename();
 	        		//String filePath = multipartList[i]+fileName.replaceAll(" ", "_");
-	            	filesInfo.setFileId(digiLockerUtils.gerUniqueKey(request));
+	            	filesInfo.setFileId(++fileUniqueKey);
 	            	filesInfo.setFileName(fileName);
 	            	filesInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
 	            	//String filePath = gallery.getFolderPath()+fileName.replaceAll(" ", "_");
@@ -451,7 +458,7 @@ public class FileManagementController  extends CommonController{
 		return mvc;
 	}//storeFilesInGalleryFromEbook() closing
 	
-	public synchronized Integer gerUniqueKey(HttpServletRequest request){
+	/*public synchronized Integer gerUniqueKey(HttpServletRequest request){
 		int newValue=0;
 		
 		Properties properties = new Properties();
@@ -472,7 +479,7 @@ public class FileManagementController  extends CommonController{
 		}
 		
 		return newValue;
-	}//closing
+	}*///closing
 	
 	
 
