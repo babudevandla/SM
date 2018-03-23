@@ -27,3 +27,11 @@ CREATE TABLE `sm_properties` (
 INSERT INTO `sm_properties` VALUES (1,' document located path','2017-11-02 14:56:45','string',0,'UPLOAD_USER_FILE_PATH','D:/Reports/SM_Docs','admin',NULL);
 
 
+CREATE TABLE `unique_key` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `uniqueProperty` varchar(45) NOT NULL,
+  `uniqueValue` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+

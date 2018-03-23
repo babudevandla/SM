@@ -37,9 +37,12 @@ import com.sm.portal.ebook.service.EbookServiceImpl;
 import com.sm.portal.edairy.model.DairyPage;
 import com.sm.portal.edairy.model.EdairyActionEnum;
 import com.sm.portal.edairy.service.EdairyServiceImpl;
+import com.sm.portal.model.UniqueKey;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.FileUploadServices;
 import com.sm.portal.service.UserService;
+import com.sm.portal.uniquekeys.UniqueKeyDaoImpl;
+import com.sm.portal.uniquekeys.UniqueKeyEnum;
 
 
 @RestController
@@ -64,6 +67,9 @@ public class EbookController {
 	
 	@Autowired
 	DigiLockeUtils digiLockerUtils;
+	
+	@Autowired
+	UniqueKeyDaoImpl uniqueKeyDaoImpl;
 	
 	@RequestMapping(value="/eBooklist", method=RequestMethod.GET)
 	public ModelAndView getEbookList(@RequestParam(name="userId", required=false) Integer userId, Principal principal){
@@ -243,5 +249,19 @@ public class EbookController {
 		return mav;
 		
 	}//creatChapter() closing
+	
+	@RequestMapping(value="/getUniqueValue", method=RequestMethod.GET)
+	public UniqueKey getUniqueValue(@RequestParam(name="userId", required=false) Integer userId,
+			@RequestParam(name="uniqueKeyProperty", required=false) String uniqueKeyProperty){
+		UniqueKey uniqueKey=null;
+		if(userId==null && uniqueKeyProperty==null)
+			 uniqueKey=uniqueKeyDaoImpl.getUniqueKey(1, UniqueKeyEnum.DAIRY_ID.toString(), 1);
+		else if(userId==null)
+			uniqueKey=uniqueKeyDaoImpl.getUniqueKey(1, uniqueKeyProperty, 1);
+		else
+			uniqueKey=uniqueKeyDaoImpl.getUniqueKey(userId, UniqueKeyEnum.DAIRY_ID.toString(), 1);
+		return uniqueKey;
+	}//getUniqueValue() closing
+	
 	
 }//class closing
