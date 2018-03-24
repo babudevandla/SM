@@ -3,13 +3,16 @@ package com.sm.portal.controller;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.PathParam;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -69,6 +72,15 @@ public class EDairyController {
 	
 	@Autowired
 	UniqueKeyDaoImpl uniqueKeyDaoImpl;
+	
+	@RequestMapping(value="/media", method=RequestMethod.GET)
+	public byte[] getImage(@RequestParam(value = "filePath") String filePath){
+		byte[] data=null;
+		try {
+			data = IOUtils.toByteArray(fileUploadServices.downloadFile(filePath));
+		} catch (IOException e) {e.printStackTrace();}
+	    return data;
+	}//
 	
 	@RequestMapping(value="/e_dairy_list", method=RequestMethod.GET)
 	public ModelAndView eDairyLists(Principal principal){

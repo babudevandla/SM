@@ -56,6 +56,9 @@
          </div>
        </c:forEach>
        </div>
-        
+        <img src="http://localhost:8095/SM_Portal/sm/media"/>
+        <video  controls>
+								  <source src="/SM_Portal/sm/media?filePath=/1/10000/60001/SampleVideo_1280x720_1mb.mp4" type="audio/mpeg"  style="height: 134px;">
+								</video>
 </jsp:body>
  </defaultTemplate:defaultDecorator>

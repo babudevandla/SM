@@ -2,22 +2,43 @@ package com.sm.portal.digilocker.service;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.sm.portal.digilocker.model.DigiLockerEnum;
+import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
 import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
 import com.sm.portal.digilocker.model.GalleryDetails;
 import com.sm.portal.digilocker.mongo.dao.DigiLockerMongoDao;
+import com.sm.portal.digilocker.utils.DigiLockeUtils;
+import com.sm.portal.service.FileUploadServices;
+import com.sm.portal.uniquekeys.UniqueKeyDaoImpl;
+import com.sm.portal.uniquekeys.UniqueKeyEnum;
 
 @Service
 public class DigilockerServiceImpl implements DigilockerService{
 
 	@Autowired
 	DigiLockerMongoDao digiLockerMongoDao;
+	
+	@Autowired
+	FileUploadServices fileUploadServices;
+	
+	@Autowired
+	DigilockerService digilockerService;
+	
+	@Autowired
+	UniqueKeyDaoImpl uniqueKeyDaoImpl;
+	
+	@Autowired
+	DigiLockeUtils digiLockerUtils;
 	
 	
 	@Override
@@ -91,5 +112,125 @@ public class DigilockerServiceImpl implements DigilockerService{
 		
 		return gallery;
 	}//getGalleryDetails() closinig
+
+
+	@Override
+	public FolderInfo createNewFolder(Integer userid, String foldername, String currentFolderPath,
+			List<FolderInfo> allFolderList) {
+
+		Integer currentFolderId=null;
+		int newFolderId=0;
+		if(StringUtils.isNotBlank(currentFolderPath)){
+			String strTemp1=currentFolderPath.substring(0, currentFolderPath.length()-1);
+			currentFolderId = Integer.parseInt(strTemp1.substring(strTemp1.lastIndexOf('/')+1));
+			
+			fileUploadServices.createFolderName(currentFolderPath);
+		}else{
+			newFolderId=uniqueKeyDaoImpl.getUniqueKey(userid, UniqueKeyEnum.FOLDER_ID.toString(), 1);
+			fileUploadServices.createFolderName("/"+userid+"/"+newFolderId+"/");
+			//fileUploadServices.createFolderName("/"+currentFolderId+"/");
+		}
+		
+		
+		FolderInfo	currentFolderInfo =null;
+		if(currentFolderId!=null)currentFolderInfo=digilockerService.getFolderInfo(allFolderList,currentFolderId);
+		
+		//currentFolderPath=currentFolderInfo.getFolderPath();
+		
+		if(newFolderId==0)newFolderId=uniqueKeyDaoImpl.getUniqueKey(userid, UniqueKeyEnum.FOLDER_ID.toString(), 1);
+		
+		
+		FolderInfo newFolder =new FolderInfo();
+		newFolder.setfId(++newFolderId);
+		newFolder.setfName(foldername);
+		
+		if(currentFolderId==null) newFolder.setParentId(0);
+		else newFolder.setParentId(currentFolderId);
+		
+		if(currentFolderInfo!=null){
+			newFolder.setFolderNamePath(currentFolderInfo.getFolderNamePath()+"/"+foldername);
+			newFolder.setFolderPath(currentFolderInfo.getFolderPath()+newFolder.getfId()+"/");
+		}else{
+			newFolder.setFolderNamePath("home"+"/"+foldername);
+			//newFolder.setFolderPath(currentFolderInfo.getFolderPath()+newFolder.getfId()+"/");
+			newFolder.setFolderPath("/"+userid+"/"+newFolder.getfId()+"/");
+		}
+		newFolder.setFolderStatus(DigiLockerStatusEnum.ACTIVE.toString());
+		newFolder.setChildFolders(null);
+		newFolder.setLocalFilesInfo(null);
+		newFolder.setOrigin(DigiLockerEnum.LOCKER.toString());
+		digilockerService.storeNewFileOrFolderInfo(newFolder, new Integer(""+newFolder.getfId()), userid);
+		
+		return newFolder;
+	}//createNewFolder() closing
+
+
+	@Override
+	public String uploadFiles(MultipartFile multipart, Integer userid, String folderPath, Integer folderId) {
+
+		String fileName = multipart.getOriginalFilename();
+		String filePath = folderPath+fileName.replaceAll(" ", "_");
+		
+		String fileURL=fileUploadServices.uploadWebDavServer(multipart,folderPath);
+		String fileType =digiLockerUtils.getFileType(multipart);
+		String fileExtension=fileName.substring(fileName.lastIndexOf(".")+1);
+		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userid, UniqueKeyEnum.FILES_ID.toString(), 1);
+		if(fileURL!=null){
+			
+			FilesInfo newFileInfo = new FilesInfo();
+			newFileInfo.setFileId(++fileUniqueKey);
+			newFileInfo.setFileName(fileName);
+			newFileInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
+			newFileInfo.setFilePath(filePath);
+			newFileInfo.setFileStatus(DigiLockerStatusEnum.ACTIVE.toString());
+			newFileInfo.setCreateddate(new Date());
+			newFileInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
+			newFileInfo.setFileType(fileType);
+			newFileInfo.setFileExtension(fileExtension);
+			FolderInfo newFolder = new FolderInfo();
+			
+			List<FilesInfo> localFilesInfo = new ArrayList<>();
+			localFilesInfo.add(newFileInfo);
+			newFolder.setLocalFilesInfo(localFilesInfo);
+			
+			digilockerService.storeNewFileOrFolderInfo(newFolder, folderId, userid);
+		}
+		
+		return fileURL;
+	}
+
+
+	@Override
+	public void storeFilesInGalleryFromDigiLocker(Integer userId, Integer folderId, MultipartFile[] multipartList) {
+
+		FolderInfo gallery =digilockerService.getGalleryDetails(userId);
+		
+		String fileURL=null;
+		List<FilesInfo> newFileList = new ArrayList<>();
+		FilesInfo filesInfo = null;
+		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userId, UniqueKeyEnum.FILES_ID.toString(),multipartList.length);
+		for (int i=0;i<multipartList.length;i++) {	
+            if (!multipartList[i].isEmpty()) {
+            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
+            	if(fileURL!=null){
+	            	filesInfo =new FilesInfo();
+	            	String fileName = multipartList[i].getOriginalFilename();
+	            	filesInfo.setFileId(++fileUniqueKey);
+	            	filesInfo.setFileName(fileName);
+	            	filesInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
+	            	filesInfo.setFilePath(gallery.getFolderPath()+fileName.replaceAll(" ", "_"));
+	            	filesInfo.setFileStatus(DigiLockerStatusEnum.ACTIVE.toString());
+	            	filesInfo.setCreateddate(new Date());
+	            	filesInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
+	            	filesInfo.setFileType(digiLockerUtils.getFileType(multipartList[i]));
+	            	newFileList.add(filesInfo);
+            	}//if closing
+            }//if closing
+		}//for closing
+		if(newFileList.size()>0){
+			gallery.setLocalFilesInfo(newFileList);
+			digilockerService.storeNewFileOrFolderInfo(gallery, gallery.getFolderId(), userId);
+		}
+	}//storeFilesInGalleryFromDigiLocker() closing
 
 }//class closing

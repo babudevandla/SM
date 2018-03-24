@@ -140,42 +140,17 @@ public class FileManagementController  extends CommonController{
 	public void downloadFile(@PathVariable Integer fid,@RequestParam String filePath,Principal principal,HttpServletRequest request
 			,HttpServletResponse response){
 		
-		/*//ModelAndView mvc = new ModelAndView("/customer/file_management");
-		HttpSession httpSession=request.getSession(true);
-		@SuppressWarnings("unchecked")
-		List<FolderInfo> allFolderList =(List<FolderInfo>) httpSession.getAttribute("allFoldersData");
-		  FolderInfo	folderInfo=digilockerService.getFolderInfo(allFolderList,fid);
-			List<DigiLockerAddressBar> addressBar = this.getAddressBar(folderInfo, allFolderList);
-			mvc.addObject("folderInfo", folderInfo);
-			mvc.addObject("currentFolderPath", folderInfo.getFolderPath());
-			mvc.addObject("isInternalFolder", "Yes");
-			mvc.addObject("addressBar",addressBar);*/
 			String fileName =filePath.substring(filePath.lastIndexOf("/"));
 		try{
-						
 			InputStream	inputStream=fileUploadServices.downloadFile(filePath);
 			response.setContentType("application/octet-stream");
 			response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-			 /*BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream());
-			 byte[] buffer = new byte[1024];
-		      int bytesRead = 0;
-		      while ((bytesRead = inputStream.read(buffer)) != -1) {
-		        outStream.write(buffer, 0, bytesRead);
-		      }
-		      outStream.flush();
-		      inputStream.close();*/
+			
 			FileCopyUtils.copy(inputStream, response.getOutputStream());
-			//mvc.setViewName("redirect:/sm/getfolderinfo/"+fid);
-			//System.out.println(user);			
 		}catch(Exception e){e.printStackTrace();}
 		
 		//return mvc;
 	}//closing getDigiLockerHomeData() 
-	
-	
-	
-	
-	
 	
 	private List<DigiLockerAddressBar> getAddressBar(FolderInfo folderInfo, List<FolderInfo> allFolderList) {
 		String currentFolderPath = folderInfo.getFolderPath();
@@ -203,47 +178,31 @@ public class FileManagementController  extends CommonController{
 	@GetMapping(value=URLCONSTANT.FILE_MANAGEMENT_CREATE_FOLDER)
 	public @ResponseBody ModelAndView createFolder(@RequestParam Integer userid,@RequestParam String foldername,
 			Principal principal,@RequestParam String currentFolderPath,HttpServletRequest request){
+		
+		
 		logger.debug(" show fileManagement ...");
 		HttpSession httpSession=request.getSession(true);
 		ModelAndView mvc = new ModelAndView();
-		Integer currentFolderId=null;
-		if(StringUtils.isNotBlank(currentFolderPath)){
-			String strTemp1=currentFolderPath.substring(0, currentFolderPath.length()-1);
-			currentFolderId = Integer.parseInt(strTemp1.substring(strTemp1.lastIndexOf('/')+1));
-			
-			fileUploadServices.createFolderName(currentFolderPath);
-		}else{
-			currentFolderId=0;
-			fileUploadServices.createFolderName("/"+userid+"/"+currentFolderId+"/");
-		}
 		
 		
 		@SuppressWarnings("unchecked")
 		List<FolderInfo> allFolderList =(List<FolderInfo>) httpSession.getAttribute("allFoldersData");
-		FolderInfo	currentFolderInfo=digilockerService.getFolderInfo(allFolderList,currentFolderId);
 		
-		//currentFolderPath=currentFolderInfo.getFolderPath();
+		FolderInfo newFolder =digilockerService.createNewFolder(userid, foldername, currentFolderPath, allFolderList);
 		
-		int	folderUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userid, UniqueKeyEnum.FOLDER_ID.toString(), 1);
-		FolderInfo newFolder =new FolderInfo();
-		newFolder.setfId(++folderUniqueKey);
-		newFolder.setfName(foldername);
-		newFolder.setParentId(currentFolderId);
-		newFolder.setFolderNamePath(currentFolderInfo.getFolderNamePath()+"/"+foldername);
-		newFolder.setFolderPath(currentFolderInfo.getFolderPath()+newFolder.getfId()+"/");
-		newFolder.setFolderStatus(DigiLockerStatusEnum.ACTIVE.toString());
-		newFolder.setChildFolders(null);
-		newFolder.setLocalFilesInfo(null);
-		newFolder.setOrigin(DigiLockerEnum.LOCKER.toString());
-		digilockerService.storeNewFileOrFolderInfo(newFolder, new Integer(""+newFolder.getfId()), userid);
 		
 		List<FolderInfo>	getUpdatedFolderList=digilockerService.getDigiLockerHomeData(new Long(userid));
 		httpSession.setAttribute("allFoldersData", getUpdatedFolderList);
 		httpSession.setAttribute("userid", userid);
-		mvc.addObject("digiLockActive", true);
-		mvc.setViewName("redirect:/sm/getfolderinfo/"+currentFolderId);
+		
+		mvc.addObject("digiLockActive", true);		
+		if(StringUtils.isNotBlank(currentFolderPath)){
+			mvc.setViewName("redirect:/sm/getfolderinfo/"+newFolder.getParentId());			
+		}else{
+			mvc.setViewName("redirect:/sm/file_management/"+userid);
+		}
 		return mvc;
-	}
+	}//createFolder() closing
 	
 	@PostMapping(value=URLCONSTANT.FILE_MANAGEMENT_UPLOAD_FILES)
 	public ModelAndView uploadFiles(@RequestParam("fileName") MultipartFile multipart,@RequestParam Integer userid,@RequestParam String folderPath,
@@ -253,33 +212,10 @@ public class FileManagementController  extends CommonController{
 		
 		ModelAndView mvc = new ModelAndView();
 		//Users user=userService.findUserByUserName(principal.getName());
-		String fileName = multipart.getOriginalFilename();
-		String filePath = folderPath+fileName.replaceAll(" ", "_");
+		String fileUrl=digilockerService.uploadFiles(multipart,userid,  folderPath,folderId );
 		
-		String fileURL=fileUploadServices.uploadWebDavServer(multipart,folderPath);
-		String fileType =digiLockerUtils.getFileType(multipart);
-		String fileExtension=fileName.substring(fileName.lastIndexOf(".")+1);
-		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userid, UniqueKeyEnum.FILES_ID.toString(), 1);
-		if(fileURL!=null){
-			mvc.addObject("message","file uploaded successfully!");
-			FilesInfo newFileInfo = new FilesInfo();
-			newFileInfo.setFileId(++fileUniqueKey);
-			newFileInfo.setFileName(fileName);
-			newFileInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
-			newFileInfo.setFilePath(filePath);
-			newFileInfo.setFileStatus(DigiLockerStatusEnum.ACTIVE.toString());
-			newFileInfo.setCreateddate(new Date());
-			newFileInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
-			newFileInfo.setFileType(fileType);
-			newFileInfo.setFileExtension(fileExtension);
-			FolderInfo newFolder = new FolderInfo();
-			
-			List<FilesInfo> localFilesInfo = new ArrayList<>();
-			localFilesInfo.add(newFileInfo);
-			newFolder.setLocalFilesInfo(localFilesInfo);
-			
-			digilockerService.storeNewFileOrFolderInfo(newFolder, folderId, userid);
-		}
+		if(fileUrl!=null)mvc.addObject("message","file uploaded successfully!");
+		
 		List<FolderInfo>	allFolderList=digilockerService.getDigiLockerHomeData(new Long(userid));
 		
 		HttpSession httpSession=request.getSession(true);
@@ -289,7 +225,7 @@ public class FileManagementController  extends CommonController{
 		mvc.setViewName("redirect:/sm/getfolderinfo/"+folderId);
 		System.out.println(user);
 		return mvc;
-	}
+	}//uploadFiles() closing
 	
 	
 
@@ -307,15 +243,9 @@ public class FileManagementController  extends CommonController{
 		logger.debug(" delete file or folders ...");
 		ModelAndView mvc = new ModelAndView();
 		if(deleteInfo.equals("File"))folderId=parentId;
-		//SMPropertites propertites = propertyService.getSmPropertyByKey(PropertyConstant.UPLOAD_USER_FILE_PATH);
-		//Users user=userService.findUserByUserName(principal.getName());
-		//boolean deleteStatus;
 		try {
-			//deleteStatus = fileUploadServices.deleteFileOrFolder(filePath);
-			//if(deleteStatus){
-				digilockerService.updateFileOrFolderSatus(deleteInfo,action,folderId, fileId,userid);
-				mvc.addObject("message","file deleted successfully!");
-			//}
+			digilockerService.updateFileOrFolderSatus(deleteInfo,action,folderId, fileId,userid);
+			mvc.addObject("message","file deleted successfully!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -418,71 +348,17 @@ public class FileManagementController  extends CommonController{
 	
 	
 	@RequestMapping(value = "/storeFilesFromGallery", method = RequestMethod.POST)
-	public ModelAndView  storeFilesFromGallery(@RequestParam("userId") Integer userId,
+	public ModelAndView  storeFilesInGalleryFromDigiLocker(@RequestParam("userId") Integer userId,
 			 @RequestParam("folderId") Integer folderId,
 			 @RequestParam("files") MultipartFile multipartList[],
 			 HttpServletRequest request) {
-		FolderInfo gallery =digilockerService.getGalleryDetails(userId);
-		String fileURL=null;
-		List<FilesInfo> newFileList = new ArrayList<>();
-		FilesInfo filesInfo = null;
-		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userId, UniqueKeyEnum.FILES_ID.toString(),multipartList.length);
-		for (int i=0;i<multipartList.length;i++) {	
-            if (!multipartList[i].isEmpty()) {
-            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
-            	if(fileURL!=null){
-	            	filesInfo =new FilesInfo();
-	            	String fileName = multipartList[i].getOriginalFilename();
-	        		//String filePath = multipartList[i]+fileName.replaceAll(" ", "_");
-	            	filesInfo.setFileId(++fileUniqueKey);
-	            	filesInfo.setFileName(fileName);
-	            	filesInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
-	            	//String filePath = gallery.getFolderPath()+fileName.replaceAll(" ", "_");
-	            	filesInfo.setFilePath(gallery.getFolderPath()+fileName.replaceAll(" ", "_"));
-	            	filesInfo.setFileStatus(DigiLockerStatusEnum.ACTIVE.toString());
-	            	filesInfo.setCreateddate(new Date());
-	            	filesInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
-	            	filesInfo.setFileType(digiLockerUtils.getFileType(multipartList[i]));
-	            	newFileList.add(filesInfo);
-            	}//if closing
-            }//if closing
-		}//for closing
-		if(newFileList.size()>0){
-			gallery.setLocalFilesInfo(newFileList);
-			digilockerService.storeNewFileOrFolderInfo(gallery, gallery.getFolderId(), userId);
-		}
-		ModelAndView mvc= new ModelAndView();
+	
+		digilockerService.storeFilesInGalleryFromDigiLocker(userId,folderId,  multipartList);
 		
+		ModelAndView mvc= new ModelAndView();
 		mvc.setViewName("redirect:/sm/getGallerContent?userid="+userId);
 		
 		return mvc;
 	}//storeFilesInGalleryFromEbook() closing
-	
-	/*public synchronized Integer gerUniqueKey(HttpServletRequest request){
-		int newValue=0;
-		
-		Properties properties = new Properties();
-		FileOutputStream fos =null;
-		try(InputStream input = request.getServletContext().getResourceAsStream("/WEB-INF/uniquekey.properties");){
-			properties.load(input);
-			String uniqueKey=properties.getProperty("uniqueId");
-			newValue= Integer.parseInt(uniqueKey)+1;
-			properties.setProperty("uniqueId", ""+newValue);
-			fos =new FileOutputStream(request.getServletContext().getRealPath("/WEB-INF/uniquekey.properties"));
-			properties.store(fos,null);
-		}catch(Exception e){
-			
-		}
-		finally{
-			try {fos.close();} catch (IOException e) {e.printStackTrace();}
-			properties=null;
-		}
-		
-		return newValue;
-	}*///closing
-	
-	
-
-
 	
 }//class closing

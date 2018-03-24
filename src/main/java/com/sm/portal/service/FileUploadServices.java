@@ -42,7 +42,8 @@ public class FileUploadServices {
 			//sardine.delete("http://104.155.27.172:8081/caweb_admin/images/actions/delete.png");
 			System.out.println("file stored successfully!");
 			//status=true;
-			fileURL=directoryPath+"/"+filename;
+			//fileURL=directoryPath+"/"+filename;
+			fileURL=WebDavServerConstant.MEDIA_URL+"?filePath="+folderPath+""+filename;
 		
 		} catch (Exception e) {	
 			e.printStackTrace();
