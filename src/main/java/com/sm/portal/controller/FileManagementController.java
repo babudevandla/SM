@@ -35,6 +35,7 @@ import com.sm.portal.digilocker.model.FolderInfo;
 import com.sm.portal.digilocker.model.GalleryDetails;
 import com.sm.portal.digilocker.service.DigilockerService;
 import com.sm.portal.digilocker.utils.DigiLockeUtils;
+import com.sm.portal.filters.ThreadLocalInfoContainer;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.FileManagementService;
 import com.sm.portal.service.FileUploadServices;
@@ -67,6 +68,8 @@ public class FileManagementController  extends CommonController{
 	DigiLockeUtils digiLockerUtils;
 	
 	@Autowired
+	
+	
 	UniqueKeyDaoImpl uniqueKeyDaoImpl;
 	
 	@GetMapping(value=URLCONSTANT.FILE_MANAGEMENT_HOME)
@@ -75,6 +78,7 @@ public class FileManagementController  extends CommonController{
 		logger.debug(" show fileManagement ...");
 		
 		ModelAndView mvc = new ModelAndView("/customer/file_management");
+		Integer UId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
 		try{
 			//Users user=userService.getUserById(userId);
 			List<FolderInfo>	allFolderList=digilockerService.getDigiLockerHomeData(new Long(userId));
