@@ -1,6 +1,9 @@
 package com.sm.portal.mongo.dao;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.bson.Document;
@@ -13,7 +16,13 @@ import org.springframework.stereotype.Repository;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.sm.portal.constants.CollectionsConstant;
+import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
+import com.sm.portal.ebook.enums.EbookChapterTypeEnum;
+import com.sm.portal.ebook.enums.EbookStatusEnum;
+import com.sm.portal.ebook.model.Ebook;
+import com.sm.portal.edairy.model.DairyInfo;
 import com.sm.portal.model.EDairyDto;
 import com.sm.portal.model.FileManagementVO;
 import com.sm.portal.model.Users;
@@ -120,4 +129,119 @@ public class EDairyMongoDao {
 			e.printStackTrace();
 		}
 	}
-}
+
+
+	public void creatEdairy(DairyInfo dairyInfo) {
+
+			MongoCollection<Document> coll = null;
+			coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EDAIRY_MONGO_USER_DAIRIES);
+			Bson filter=Filters.and(Filters.eq("userId",dairyInfo.getUserId()));
+			Document userDairyDoc =this.getUserDairiesDocument(dairyInfo,coll);
+			coll.findOneAndUpdate(filter,new Document("$set", userDairyDoc),new FindOneAndUpdateOptions().upsert(true)) ;
+			this.createEdairyInMongo(dairyInfo);
+	}//creatEdairy() closing
+
+	public void createEdairyInMongo(DairyInfo dairyInfo) {
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EDAIRY);
+		Bson filter=Filters.and(Filters.eq("userId",dairyInfo.getUserId()), Filters.eq("dairyId",dairyInfo.getDairyId()));
+		
+		Document edairyDoc = new Document();
+		edairyDoc.put("userId", dairyInfo.getUserId());
+		edairyDoc.put("year", dairyInfo.getYear());
+		edairyDoc.put("dairyId", dairyInfo.getDairyId());
+		edairyDoc.put("dairyName", dairyInfo.getDairyName());
+		edairyDoc.put("coverImage", dairyInfo.getCoverImage());
+		edairyDoc.put("lastModifiedDate", dairyInfo.getLastModifiedDate());
+		//edairyDoc.put("pageSize", ebook.getPageSize());
+		
+		List<Document> edairyPageDocs = new ArrayList<>();
+		
+		Document edairyPageDoc =null;
+		
+		int currentYear=dairyInfo.getYear();
+		/*int previousYear=currentYear-1;*/
+		int nextYear=currentYear+1;
+		
+		 Date startDate = new GregorianCalendar(currentYear, Calendar.JANUARY, 1).getTime();
+		
+		 Date endDate = new GregorianCalendar(nextYear, Calendar.JANUARY, 1).getTime();
+		 
+		 Calendar calendar = new GregorianCalendar();
+		 calendar.setTime(startDate);
+		     
+	    Calendar endCalendar = new GregorianCalendar();
+	    endCalendar.setTime(endDate);
+		int i=0;
+	    while (calendar.before(endCalendar)) {
+	        Date date = calendar.getTime();
+	        edairyPageDoc =new Document();
+	        edairyPageDoc.put("date", date);
+	        edairyPageDoc.put("pageNo", ++i);
+	        edairyPageDoc.put("pageName", "");
+	        edairyPageDoc.put("content", "");
+	        edairyPageDoc.put("pageStatus", DigiLockerStatusEnum.ACTIVE.toString());
+	        
+	        calendar.add(Calendar.DATE, 1);
+	        edairyPageDocs.add(edairyPageDoc);
+	        
+	    }
+	    
+	   // edairyPageDocs.sort((p1, p2) -> p1.getDate("date").compareTo(p2.getDate("date")));
+		edairyDoc.put("pages", edairyPageDocs);
+		coll.findOneAndUpdate(filter,new Document("$set", edairyDoc),new FindOneAndUpdateOptions().upsert(true)) ;
+		
+	}//createEbook
+
+	private Document getUserDairiesDocument(DairyInfo dairyInfo, MongoCollection<Document> coll) {
+		Document userDairyDoc=null;
+		List<Document> userDairyList =null;
+		if(coll!=null){
+			userDairyDoc =this.getUserDairyDocumentByUserId(dairyInfo.getUserId(), coll);
+			if(userDairyDoc!=null){
+				userDairyList =(List<Document>) userDairyDoc.get("daires");
+			}
+		}
+		
+		if(userDairyDoc==null){//if already not available createing first
+			userDairyDoc=new Document();
+			userDairyDoc.put("userId", dairyInfo.getUserId());
+			userDairyDoc.put("daires", userDairyList);
+			coll.findOneAndUpdate(Filters.eq("userId",dairyInfo.getUserId()),new Document("$set", userDairyDoc),new FindOneAndUpdateOptions().upsert(true));//creating first and getting then
+			userDairyDoc =this.getUserDairyDocumentByUserId(dairyInfo.getUserId(), coll);
+			if(userDairyDoc!=null){
+				userDairyList =(List<Document>) userDairyDoc.get("books");
+			}
+		}
+		
+		if(userDairyList==null)userDairyList =new ArrayList<>();
+		
+		Document dairyDoc = new Document();
+		
+		dairyDoc.put("dairyId", dairyInfo.getDairyId());
+		dairyDoc.put("year", dairyInfo.getYear());
+		dairyDoc.put("name", dairyInfo.getDairyName());
+		dairyDoc.put("createdDate", new Date());
+		dairyDoc.put("status", EbookStatusEnum.ACTIVE.toString());
+		dairyDoc.put("coverPage", dairyInfo.getCoverImage());
+		userDairyList.add(dairyDoc);
+		userDairyDoc.put("daires", userDairyList);
+		return userDairyDoc;
+		
+	}//getUserDairiesDocument() closing
+	
+	private Document getUserDairyDocumentByUserId(Integer userId, MongoCollection<Document> coll) {
+		Document userDairyDoc=null;
+		MongoCursor<Document> cursor = null;
+		if(coll==null){
+			coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EDAIRY_MONGO_USER_DAIRIES);
+		}//if closing
+		cursor =coll.find(Filters.eq("userId",userId)).iterator();
+		
+		while(cursor.hasNext()){
+			userDairyDoc = cursor.next();
+			 break;
+			}
+		return userDairyDoc;
+	}//getUserBookDocumentByUserId() closing
+}//class closing

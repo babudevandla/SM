@@ -8,6 +8,7 @@ import java.util.List;
 public class DairyInfo implements Serializable{
 
 	private Integer userId;
+	private Integer year;
 	private Integer dairyId;
 	private String dairyName;
 	private String coverImage;
@@ -15,10 +16,10 @@ public class DairyInfo implements Serializable{
 	private List<DairyPage> pages;
 	private DairyPage defaultPage;
 	
-	public int getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
-	public void setUserId(int userId) {
+	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
 	public int getDairyId() {
@@ -56,6 +57,15 @@ public class DairyInfo implements Serializable{
 	}
 	public void setDefaultPage(DairyPage defaultPage) {
 		this.defaultPage = defaultPage;
+	}
+	public Integer getYear() {
+		return year;
+	}
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+	public void setDairyId(Integer dairyId) {
+		this.dairyId = dairyId;
 	}
 	
     	

@@ -32,10 +32,12 @@ import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
 import com.sm.portal.digilocker.service.DigilockerService;
 import com.sm.portal.digilocker.utils.DigiLockeUtils;
+import com.sm.portal.ebook.enums.BookSizeEnum;
 import com.sm.portal.edairy.model.DairyInfo;
 import com.sm.portal.edairy.model.DairyPage;
 import com.sm.portal.edairy.model.EDairyPageDto;
 import com.sm.portal.edairy.model.EdairyActionEnum;
+import com.sm.portal.edairy.model.EdairyYearsEnum;
 import com.sm.portal.edairy.model.UserDairies;
 import com.sm.portal.edairy.service.EdairyServiceImpl;
 import com.sm.portal.model.EDairyDto;
@@ -97,24 +99,28 @@ public class EDairyController {
 	
 	
 	@RequestMapping(value="/create_edairy", method=RequestMethod.GET)
-	public ModelAndView createNewEDairy(@ModelAttribute("edairyDto") EDairyDto eDairyDto, Principal principal){
+	public ModelAndView createNewEDairy(@ModelAttribute("dairyInfo") DairyInfo dairyInfo, Principal principal){
 		logger.debug(" show user profile ...");
+		Users user =userService.findUserByUserName(principal.getName());
 		ModelAndView mvc = new ModelAndView("/customer/create_edairy");
-		mvc.addObject("edairyDto",eDairyDto);
+		dairyInfo.setYear(2018);
+		mvc.addObject("dairyInfo",dairyInfo);
 		mvc.addObject("diaryActive", true);
+		mvc.addObject("edairyYearsEnum", EdairyYearsEnum.values());
+		mvc.addObject("userId",user.getUserId());
 		return mvc;
 	}
 	
 	@RequestMapping(value="/submit_edairy", method=RequestMethod.POST)
-	public ModelAndView saveNewEDairy(@ModelAttribute("edairyDto") EDairyDto eDairyDto, Principal principal){
+	public ModelAndView saveNewEDairy(@ModelAttribute("dairyInfo") DairyInfo dairyInfo, Principal principal){
 		logger.debug(" show saveNewEDairy ...");
 		ModelAndView mvc = new ModelAndView();
 		Users user =userService.findUserByUserName(principal.getName());
 		mvc.addObject("user", user);
-		eDairyService.saveEDairyData(eDairyDto,user);
+		eDairyService.saveEDairyData(dairyInfo);
 		mvc.setViewName("redirect:/sm/e_dairy_list");
 		
-		mvc.addObject("edairyDto",eDairyDto);
+		//mvc.addObject("edairyDto",eDairyDto);
 		return mvc;
 	}
 

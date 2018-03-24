@@ -2,6 +2,7 @@ package com.sm.portal.service;
 
 import java.util.List;
 
+import com.sm.portal.edairy.model.DairyInfo;
 import com.sm.portal.model.EDairyDto;
 import com.sm.portal.model.Users;
 
@@ -14,5 +15,7 @@ public interface EDairyService {
 	EDairyDto getEDairyDataById(Integer dairyId);
 
 	void updateEDairyData(EDairyDto eDairyDto, Users user);
+
+	void saveEDairyData(DairyInfo dairyInfo);
 
 }
