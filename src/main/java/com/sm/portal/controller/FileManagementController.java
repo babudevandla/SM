@@ -1,14 +1,10 @@
 package com.sm.portal.controller;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,22 +31,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.sm.portal.constants.URLCONSTANT;
 import com.sm.portal.constants.WebDavServerConstant;
 import com.sm.portal.digilocker.model.DigiLockerAddressBar;
-import com.sm.portal.digilocker.model.DigiLockerEnum;
-import com.sm.portal.digilocker.model.DigiLockerStatusEnum;
-import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
 import com.sm.portal.digilocker.model.GalleryDetails;
 import com.sm.portal.digilocker.service.DigilockerService;
 import com.sm.portal.digilocker.utils.DigiLockeUtils;
-import com.sm.portal.ebook.model.EbookPageDto;
-import com.sm.portal.edairy.model.EdairyActionEnum;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.FileManagementService;
 import com.sm.portal.service.FileUploadServices;
 import com.sm.portal.service.PropertyService;
 import com.sm.portal.service.UserService;
 import com.sm.portal.uniquekeys.UniqueKeyDaoImpl;
-import com.sm.portal.uniquekeys.UniqueKeyEnum;
 
 @RestController
 @RequestMapping(URLCONSTANT.BASE_URL)

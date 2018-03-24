@@ -1,6 +1,6 @@
 <%@ page import="com.sm.portal.constants.WebDavServerConstant" %>
 <% 
-	pageContext.setAttribute("WebDav_Server_Url", WebDavServerConstant.MEDIA_URL);
+	pageContext.setAttribute("Media_rul", WebDavServerConstant.MEDIA_URL);
 %>
 <%@ page pageEncoding="ISO-8859-1"  contentType="text/html; charset=UTF-8" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
@@ -151,10 +151,10 @@
                 		<c:forEach items="${folderInfo.localFilesInfo}" var="files" varStatus="status">
 			                <tr>
 				                <td>
-				                	<a href="${WEBDAV_SERVER_URL}?filePath=${files.filePath}"  target="_blank" style="cursor: pointer;"	class="user-link">
+				                	<a href="${Media_rul}?filePath=${files.filePath}"  target="_blank" style="cursor: pointer;"	class="user-link">
 				                		<c:choose>
 				                			<c:when test="${files.fileType eq 'IMAGE' }">
-				                				<img src="${WEBDAV_SERVER_URL}?filePath=${files.filePath}" alt="" class="digilocker-photo-sm " />
+				                				<img src="${Media_rul}?filePath=${files.filePath}" alt="" class="digilocker-photo-sm " />
 				                				<%-- <img alt="" src="${contextPath}/resources/default/images/img_icon.png" style="width: 20px;margin-top: -3px;"> --%>
 				                			</c:when>
 				                			<c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'pdf' }">

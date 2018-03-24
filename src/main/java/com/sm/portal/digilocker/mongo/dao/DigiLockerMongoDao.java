@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.sm.portal.constants.CollectionsConstant;
@@ -164,6 +165,19 @@ public class DigiLockerMongoDao {
 		Bson filter = Filters.eq("userId", userId);
 		
 		FindIterable<Document> folderInfoVos=coll.find(filter);
+		int count=0;
+		for(Document cur : folderInfoVos){
+			count++;
+			break;
+		}
+		if(count==0){
+			Document userDigilockerDocument = new Document();
+			userDigilockerDocument.put("userId", userId);
+			userDigilockerDocument.put("foldersList", new ArrayList<Document>());
+			coll.insertOne(userDigilockerDocument);
+			folderInfoVos=coll.find(filter);
+		}
+		
 		if(null != folderInfoVos){
 			for (Document cur :  folderInfoVos ) {
 				boolean isFolderAlreadyExists =false;
