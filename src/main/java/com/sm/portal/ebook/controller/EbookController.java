@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +38,7 @@ import com.sm.portal.ebook.service.EbookServiceImpl;
 import com.sm.portal.edairy.model.DairyPage;
 import com.sm.portal.edairy.model.EdairyActionEnum;
 import com.sm.portal.edairy.service.EdairyServiceImpl;
+import com.sm.portal.filters.ThreadLocalInfoContainer;
 import com.sm.portal.model.UniqueKey;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.FileUploadServices;
@@ -262,6 +264,31 @@ public class EbookController {
 			uniqueKey=uniqueKeyDaoImpl.getUniqueKey(userId, UniqueKeyEnum.DAIRY_ID.toString(), 1);
 		return uniqueKey;
 	}//getUniqueValue() closing
+	
+	@RequestMapping(value="/createNewChapter/{bookId}/{pageNo}/{chapterName}")
+	public ModelAndView createNewChapter(@PathVariable Integer bookId,
+										 @PathVariable Integer pageNo,
+										 @PathVariable String chapterName){
+		Integer userId=(Integer) (ThreadLocalInfoContainer.INFO_CONTAINER.get()).get("USER_ID");
+		ModelAndView mav =new ModelAndView();
+		ebookServiceImple.createNewChapter(bookId,pageNo, chapterName);
+		mav.setViewName("redirect:/sm/editEbookContent?userId="+userId+"&bookId="+bookId+"&defaultPageNo="+pageNo);
+		return mav;
+		
+	}//createNewChapter() closing
+	@RequestMapping(value="/updateChapter/{bookId}/{pageNo}/{newChapterName}/{existingName}")
+	public ModelAndView updateChapter(@PathVariable Integer bookId,
+			 @PathVariable Integer pageNo,
+			 @PathVariable String newChapterName,
+			 @PathVariable String existingName){
+		Integer userId=(Integer) (ThreadLocalInfoContainer.INFO_CONTAINER.get()).get("USER_ID");
+		ebookServiceImple.updateChapter(bookId,pageNo, newChapterName,existingName);
+		
+		ModelAndView mav =new ModelAndView();	
+		mav.setViewName("redirect:/sm/editEbookContent?userId="+userId+"&bookId="+bookId+"&defaultPageNo="+pageNo);
+		return mav;
+		
+	}//createNewChapter() closing
 	
 	
 }//class closing

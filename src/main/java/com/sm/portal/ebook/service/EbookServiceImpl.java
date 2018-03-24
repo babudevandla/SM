@@ -64,6 +64,15 @@ public class EbookServiceImpl implements EbookService{
 		ebookMongoDao.saveEbookPageContent(eBookPageDto);
 		
 	}//saveEbookPageContent() closing
+
+	public void createNewChapter(Integer bookId, Integer pageNo, String chapterName) {
+		ebookMongoDao.createNewChapter(bookId,pageNo,chapterName );	
+	}
+
+	public void updateChapter(Integer bookId, Integer pageNo, String chapterName, String existingName) {
+
+		ebookMongoDao.updateChapter(bookId,pageNo,chapterName,existingName );
+	}
 	
 	
 	

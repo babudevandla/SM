@@ -23,6 +23,7 @@ import com.sm.portal.ebook.model.EbookPageBean;
 import com.sm.portal.ebook.model.EbookPageDto;
 import com.sm.portal.ebook.model.UserBook;
 import com.sm.portal.ebook.model.UserBooks;
+import com.sm.portal.filters.ThreadLocalInfoContainer;
 import com.sm.portal.mongo.MongoDBUtil;
 
 @Repository
@@ -244,6 +245,54 @@ public class EbookMongoDao {
 		MongoCollection<Document> coll = null;
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_MONGO_COLLECTION);
 	}
+
+	public void createNewChapter(Integer bookId, int pageNo, String chapterName) {
+		MongoCollection<Document> coll = null;
+		Integer userId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_LIST_MONGO_COLLECTON);
+		Bson filter=Filters.and(Filters.eq("userId",userId), Filters.eq("bookId",bookId));
+		MongoCursor<Document> cursor = null;
+		cursor =coll.find(filter).iterator();
+		Document ebookDoc =null;
+		while(cursor.hasNext()){
+			ebookDoc =cursor.next();
+			List<Document> ebookPageDocs= (List<Document>) ebookDoc.get("ebookPages");
+			for(Document pageDoc: ebookPageDocs){
+				if(pageDoc.getInteger("pageNo").intValue()==pageNo){
+					pageDoc.put("chapterName", chapterName);
+					pageDoc.put("chaperType", EbookChapterTypeEnum.CHAPTER_NAME.toString());
+				}else if(pageDoc.getInteger("pageNo").intValue()>pageNo){
+					if(pageDoc.getString("chaperType").equals(EbookChapterTypeEnum.CHAPTER_NAME.toString()))break;
+					pageDoc.put("chapterName", chapterName);
+				}
+			}//for closing
+			
+		}//while closing
+		
+		coll.findOneAndUpdate(filter,new Document("$set", ebookDoc),new FindOneAndUpdateOptions().upsert(true)) ;
+	}//createNewChapter() closing
+
+	public void updateChapter(Integer bookId, int pageNo, String chapterName, String existingName) {
+		Integer userId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_LIST_MONGO_COLLECTON);
+		Bson filter=Filters.and(Filters.eq("userId",userId), Filters.eq("bookId",bookId));
+		MongoCursor<Document> cursor = null;
+		cursor =coll.find(filter).iterator();
+		Document ebookDoc =null;
+		while(cursor.hasNext()){
+			ebookDoc =cursor.next();
+			List<Document> ebookPageDocs= (List<Document>) ebookDoc.get("ebookPages");
+			for(Document pageDoc: ebookPageDocs){
+				if(pageDoc.getString("chapterName").equals(existingName)){
+					pageDoc.put("chapterName", chapterName);
+				}
+			}//for closing
+			
+		}//while closing
+		
+		coll.findOneAndUpdate(filter,new Document("$set", ebookDoc),new FindOneAndUpdateOptions().upsert(true)) ;
+	}//updateChapter() closing
 
 	
 
