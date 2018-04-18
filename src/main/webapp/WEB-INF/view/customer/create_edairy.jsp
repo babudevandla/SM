@@ -14,33 +14,40 @@
 <jsp:body>
 
  <h1>New Dairy :</h1>  <br/>
+ <fieldset>
+ <div class="row">
  <form:form action="${contextPath}/sm/submit_edairy" method="post" commandName="dairyInfo">
 	<form:hidden path="userId" value="${userId }" />
-	
-		Dairy Name: <form:input path="dairyName" id="dairyName" maxlength="150"/></br>
-		Year:  <form:select path="year" id="yearId" >
-                           <c:forEach var="yearEnumVar"  items="${edairyYearsEnum}">
-                           		  <c:choose>
-	     	                		<c:when test ="${year == yearEnumVar.yearId}">
-	     	                			<form:option value="${yearEnumVar.yearId}">${yearEnumVar.yearId}</form:option>
-	     	                		</c:when>
-	     	                		<c:otherwise>
-	     	                			<c:choose>
-		     	                			<c:when test="${year != yearEnumVar.yearId}">
-		     	                				<form:option value="${yearEnumVar.yearId}">${yearEnumVar.yearId}</form:option>
-		     	                			</c:when>
-	     	                			</c:choose>
-	     	                		</c:otherwise>
-	     	                	</c:choose>  
-                              <form:option value="${yearEnumVar.yearId}">${yearEnumVar.yearId}</form:option>
-                           </c:forEach>
-           </form:select></br>
-		
- <input name="submit" type="submit"	class="btn btn-primary" value="Save" />
+        <div class="form-group col-xs-4">
+		<label>Dairy Name: </label>
+		<form:input path="dairyName" id="dairyName" class="form-control"  maxlength="150"/></br>
+		</div>
+		<div class="form-group col-xs-4">
+		<label>Year:  </label>
+		<form:select path="year" id="yearId" class="form-control" >
+              <c:forEach var="yearEnumVar"  items="${edairyYearsEnum}">
+              		  <c:choose>
+          		<c:when test ="${year == yearEnumVar.yearId}">
+          			<form:option value="${yearEnumVar.yearId}">${yearEnumVar.yearId}</form:option>
+          		</c:when>
+          		<c:otherwise>
+          			<c:choose>
+           			<c:when test="${year != yearEnumVar.yearId}">
+           				<form:option value="${yearEnumVar.yearId}">${yearEnumVar.yearId}</form:option>
+           			</c:when>
+          			</c:choose>
+          		</c:otherwise>
+          	</c:choose>  
+                 <form:option value="${yearEnumVar.yearId}">${yearEnumVar.yearId}</form:option>
+              </c:forEach>
+          </form:select></br>
+	</div>	
+	<div class="form-group col-xs-4" style="top: 26px;">
+	 <input name="submit" type="submit"	class="btn btn-secondary" value="Save" />
+	</div> 
 </form:form>
-<!-- <h1> CKEditor Plug-In : </h1> <br/>
-
-<textarea id="myfield" name="myfield"></textarea> -->
+</div>
+</fieldset>
 
 </jsp:body>
  </defaultTemplate:defaultDecorator>

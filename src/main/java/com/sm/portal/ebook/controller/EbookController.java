@@ -99,7 +99,8 @@ public class EbookController {
 	public ModelAndView creatEbookSubmit(@ModelAttribute Ebook eBook,BindingResult result, HttpServletRequest request){
 		ModelAndView mav = new ModelAndView();
 		
-		eBook.setBookId(digiLockerUtils.gerUniqueKey(request));
+		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(eBook.getUserId(), UniqueKeyEnum.BOOK_ID.toString(), 1);
+		eBook.setBookId(fileUniqueKey);
 		ebookServiceImple.createUserBook(eBook);
 		mav.setViewName("redirect:/sm/eBooklist?userId="+eBook.getUserId());
 		return mav;
@@ -276,13 +277,15 @@ public class EbookController {
 		return mav;
 		
 	}//createNewChapter() closing
-	@RequestMapping(value="/updateChapter/{bookId}/{pageNo}/{newChapterName}/{existingName}")
-	public ModelAndView updateChapter(@PathVariable Integer bookId,
-			 @PathVariable Integer pageNo,
-			 @PathVariable String newChapterName,
-			 @PathVariable String existingName){
-		Integer userId=(Integer) (ThreadLocalInfoContainer.INFO_CONTAINER.get()).get("USER_ID");
-		ebookServiceImple.updateChapter(bookId,pageNo, newChapterName,existingName);
+	@RequestMapping(value="/updateChapter")
+	public ModelAndView updateChapter(@RequestParam Integer bookId,@RequestParam Integer userId,
+			@RequestParam Integer pageNo,
+			@RequestParam String newChapterName,
+			@RequestParam String existingName){
+		if(userId==null){
+			userId=(Integer) (ThreadLocalInfoContainer.INFO_CONTAINER.get()).get("USER_ID");
+		}
+		ebookServiceImple.updateChapter(bookId,pageNo, newChapterName,existingName,userId);
 		
 		ModelAndView mav =new ModelAndView();	
 		mav.setViewName("redirect:/sm/editEbookContent?userId="+userId+"&bookId="+bookId+"&defaultPageNo="+pageNo);

@@ -73,7 +73,7 @@ public class UserServiceImpl  implements UserService {
 		
 		Integer  userId=userDao.saveUser(info);
 		
-		List<FolderInfo> folderlist=new ArrayList<>();
+		/*List<FolderInfo> folderlist=new ArrayList<>();
 		FolderInfo newFolder =new FolderInfo();
 		newFolder.setfId(0);
 		newFolder.setfName("");
@@ -102,7 +102,7 @@ public class UserServiceImpl  implements UserService {
 		folderlist.add(newFolder);
 		folderlist.add(galFolder);
 		
-		digilockerService.storeFolderInfo(folderlist,  userId);
+		digilockerService.storeFolderInfo(folderlist,  userId);*/
 		
 		return userId;
 	}

@@ -1,14 +1,14 @@
 <%@ page pageEncoding="ISO-8859-1"  contentType="text/html; charset=UTF-8" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
- <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <%@taglib prefix="defaultTemplate" tagdir="/WEB-INF/tags"%>
 <%@ page import="com.sm.portal.edairy.model.EdairyActionEnum" %>
- <script src="${contextPath}/resources/default/js/jquery-3.1.1.min.js"></script>
+<script src="${contextPath}/resources/default/js/jquery-3.1.1.min.js"></script>
 
 <defaultTemplate:defaultDecorator>
 <jsp:attribute name="title">E-Book</jsp:attribute>
@@ -56,9 +56,6 @@
          </div>
        </c:forEach>
        </div>
-        <img src="http://localhost:8095/SM_Portal/sm/media"/>
-        <video  controls>
-								  <source src="/SM_Portal/sm/media?filePath=/1/10000/60001/SampleVideo_1280x720_1mb.mp4" type="audio/mpeg"  style="height: 134px;">
-								</video>
+        
 </jsp:body>
  </defaultTemplate:defaultDecorator>

@@ -21,6 +21,8 @@
 <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"/>
+		
+		
 <style type="text/css">
 h2.mce-content-body {
   font-size: 200%;
@@ -39,6 +41,16 @@ body {
   margin-left: 0;
   min-height: auto;
   padding: inherit;
+}
+
+.edit {
+    float: left;
+    background: url(${contextPath}/resources/default/images/edit.png) no-repeat;
+    width: 32px;
+    height: 32px;
+    display: block;
+    cursor: pointer;
+    margin-left: 10px;
 }
 
 </style>
@@ -200,6 +212,7 @@ body {
 <script src="${contextPath}/resources/default/datatables/media/js/jquery.dataTables.min.js"></script>
 <script src="${contextPath}/resources/default/_mod/datatables/jquery.dataTables.bootstrap.min.js"></script>
 <script src="${contextPath}/resources/default/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+
 <script type="text/javascript">
 	
  $(document).ready(function() {

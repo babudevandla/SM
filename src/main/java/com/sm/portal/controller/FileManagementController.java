@@ -78,7 +78,7 @@ public class FileManagementController  extends CommonController{
 		logger.debug(" show fileManagement ...");
 		
 		ModelAndView mvc = new ModelAndView("/customer/file_management");
-		Integer UId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
+		//Integer UId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
 		try{
 			//Users user=userService.getUserById(userId);
 			List<FolderInfo>	allFolderList=digilockerService.getDigiLockerHomeData(new Long(userId));
@@ -330,6 +330,8 @@ public class FileManagementController  extends CommonController{
 			,HttpServletRequest request){
 		ModelAndView mvc = new ModelAndView("/customer/gallery_content");
 		try {
+			if(filesType==null)
+				filesType="ALL";
 			List<GalleryDetails> gallerylist = digilockerService.getGallerContent(userid, filesType,fileStatus);
 			mvc.addObject("galleryContent", gallerylist);
 			mvc.addObject("fileType", filesType);

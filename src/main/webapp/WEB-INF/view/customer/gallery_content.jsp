@@ -100,7 +100,7 @@
            				<img alt="" src="${contextPath}/resources/default/images/doc_icon.png" style="height: 134px;"/>
            			 </c:when>
            			 <c:otherwise>
-           				<i class="fa fa-file" aria-hidden="true"></i>
+           				<i class="fa fa-folder" aria-hidden="true"></i>
            			 </c:otherwise>
               		</c:choose>
                   </div>
@@ -122,7 +122,14 @@
 		               			<span class="label label-warning">${files.fileStatus}</span>
 		               		</c:when>
 		               		<c:otherwise>
-		               			<span class="label label-danger">${files.fileStatus}</span>
+		               			<c:choose>
+		               				<c:when test="${files.folderStatus eq 'DELETED'}">
+		               					<span class="label label-danger">${files.folderStatus}</span>
+		               				</c:when>
+		               				<c:otherwise>
+		               					<span class="label label-danger">${files.fileStatus}</span>
+		               				</c:otherwise>
+		               			</c:choose>
 		               		</c:otherwise>
 		               </c:choose>
                       </div>

@@ -21,7 +21,7 @@
     <table id="navigatorTable" class="table" cellspacing="0" style ="width: 100%">
 	    <tbody>
 	    	<tr>
-	    		<td ><label>Chapter:</label></td><td id="ebookPageDateId">${eBook.defaultPage.chapterName}</td>
+	    		<td ><label>Chapter:</label></td><td id="ebookPageDateId" ><span id="cptrName">${eBook.defaultPage.chapterName}</span> <span class="dedit-remote-json"><img src="${contextPath}/resources/default/images/edit.png"> </span></td>
 	    		<td><label>Page:</label></td><td id="ebookPageNoId">${eBook.defaultPage.pageNo}</td>
 	    		<td><label>Select Date:</label></td><td id="sectedDateId"></td>
 	    		<td align="right">
@@ -85,10 +85,36 @@
     </div>
 </div>
 
-
+<div class="modal fade" id="updateCptrName" role="dialog">
+    <div class="modal-dialog">
+    <form action="${contextPath}/sm/updateChapter" id="storeFilesInGallery"  method="get" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+                <h4 class="modal-title filename"></h4>
+            </div>
+            <div class="modal-body">
+            	<input type="text" name="newChapterName" id="chaptername" class="form-control" >
+				<input type="hidden" name="bookId" class="bookId">
+				<input type="hidden" name="userId" class="userId">
+				<input type="hidden" name="pageNo" class="pageNo">
+				<input type="hidden" name="existingName" class="existingName">
+            </div>
+            <div class="modal-footer">
+            	 <button type="submit" class="btn btn-primary" id="" >Update</button>
+            	  <button type="submit" class="btn btn-primary" id="" >Create</button>
+                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+      </form>
+    </div>
+</div>
 
 <script type="text/javascript">
-	
+$(document).ready(function () {
+	/* $('.dedit-remote-json').doomEdit({editForm:{method:'post', action:'remote_json.html', id:'ebookPageDateId'}, afterFormSubmit: function (data, form, el) {data = $.parseJSON(data);el.text(data.message);alert(data.message);}}); */
+});
+
 function AddMoreFile(tableID) {
     var table = document.getElementById(tableID);
     var rowCount = table.rows.length;
@@ -128,25 +154,7 @@ $(document).ready(function() {
 	  		});
 	  
 	
-	// var list=${pagelist};
-	// console.log(list);
-	 // var list=$.parseJSON("${pagelist}");
-	// var list=${pagelist};
-	  /* $.each(list,function( index, value ) {
-		 
-		  if(value.pageNo==2){
-			  alert(value.pageName);
-			$("#pageContent").html(value.pageName);
-			
-			return false;
-		  }
-	});   */
 	
-	/* $("#nextBtn1").click(function(){
-		//$(".abc").html("some thing");
-		tinymce.editors[0].setContent("hello world");
-		
-	}); */
  $("#ebookNextBtn").click(function(){
 	 var list=${pagelist};
 	var currentPageNo= $("#ebookPageNoId").html();
@@ -196,17 +204,7 @@ $("#viewBookId").click(function(){
 	
 });    
 
-/* $("#savePageContentId").click(function(){
-	 //var list=${pagelist};
-	 var href=$(this).attr("data-href");
-	var currentPageNo= $("#pageNoId").html();
-	var actionBy =$(this).attr("data-actionBy");
-	var pageContent=$("#editor").val();
-	var formData= $("#savePageId").serialize();
-	window.location.href=href+"?currentPageNo="+currentPageNo+"&pageContent="+pageContent;
-	
-}); */
- 
+
  
 	$("#saveEbookPageContentId").click(function(){
 		var currentPageNo= $("#ebookPageNoId").html();
@@ -218,31 +216,35 @@ $("#viewBookId").click(function(){
 	});
  
  
+ 
+	$(".dedit-remote-json").click(function(e){
+  		e.preventDefault();
+  		
+  		var currentPageNo= $("#ebookPageNoId").html();
+  		var dairyId= $("#bookId").html();
+  		var userId= $("#userId").html();
+  		var cptrName=$("#cptrName").html();
+  		$(".existingName").val(cptrName);
+  		$(".bookId").val(dairyId);
+		$(".userId").val(userId);
+		$(".pageNo").val(currentPageNo);
+  		$("#chaptername").val(cptrName);
+  		
+  		
+  		console.log(cptrName);
+  		
+  		$("#updateCptrName").modal({
+  			backdrop: 'static', 
+        	keyboard: false,
+        	show:true,
+        	height:'100%',
+        	width:'100%'
+  			});
+  		});
  }); 
  
  
 
-/* function readURL(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-            $('#blah')
-                .attr('src', e.target.result)
-                .width(150)
-                .height(200);
-        };
-
-        reader.readAsDataURL(input.files[0]);
-    }
-} */
-	
- /* $(document).ready(function() {
-	    	
-	    	
-	   
-	  	  
-*/	
  </script>
 	  	  
 </jsp:body>

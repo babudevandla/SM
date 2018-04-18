@@ -69,9 +69,9 @@ public class EbookServiceImpl implements EbookService{
 		ebookMongoDao.createNewChapter(bookId,pageNo,chapterName );	
 	}
 
-	public void updateChapter(Integer bookId, Integer pageNo, String chapterName, String existingName) {
+	public void updateChapter(Integer bookId, Integer pageNo, String chapterName, String existingName, Integer userId) {
 
-		ebookMongoDao.updateChapter(bookId,pageNo,chapterName,existingName );
+		ebookMongoDao.updateChapter(bookId,pageNo,chapterName,existingName ,userId);
 	}
 	
 	

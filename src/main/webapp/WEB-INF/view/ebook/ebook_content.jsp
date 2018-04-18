@@ -29,7 +29,8 @@
 				return false;
 			  }
 		});   */
-		  
+		
+		
 	 $("#ebookNextBtn").click(function(){
 		 var list=${pagelist};
 		var currentPageNo= $("#ebookPageNoId").html();
@@ -76,6 +77,28 @@
 		
 	 });
 		
+	 $(".dedit-remote-json").click(function(e){
+	  		e.preventDefault();
+	  		
+	  		var currentPageNo= $("#ebookPageNoId").html();
+	  		
+	  		var cptrName=$("#cptrName").html();
+	  		$(".existingName").val(cptrName);
+			$(".pageNo").val(currentPageNo);
+	  		$("#chaptername").val(cptrName);
+	  		
+	  		
+	  		console.log(cptrName);
+	  		
+	  		$("#updateCptrName").modal({
+	  			backdrop: 'static', 
+	        	keyboard: false,
+	        	show:true,
+	        	height:'100%',
+	        	width:'100%'
+	  			});
+	  	});
+
 	});
 	
 	
@@ -97,8 +120,9 @@
 } */
  div#ebookPageContent {
     overflow-y: auto;
-    height: 600px;
+    height: 100%;
     overflow-x: hidden;
+    width: 100%;
 } 
 </style>
  <div class="create-post" style="min-height: 0px;">
@@ -135,20 +159,20 @@
 
 <div class="container-fluid" >
 <div class="book-read" itemscope="" itemtype="http://schema.org/Book">
-<div class="xol-xs-12">
-<div class="xb-reader" data-caplink="https://www.readanybook.com/ebook-promo/565144" data-hash="true" style="height: 100%;">
+<div class="xol-xs-12"><span style="font-size: 17px;float: right;font-weight: bold;color: slategray;font-family: sans-serif;"> ${eBook.bookTitle}</span>
+<div class="xb-reader" data-hash="true" style="height: 100%;" >
     <div class="reader-vertical-line"></div>
     <div class="reader-header-outher">
         <div class="reader-header">
             <div class="reader-header-left" style="width: 100%;">
                 <h1 class="reader-name-inner" style="overflow-wrap: break-word;">
-                    <a href="javascript:void(0);" title="Chapter Name" id="ebookPageDateId" itemprop="name">${eBook.defaultPage.chapterName}</a>
+                    <a href="javascript:void(0);" title="Chapter Name" id="ebookPageDateId" itemprop="name" ><span id="cptrName">${eBook.defaultPage.chapterName}</span>  </a> <span class="dedit-remote-json"><img src="${contextPath}/resources/default/images/edit.png"> </span>
                     <a id="editEbookId" data-href="${pageContext.request.contextPath}/sm/editEbookContent?userId=${eBook.userId}&bookId=${eBook.bookId}"  class="btn btn-warning pull-right">
 	    				<i class="fa fa-edit"></i> EDIT
 	    			</a>
                  </h1>
                 <div class="reader-info-inner" style="overflow-wrap: break-word;">
-                     <a href="javascript:void(0);" id="ebookPageNoId" title="Page No">Page : ${eBook.defaultPage.pageNo}</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
+                     Page : <a href="javascript:void(0);" id="ebookPageNoId" title="Page No">${eBook.defaultPage.pageNo}</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
                      <a href="javascript:void(0);" id="sectedDateId" title="Created Date" itemprop="genre"> Mar 22, 2018 12:23:38 PM</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
                      <a href="javascript:void(0);" title="Read Fantasy books" itemprop="genre">Topic name</a>                
                 </div>
@@ -157,45 +181,52 @@
         </div>
     </div>
     <div class="reader-content-outer" >
-        <div class="xb-reader-prev col-sm-1 hidden-xs text-center">
-        	<a  id="ebookPrevBtn"  title="Prev page"><span class="glyphicon glyphicon-chevron-left"></span></a>
+        <div class="xb-reader-prev col-sm-1 hidden-xs text-center" style="width:4%">
+        	<a  id="ebookPrevBtn"  title="Prev page" style="cursor: pointer"><span class="glyphicon glyphicon-chevron-left"></span></a>
         </div>
-        <div class="reader-content col-xs-12 col-sm-10" >
+        <div class="reader-content col-xs-12 col-sm-10" style="width:92%">
         	<div id="ebookPageContent" style="visibility: visible;">
         		${eBook.defaultPage.content}
         	</div>
         </div>
-        <div class="xb-reader-next col-sm-1 hidden-xs text-center">
-        	<a  title="Next page"  id="ebookNextBtn" ><span class="glyphicon glyphicon-chevron-right"></span></a>
+        <div class="xb-reader-next col-sm-1 hidden-xs text-center" style="width:4%">
+        	<a  title="Next page"  id="ebookNextBtn" style="cursor: pointer"><span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
         <div class="clear"></div>
     </div>
-   <!--  <div class="reader-options collapsed">
-        <div class="col-xs-4">
-            <a href="javascript:;" title="Previous page" class="xb-reader-prev"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Prev</a>
-        </div>
-        <div class="col-xs-4 text-center when-collapsed">
-            <div class="download-panel-bottom hidden-xs">
-                <a rel="nofollow" target="_blank" href="http://desyncs.com/TDS/?sub=124&amp;q=Scarlet&amp;place=read&amp;img=https%3A%2F%2Ffiles.readanybook.com%2F515244%2Ffiles%2Fscarlet.jpg&amp;eid=9782897672492&amp;type=eid" title="Download book">DOWNLOAD</a><span> this page</span>
-            </div>
-            <a href="javascript:;" class="visible-xs files-link" title="Read other files of this book">Files (<span class="xb-reader-files-count">2</span>)</a>
-        </div>
-        <div class="col-xs-4 text-center when-not-collapsed" style="display: none;">
-            <a href="javascript:;" class="files-link files-link-close" title="Close and return to reading">Close</a>
-        </div>
-        <div class="col-xs-4 text-right">
-            <a href="javascript:;" title="Next page" class="xb-reader-next">Next <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
-        </div>
-        <div class="clear"></div>
-    </div> -->
-</div>    
+   
+</div>  
+ <span style="font-size: 17px;float: right;font-weight: bold;color: slategray;font-family: sans-serif;"> ${eBook.bookTitle}</span>  
 </div>
 </div>   
  </div>
 
 <span style="display: none;" id="pageListCont">${pagelist}</span>
 
-
+<div class="modal fade" id="updateCptrName" role="dialog">
+    <div class="modal-dialog">
+    <form action="${contextPath}/sm/updateChapter" id="storeFilesInGallery"  method="get" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+                <h4 class="modal-title filename"></h4>
+            </div>
+            <div class="modal-body">
+            	<input type="text" name="newChapterName" id="chaptername" class="form-control" >
+				<input type="hidden" name="bookId" class="bookId" value="${eBook.bookId}">
+				<input type="hidden" name="userId" class="userId" value="${eBook.userId}">
+				<input type="hidden" name="pageNo" class="pageNo" >
+				<input type="hidden" name="existingName" class="existingName">
+            </div>
+            <div class="modal-footer">
+            	 <button type="submit" class="btn btn-primary" id="" >Update</button>
+            	  <button type="submit" class="btn btn-primary" id="" >Create</button>
+                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+      </form>
+    </div>
+</div>
     
 </jsp:body>
  </defaultTemplate:defaultDecorator>

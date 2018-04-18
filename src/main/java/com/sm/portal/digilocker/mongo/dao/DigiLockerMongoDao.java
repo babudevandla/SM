@@ -370,12 +370,12 @@ public class DigiLockerMongoDao {
 			matchFilter.append("foldersList.files.fileType", filesType);
 			match2.append("$match", matchFilter);
 			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2,sort));
-		}else if(fileStatus!=null){
+		}else if(fileStatus!=null && !fileStatus.equals("DELETED")){
 			Document matchFilter=new Document("foldersList.folderStatus",  "ACTIVE");
 			matchFilter.append("foldersList.files.fileStatus", fileStatus);
 			match2.append("$match", matchFilter);
 			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2,sort));
-		}else{
+		}else if((filesType!=null && filesType.equals("ALL"))&& (fileStatus==null)){
 			match2.append("$match", new Document("foldersList.folderStatus", "ACTIVE"));
 			folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,unwind2,match2,sort));
 		}
@@ -385,31 +385,33 @@ public class DigiLockerMongoDao {
 				gallerInfo.add(details);
 			}//for closing
 			
-			//fetching deleted folders
-			if(fileStatus!=null){
-				fetchingDeletedFolder(coll,gallerInfo, match,  unwind1,fileStatus);
-			}
-			
 		}//if closing
-		
+		//fetching deleted folders
+		if(fileStatus!=null && fileStatus.equals("DELETED")){
+			fetchingDeletedFolder(gallerInfo,fileStatus,userId);
+		}
 		return gallerInfo;
 	}//getGallerContent() closing
 	
-	private List<GalleryDetails> fetchingDeletedFolder(MongoCollection<Document> coll, List<GalleryDetails> gallerInfo, Document match, Document unwind1,String folderStatus) {
+	private List<GalleryDetails> fetchingDeletedFolder(List<GalleryDetails> gallerInfo, String folderStatus, Integer userId) {
 		
 		AggregateIterable<Document> folderInfoVos=null;
 		
-		Document matchFilter=new Document("foldersList.folderStatus",  folderStatus);
-		matchFilter.append("$match", matchFilter);
+		MongoCollection<Document> coll = mongoDBUtil.getMongoCollection(CollectionsConstant.DIGILOCKER_MONGO_COLLETION);
+		Document match = new Document();
+		match.append("$match", new Document("userId", userId));
+		Document unwind1 = new Document();
+		unwind1.append("$unwind", "$foldersList");
+		Document matchFilter=new Document();
+		matchFilter.append("$match", new Document("foldersList.folderStatus", folderStatus));
 		
 		folderInfoVos=coll.aggregate(Arrays.asList(match,unwind1,matchFilter));
 		if(null != folderInfoVos){
-			Document cur =  folderInfoVos.first();
-			/*for (Document cur :  folderInfoVos ) {
+			for (Document cur :  folderInfoVos ) {
 				GalleryDetails details=setDeletedFolderData(cur);
 				gallerInfo.add(details);
 			}//for closing
-*/		}//if closing
+		}//if closing
 		return gallerInfo;
 	}
 

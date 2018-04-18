@@ -272,8 +272,10 @@ public class EbookMongoDao {
 		coll.findOneAndUpdate(filter,new Document("$set", ebookDoc),new FindOneAndUpdateOptions().upsert(true)) ;
 	}//createNewChapter() closing
 
-	public void updateChapter(Integer bookId, int pageNo, String chapterName, String existingName) {
-		Integer userId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
+	public void updateChapter(Integer bookId, int pageNo, String chapterName, String existingName, Integer userId) {
+		if(userId==null)
+			userId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
+		
 		MongoCollection<Document> coll = null;
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_LIST_MONGO_COLLECTON);
 		Bson filter=Filters.and(Filters.eq("userId",userId), Filters.eq("bookId",bookId));
