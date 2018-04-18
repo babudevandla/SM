@@ -43,6 +43,7 @@
 				$("#ebookPageContent").html(value.content);
 				$("#ebookPageNoId").html(value.pageNo);
 				$("#ebooPageDateId").html(value.date);
+				$("#cptrName").html(value.chapterName);
 				return false;
 			  }
 		}); 
@@ -60,6 +61,7 @@
 				$("#ebookPageContent").html(value.content);
 				$("#ebookPageNoId").html(value.pageNo);
 				$("#ebooPageDateId").html(value.date);
+				$("#cptrName").html(value.chapterName);
 				return false;
 			  }
 		}); 
@@ -87,7 +89,6 @@
 			$(".pageNo").val(currentPageNo);
 	  		$("#chaptername").val(cptrName);
 	  		
-	  		
 	  		console.log(cptrName);
 	  		
 	  		$("#updateCptrName").modal({
@@ -98,7 +99,8 @@
 	        	width:'100%'
 	  			});
 	  	});
-
+		
+	 
 	});
 	
 	
@@ -205,7 +207,7 @@
 
 <div class="modal fade" id="updateCptrName" role="dialog">
     <div class="modal-dialog">
-    <form action="${contextPath}/sm/updateChapter" id="storeFilesInGallery"  method="get" >
+    <form action="${contextPath}/sm/updateChapter" id="updateCptrNameFrom"  method="get" >
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
@@ -219,8 +221,8 @@
 				<input type="hidden" name="existingName" class="existingName">
             </div>
             <div class="modal-footer">
-            	 <button type="submit" class="btn btn-primary" id="" >Update</button>
-            	  <button type="submit" class="btn btn-primary" id="" >Create</button>
+            	 <button type="submit" class="btn btn-primary changeCptrName" id="updateCptr" data-href="${contextPath}/sm/updateChapter" >Update</button>
+            	  <button type="submit" class="btn btn-primary changeCptrName" id="createCptr" data-href="${contextPath}/sm/createNewChapter">Create</button>
                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

@@ -246,9 +246,11 @@ public class EbookMongoDao {
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_MONGO_COLLECTION);
 	}
 
-	public void createNewChapter(Integer bookId, int pageNo, String chapterName) {
+	public void createNewChapter(Integer bookId, int pageNo, String chapterName, Integer userId) {
 		MongoCollection<Document> coll = null;
-		Integer userId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
+		if(userId==null)
+			userId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
+		
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_LIST_MONGO_COLLECTON);
 		Bson filter=Filters.and(Filters.eq("userId",userId), Filters.eq("bookId",bookId));
 		MongoCursor<Document> cursor = null;

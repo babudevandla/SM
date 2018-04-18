@@ -51,6 +51,14 @@ $(document).ready(function() {
 		    
 		});
 	  
+	  
+		$('.changeCptrName').click(function(event){
+			event.preventDefault();
+			var	href=$(this).attr('data-href');
+			console.log(href);
+			$("#updateCptrNameFrom").attr("action", href);
+			$("#updateCptrNameFrom").submit();
+		});
 	
 });
 

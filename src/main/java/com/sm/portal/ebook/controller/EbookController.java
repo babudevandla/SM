@@ -266,13 +266,16 @@ public class EbookController {
 		return uniqueKey;
 	}//getUniqueValue() closing
 	
-	@RequestMapping(value="/createNewChapter/{bookId}/{pageNo}/{chapterName}")
-	public ModelAndView createNewChapter(@PathVariable Integer bookId,
-										 @PathVariable Integer pageNo,
-										 @PathVariable String chapterName){
-		Integer userId=(Integer) (ThreadLocalInfoContainer.INFO_CONTAINER.get()).get("USER_ID");
+	@RequestMapping(value="/createNewChapter")
+	public ModelAndView createNewChapter(@RequestParam Integer bookId,@RequestParam Integer userId,
+			@RequestParam Integer pageNo,
+			@RequestParam String newChapterName,
+			@RequestParam String existingName){
+		if(userId==null){
+			userId=(Integer) (ThreadLocalInfoContainer.INFO_CONTAINER.get()).get("USER_ID");
+		}
 		ModelAndView mav =new ModelAndView();
-		ebookServiceImple.createNewChapter(bookId,pageNo, chapterName);
+		ebookServiceImple.createNewChapter(bookId,pageNo, newChapterName,userId);
 		mav.setViewName("redirect:/sm/editEbookContent?userId="+userId+"&bookId="+bookId+"&defaultPageNo="+pageNo);
 		return mav;
 		
