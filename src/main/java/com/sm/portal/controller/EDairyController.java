@@ -118,7 +118,7 @@ public class EDairyController {
 		Users user =userService.findUserByUserName(principal.getName());
 		mvc.addObject("user", user);
 		eDairyService.saveEDairyData(dairyInfo);
-		mvc.setViewName("redirect:/sm/e_dairy_list");
+		mvc.setViewName("redirect:/sm/getUserDairiesList");
 		
 		//mvc.addObject("edairyDto",eDairyDto);
 		return mvc;

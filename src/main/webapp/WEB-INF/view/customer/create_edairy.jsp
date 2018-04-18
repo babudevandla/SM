@@ -20,7 +20,7 @@
 	<form:hidden path="userId" value="${userId }" />
         <div class="form-group col-xs-4">
 		<label>Dairy Name: </label>
-		<form:input path="dairyName" id="dairyName" class="form-control"  maxlength="150"/></br>
+		<form:input path="dairyName" id="dairyName" class="form-control"  maxlength="150" /></br>
 		</div>
 		<div class="form-group col-xs-4">
 		<label>Year:  </label>
