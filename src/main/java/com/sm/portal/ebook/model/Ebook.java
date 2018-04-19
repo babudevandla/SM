@@ -3,6 +3,8 @@ package com.sm.portal.ebook.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Ebook implements Serializable {
 
 	/**
@@ -17,6 +19,8 @@ public class Ebook implements Serializable {
 	private Integer pageSize;
 	List<EbookPage> ebookPages;
 	private EbookPage defaultPage;
+	
+	private MultipartFile coverImg;
 	
 	public Integer getBookId() {
 		return bookId;
@@ -65,6 +69,12 @@ public class Ebook implements Serializable {
 	}
 	public void setDefaultPage(EbookPage defaultPage) {
 		this.defaultPage = defaultPage;
+	}
+	public MultipartFile getCoverImg() {
+		return coverImg;
+	}
+	public void setCoverImg(MultipartFile coverImg) {
+		this.coverImg = coverImg;
 	}
 	
 	

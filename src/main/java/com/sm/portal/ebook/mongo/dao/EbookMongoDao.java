@@ -52,6 +52,8 @@ public class EbookMongoDao {
 					bv.setCreatedDate(doc.getDate("createdDate"));
 					bv.setCoverPage(doc.getString("coverPage"));
 					bv.setStatus(doc.getString("status"));
+					bv.setPageSize(doc.getInteger("pageSize"));
+					bv.setBookSize(doc.getInteger("bookSize"));
 					books.add(bv);
 				}//for closing
 			}//if cllsing
@@ -297,6 +299,16 @@ public class EbookMongoDao {
 		
 		coll.findOneAndUpdate(filter,new Document("$set", ebookDoc),new FindOneAndUpdateOptions().upsert(true)) ;
 	}//updateChapter() closing
+
+	public void updateBookCoverImg(Ebook ebook) {
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_MONGO_COLLECTION);
+		Bson filter=Filters.and(Filters.eq("userId",ebook.getUserId()));
+		Document userBookDoc =new Document();
+		coll.findOneAndUpdate(filter,new Document("$set", userBookDoc),new FindOneAndUpdateOptions().upsert(true)) ;
+		this.createEbook(ebook);
+		
+	}
 
 	
 

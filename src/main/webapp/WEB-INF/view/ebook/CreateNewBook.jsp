@@ -15,18 +15,18 @@
 <defaultTemplate:defaultDecorator>
 <jsp:attribute name="title">E-Book</jsp:attribute>
 <jsp:body>
-	<h3>Create New Book</h3>
+	<h3>Create New E-Book</h3>
 	<fieldset>
 	<div class="row">
 	<form:form action="${contextPath}/sm/creatEbook" id="createEbook"  method="POST" commandName="eBook" >
 	
 		<form:hidden path="userId" />
 		 <div class="form-group col-xs-4">
-			<label>BookName: </label>
-			<form:input path="bookTitle" id="bookTitle" maxlength="150" class="form-control" />
+			<label>Book Name: </label>
+			<form:input path="bookTitle" id="bookTitle" maxlength="150" class="form-control" required="required" />
 		</div>
 		 <div class="form-group col-xs-3">
-			<label>BookSize: </label>
+			<label>Book Size: </label>
 			<form:select path="bookSize" id="bookSize" class="form-control" >
                 <c:forEach var="bookSizeVar"  items="${bookSizeEnumList}">
                    <form:option value="${bookSizeVar.bookSize}">${bookSizeVar.bookSize}</form:option>

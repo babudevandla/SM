@@ -9,6 +9,9 @@ public class UserBook {
 	private Date createdDate;
 	private String status;
 	private String coverPage;
+	private Integer bookSize;
+	private Integer pageSize;
+	
 	public Integer getBookId() {
 		return bookId;
 	}
@@ -38,6 +41,18 @@ public class UserBook {
 	}
 	public void setCoverPage(String coverPage) {
 		this.coverPage = coverPage;
+	}
+	public Integer getBookSize() {
+		return bookSize;
+	}
+	public void setBookSize(Integer bookSize) {
+		this.bookSize = bookSize;
+	}
+	public Integer getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
 	
 	

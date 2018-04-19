@@ -11,12 +11,17 @@ import com.sm.portal.ebook.model.EbookPageBean;
 import com.sm.portal.ebook.model.EbookPageDto;
 import com.sm.portal.ebook.model.UserBooks;
 import com.sm.portal.ebook.mongo.dao.EbookMongoDao;
+import com.sm.portal.service.FileUploadServices;
 
 @Service
 public class EbookServiceImpl implements EbookService{
 
 	@Autowired
 	public EbookMongoDao ebookMongoDao;
+	
+	@Autowired
+	FileUploadServices fileUploadServices;
+	
 	@Override
 	public UserBooks getEbookList(Integer userId) {
 
@@ -72,6 +77,15 @@ public class EbookServiceImpl implements EbookService{
 	public void updateChapter(Integer bookId, Integer pageNo, String chapterName, String existingName, Integer userId) {
 
 		ebookMongoDao.updateChapter(bookId,pageNo,chapterName,existingName ,userId);
+	}
+
+	public void updateBookCoverImg(Ebook eBook) {
+		String fileURL=null;
+		 if (!eBook.getCoverImg().isEmpty()) {
+			 fileURL =fileUploadServices.uploadWebDavServer(eBook.getCoverImg());
+		 }
+		 eBook.setCoverImage(fileURL);
+		 ebookMongoDao.updateBookCoverImg(eBook);
 	}
 	
 	

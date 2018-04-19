@@ -129,79 +129,58 @@
 </style>
  <div class="create-post" style="min-height: 0px;">
    <div class="row" >
-   
-   	<%-- <div class="col-md-3 col-sm-3">
-         <div class="form-group">
-           	<a href="${contextPath}/sm/create_edairy" class="btn btn-primary pull-right">
-           		 Create New E-Diary 
-           	</a>
-         </div>
-         </div> --%>
-       </div>
-   	</div>
-   	<!-- <a class="btn btn-primary pull-left" id="ebookPrevBtn"  ><i class="fa fa-chevron-left" aria-hidden="true"></i> PRE </a>
-	<a class="btn btn-primary pull-right nextBtn" id="ebookNextBtn" >NEXT <i class="fa fa-chevron-right" aria-hidden="true"></i></a> -->
-   <%--  <table id="navigatorTable" class="table" cellspacing="0" style ="width: 100%">
-	    <tbody>
-	    	<tr>
-	    		<td ><label>Chapter:</label></td><td id="ebookPageDateId">${eBook.defaultPage.chapterName}</td>
-	    		<td><label>Page:</label></td><td id="ebookPageNoId">${eBook.defaultPage.pageNo}</td>
-	    		<td><label>Select Date:</label></td><td id="sectedDateId"></td>
-	    		<td align="right">
-	    			<a id="editEbookId" data-href="${pageContext.request.contextPath}/sm/editEbookContent?userId=${eBook.userId}&bookId=${eBook.bookId}"  class="btn btn-warning">
-	    				<i class="fa fa-edit"></i> WRITE
-	    			</a>
-	    		</td>
-	    	</tr>
-	    </tbody>
-    </table>
-    <div id="ebookPageContent" >
-    	${eBook.defaultPage.content}
-    </div> --%>
-
-<div class="container-fluid" >
-<div class="book-read" itemscope="" itemtype="http://schema.org/Book">
-<div class="xol-xs-12"><span style="font-size: 17px;float: right;font-weight: bold;color: slategray;font-family: sans-serif;"> ${eBook.bookTitle}</span>
-<div class="xb-reader" data-hash="true" style="height: 100%;" >
-    <div class="reader-vertical-line"></div>
-    <div class="reader-header-outher">
-        <div class="reader-header">
-            <div class="reader-header-left" style="width: 100%;">
-                <h1 class="reader-name-inner" style="overflow-wrap: break-word;">
-                    <a href="javascript:void(0);" title="Chapter Name" id="ebookPageDateId" itemprop="name" ><span id="cptrName">${eBook.defaultPage.chapterName}</span>  </a> <span class="dedit-remote-json"><img src="${contextPath}/resources/default/images/edit.png"> </span>
-                    <a id="editEbookId" data-href="${pageContext.request.contextPath}/sm/editEbookContent?userId=${eBook.userId}&bookId=${eBook.bookId}"  class="btn btn-warning pull-right">
-	    				<i class="fa fa-edit"></i> EDIT
-	    			</a>
-                 </h1>
-                <div class="reader-info-inner" style="overflow-wrap: break-word;">
-                     Page : <a href="javascript:void(0);" id="ebookPageNoId" title="Page No">${eBook.defaultPage.pageNo}</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
-                     <a href="javascript:void(0);" id="sectedDateId" title="Created Date" itemprop="genre"> Mar 22, 2018 12:23:38 PM</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
-                     <a href="javascript:void(0);" title="Read Fantasy books" itemprop="genre">Topic name</a>                
-                </div>
-            </div>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <div class="reader-content-outer" >
-        <div class="xb-reader-prev col-sm-1 hidden-xs text-center" style="width:4%">
-        	<a  id="ebookPrevBtn"  title="Prev page" style="cursor: pointer"><span class="glyphicon glyphicon-chevron-left"></span></a>
-        </div>
-        <div class="reader-content col-xs-12 col-sm-10" style="width:92%">
-        	<div id="ebookPageContent" style="visibility: visible;">
-        		${eBook.defaultPage.content}
-        	</div>
-        </div>
-        <div class="xb-reader-next col-sm-1 hidden-xs text-center" style="width:4%">
-        	<a  title="Next page"  id="ebookNextBtn" style="cursor: pointer"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="clear"></div>
-    </div>
-   
-</div>  
- <span style="font-size: 17px;float: right;font-weight: bold;color: slategray;font-family: sans-serif;"> ${eBook.bookTitle}</span>  
-</div>
-</div>   
- </div>
+	<div class="container-fluid" >
+	 <div class="book-read" itemscope="" itemtype="http://schema.org/Book">
+	 <c:choose>
+  		<c:when test="${not empty eBook.coverImage}">
+  			<img src="${contextPath}/${eBook.coverImage}" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+  		</c:when>
+  		<c:otherwise>
+  			 <img src="${contextPath}/resources/default/images/Book_icon.png" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+  		</c:otherwise>
+  	</c:choose>&nbsp;&nbsp;
+  	<span style="font-size: 17px;;font-weight: bold;color: slategray;font-family: sans-serif;"> ${eBook.bookTitle}</span><br/><br/>
+		<div class="xol-xs-12">
+		<div class="xb-reader" data-hash="true" style="height: 100%;" >
+		    <div class="reader-vertical-line"></div>
+		    <div class="reader-header-outher">
+		        <div class="reader-header">
+		            <div class="reader-header-left" style="width: 100%;">
+		                <h1 class="reader-name-inner" style="overflow-wrap: break-word;">
+		                    <a href="javascript:void(0);" title="Chapter Name" id="ebookPageDateId" itemprop="name" ><span id="cptrName">${eBook.defaultPage.chapterName}</span>  </a> <span class="dedit-remote-json"><img src="${contextPath}/resources/default/images/edit.png"> </span>
+		                    <a id="editEbookId" data-href="${pageContext.request.contextPath}/sm/editEbookContent?userId=${eBook.userId}&bookId=${eBook.bookId}"  class="btn btn-warning pull-right">
+			    				<i class="fa fa-edit"></i> EDIT
+			    			</a>
+		                 </h1>
+		                <div class="reader-info-inner" style="overflow-wrap: break-word;">
+		                     Page : <a href="javascript:void(0);" id="ebookPageNoId" title="Page No">${eBook.defaultPage.pageNo}</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
+		                     <a href="javascript:void(0);" id="sectedDateId" title="Created Date" itemprop="genre"> Mar 22, 2018 12:23:38 PM</a> &nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp; 
+		                     <a href="javascript:void(0);" title="Read Fantasy books" itemprop="genre">Topic name</a>                
+		                </div>
+		            </div>
+		            <div class="clear"></div>
+		        </div>
+		    </div>
+		    <div class="reader-content-outer" >
+		        <div class="xb-reader-prev col-sm-1 hidden-xs text-center" style="width:4%">
+		        	<a  id="ebookPrevBtn"  title="Prev page" style="cursor: pointer"><span class="glyphicon glyphicon-chevron-left"></span></a>
+		        </div>
+		        <div class="reader-content col-xs-12 col-sm-10" style="width:92%">
+		        	<div id="ebookPageContent" style="visibility: visible;">
+		        		${eBook.defaultPage.content}
+		        	</div>
+		        </div>
+		        <div class="xb-reader-next col-sm-1 hidden-xs text-center" style="width:4%">
+		        	<a  title="Next page"  id="ebookNextBtn" style="cursor: pointer"><span class="glyphicon glyphicon-chevron-right"></span></a>
+		        </div>
+		        <div class="clear"></div>
+		    </div>
+		   
+		</div>  
+		 <span style="font-size: 17px;float: right;font-weight: bold;color: slategray;font-family: sans-serif;"> ${eBook.bookTitle}</span>  
+		</div>
+		</div>   
+		 </div>
 
 <span style="display: none;" id="pageListCont">${pagelist}</span>
 

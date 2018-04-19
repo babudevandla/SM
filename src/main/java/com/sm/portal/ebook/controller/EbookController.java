@@ -2,8 +2,11 @@ package com.sm.portal.ebook.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,13 +35,12 @@ import com.sm.portal.ebook.model.Ebook;
 import com.sm.portal.ebook.model.EbookPage;
 import com.sm.portal.ebook.model.EbookPageBean;
 import com.sm.portal.ebook.model.EbookPageDto;
+import com.sm.portal.ebook.model.UserBook;
 import com.sm.portal.ebook.model.UserBooks;
 import com.sm.portal.ebook.service.EbookServiceImpl;
-import com.sm.portal.edairy.model.DairyPage;
 import com.sm.portal.edairy.model.EdairyActionEnum;
 import com.sm.portal.edairy.service.EdairyServiceImpl;
 import com.sm.portal.filters.ThreadLocalInfoContainer;
-import com.sm.portal.model.UniqueKey;
 import com.sm.portal.model.Users;
 import com.sm.portal.service.FileUploadServices;
 import com.sm.portal.service.UserService;
@@ -79,7 +80,8 @@ public class EbookController {
 		Users user =userService.findUserByUserName(principal.getName());
 		if(userId==null)userId=user.getUserId();
 		UserBooks userBooks = ebookServiceImple.getEbookList(userId);
-		//mav.addObject("EbookList", userBooks.getBooks());
+		
+		//userBooks.getBooks().stream().sorted().collect(Collectors.toList());
 		mav.addObject("userBooks",userBooks);
 		if(user.getUserId()!=null)mav.addObject("userId",user.getUserId());
 		else mav.addObject("userId",userId);
@@ -92,6 +94,15 @@ public class EbookController {
 		mav.addObject("userId",userId);
 		mav.addObject("bookSizeEnumList", BookSizeEnum.values());
 		mav.addObject("pageSizeEnumList", PageSizeEnum.values());
+		return mav;
+	}//getEbookList() closing
+	
+	@RequestMapping(value="/uploadCoverimg", method=RequestMethod.POST)
+	public ModelAndView uploadCoverimg(@ModelAttribute Ebook eBook,BindingResult result, HttpServletRequest request){
+		ModelAndView mav = new ModelAndView();
+		
+		ebookServiceImple.updateBookCoverImg(eBook);
+		mav.setViewName("redirect:/sm/eBooklist?userId="+eBook.getUserId());
 		return mav;
 	}//getEbookList() closing
 	

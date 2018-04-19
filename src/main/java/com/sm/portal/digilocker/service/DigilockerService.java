@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sm.portal.digilocker.model.FilesInfo;
 import com.sm.portal.digilocker.model.FolderInfo;
 import com.sm.portal.digilocker.model.GalleryDetails;
+import com.sm.portal.ebook.model.Ebook;
 
 public interface DigilockerService {
 
@@ -37,5 +38,6 @@ public interface DigilockerService {
 	public String uploadFiles(MultipartFile multipart, Integer userid, String folderPath, Integer folderId);
 
 	public void storeFilesInGalleryFromDigiLocker(Integer userId, Integer folderId, MultipartFile[] multipartList);
+
 
 }

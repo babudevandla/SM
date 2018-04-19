@@ -110,7 +110,14 @@
                       <a class="btn text-red"><i class="fa fa-thumbs-down"></i> 4</a>
                     </div> -->
                     <div class="user-info">
-                      <img src="${WebDav_Server_Url}?filePath=${files.filePath}" alt="" class="profile-photo-sm pull-left" />
+                    <c:choose>
+                    	<c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'pdf'  )}">
+                      		<img src="${contextPath}/resources/default/images/pdf_icon.png" alt="" class="profile-photo-sm pull-left" />
+                      </c:when>
+                      <c:otherwise>
+                      		<img src="${WebDav_Server_Url}?filePath=${files.filePath}" alt="" class="profile-photo-sm pull-left" />
+                      </c:otherwise>
+                      </c:choose>
                       <div class="user">
                         <h6>${files.fileName}</h6>
                         <h6>Origin: ${files.origin} </h6>

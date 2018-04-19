@@ -32,14 +32,24 @@
        <c:forEach items="${userBooks.books }" var="book" >
          <div class="nearby-user">
            <div class="row">
-             <div class="col-md-3 col-sm-3">
+             <div class="col-md-4 col-sm-4">
              	<a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}">
-              	 <img src="${contextPath}/resources/default/images/Book_icon.png" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+             	<c:choose>
+             		<c:when test="${not empty book.coverPage}">
+             			<img src="${contextPath}/${book.coverPage}" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+             		</c:when>
+             		<c:otherwise>
+             			 <img src="${contextPath}/resources/default/images/Book_icon.png" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+             		</c:otherwise>
+             	</c:choose>
+              	
                </a>
+               <p>&nbsp;<span class="label label-primary">${book.bookSize} </span>&nbsp;Pages  | &nbsp;<span class="label label-warning">${book.pageSize}</span>&nbsp; Lines per Page </p>
              </div>
-             <div class="col-md-9 col-sm-9">
+             <div class="col-md-5 col-sm-5">
              	<h5><a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}" class="profile-link">${book.bookTitle}</a></h5>
                <p><f:formatDate value="${book.createdDate}" type="both"/> </p>
+              <p> Book size :${book.bookSize}</p>
                <c:choose>
                		<c:when test="${book.status eq 'ACTIVE'}">
                			<span class="label label-success">${book.status}</span>
@@ -52,6 +62,15 @@
                		</c:otherwise>
                </c:choose>
              </div>
+             <div class="col-md-3 col-sm-3">
+	             <form action="${contextPath}/sm/uploadCoverimg" enctype="multipart/form-data" method="post">
+	             	Update cover Img:<input type="file" name="coverImg" ><br/>
+	             	<input type="hidden" name="bookId" value="${book.bookId}">
+	             	<input type="hidden" name="userId" value="${userBooks.userId}">
+	             	<input type="submit" value="Upload" class="btn btn">
+	             </form>
+             </div>
+             
            </div>
          </div>
        </c:forEach>
