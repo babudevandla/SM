@@ -205,12 +205,15 @@ public class DigilockerServiceImpl implements DigilockerService{
 		List<FilesInfo> newFileList = new ArrayList<>();
 		FilesInfo filesInfo = null;
 		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userId, UniqueKeyEnum.FILES_ID.toString(),multipartList.length);
+		String fileExtention =null;
+		String fileName =null;
 		for (int i=0;i<multipartList.length;i++) {	
             if (!multipartList[i].isEmpty()) {
             	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
             	if(fileURL!=null){
 	            	filesInfo =new FilesInfo();
-	            	String fileName = multipartList[i].getOriginalFilename();
+	            	fileName= multipartList[i].getOriginalFilename();
+	            	fileExtention=fileName.substring(fileName.lastIndexOf(".")+1);
 	            	filesInfo.setFileId(++fileUniqueKey);
 	            	filesInfo.setFileName(fileName);
 	            	filesInfo.setDumy_filename(fileName.replaceAll(" ", "_"));
@@ -219,6 +222,7 @@ public class DigilockerServiceImpl implements DigilockerService{
 	            	filesInfo.setCreateddate(new Date());
 	            	filesInfo.setStatusAtGallery(DigiLockerStatusEnum.ACTIVE.toString());
 	            	filesInfo.setFileType(digiLockerUtils.getFileType(multipartList[i]));
+	            	filesInfo.setFileExtension(fileExtention);
 	            	newFileList.add(filesInfo);
             	}//if closing
             }//if closing
