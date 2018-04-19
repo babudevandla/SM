@@ -49,7 +49,7 @@
              <div class="col-md-5 col-sm-5">
              	<h5><a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}" class="profile-link">${book.bookTitle}</a></h5>
                <p><f:formatDate value="${book.createdDate}" type="both"/> </p>
-              <p> Book size :${book.bookSize}</p>
+              
                <c:choose>
                		<c:when test="${book.status eq 'ACTIVE'}">
                			<span class="label label-success">${book.status}</span>
