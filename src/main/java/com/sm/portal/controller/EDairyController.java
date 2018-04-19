@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.PathParam;
 
 import org.apache.commons.io.IOUtils;
@@ -75,11 +76,23 @@ public class EDairyController {
 	@Autowired
 	UniqueKeyDaoImpl uniqueKeyDaoImpl;
 	
-	@RequestMapping(value="/media", method=RequestMethod.GET)
+	/*@RequestMapping(value="/media", method=RequestMethod.GET)
 	public byte[] getImage(@RequestParam(value = "filePath") String filePath){
 		byte[] data=null;
 		try {
 			data = IOUtils.toByteArray(fileUploadServices.downloadFile(filePath));
+		} catch (IOException e) {e.printStackTrace();}
+	    return data;
+	}*/
+	
+	@RequestMapping(value="/media", method=RequestMethod.GET)
+	public byte[] getImage(@RequestParam(value = "filePath") String filePath, HttpServletResponse response){
+		byte[] data=null;
+		try {
+			data = IOUtils.toByteArray(fileUploadServices.downloadFile(filePath));
+			response.setContentType("application/pdf");
+			response.setContentLength(data.length);
+			response.getOutputStream().write(data);
 		} catch (IOException e) {e.printStackTrace();}
 	    return data;
 	}//
