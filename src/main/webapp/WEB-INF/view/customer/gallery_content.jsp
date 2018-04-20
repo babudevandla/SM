@@ -115,7 +115,7 @@
                       		<img src="${contextPath}/resources/default/images/pdf_icon.png" alt="" class="profile-photo-sm pull-left" />
                       </c:when>
                       <c:otherwise>
-                      		<img src="${WebDav_Server_Url}?filePath=${files.filePath}" alt="" class="profile-photo-sm pull-left" />
+                      		<img src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" alt="" class="profile-photo-sm pull-left" />
                       </c:otherwise>
                       </c:choose>
                       <div class="user">
