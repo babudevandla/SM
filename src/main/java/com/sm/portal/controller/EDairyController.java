@@ -207,7 +207,7 @@ public class EDairyController {
 		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userId, UniqueKeyEnum.FILES_ID.toString(), multipartList.length);
 		for (int i=0;i<multipartList.length;i++) {	
             if (!multipartList[i].isEmpty()) {
-            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
+            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath(),request);
             	if(fileURL!=null){
 	            	fileUrlList.add(fileURL);
 	            	filesInfo =new FilesInfo();

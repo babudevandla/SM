@@ -3,6 +3,8 @@ package com.sm.portal.digilocker.service;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sm.portal.digilocker.model.FilesInfo;
@@ -35,9 +37,9 @@ public interface DigilockerService {
 	public FolderInfo createNewFolder(Integer userid, String foldername, String currentFolderPath,
 			List<FolderInfo> allFolderList);
 
-	public String uploadFiles(MultipartFile multipart, Integer userid, String folderPath, Integer folderId);
+	public String uploadFiles(MultipartFile multipart, Integer userid, String folderPath, Integer folderId, HttpServletRequest request);
 
-	public void storeFilesInGalleryFromDigiLocker(Integer userId, Integer folderId, MultipartFile[] multipartList);
+	public void storeFilesInGalleryFromDigiLocker(Integer userId, Integer folderId, MultipartFile[] multipartList, HttpServletRequest request);
 
 
 }

@@ -186,7 +186,7 @@ public class EbookController {
 		DigiLockeUtils digiLockerUtils = new DigiLockeUtils();
 		for (int i=0;i<multipartList.length;i++) {	
             if (!multipartList[i].isEmpty()) {
-            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
+            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath(),request);
             	if(fileURL!=null){
 	            	fileUrlList.add(fileURL);
 	            	filesInfo =new FilesInfo();

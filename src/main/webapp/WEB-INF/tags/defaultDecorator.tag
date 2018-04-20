@@ -101,11 +101,12 @@ body {
             	<a  class="text-white"><i class="fa fa-phone" aria-hidden="true"></i> ${user.mobile_no}</a>
             </div><!--profile card ends-->
             <ul class="nav-news-feed">
-              <li class="${digiLockActive?'active':''}"><i class="icon ion-lock-combination"></i><div><a href="${contextPath}/sm/file_management/${user.userId}">Digi Locker</a></div></li>
-              <li class="${diaryActive?'active':''}"><i class="fa fa-calendar" aria-hidden="true"></i><div><a href="${contextPath}/sm/getUserDairiesList">E Diary</a></div></li>
+              <%-- <li class="${digiLockActive?'active':''}"><i class="icon ion-lock-combination"></i><div><a href="${contextPath}/sm/file_management/${user.userId}">File Bank</a></div></li> --%>
+              <li class="${digiLockActive?'active':''}"><i class="icon ion-lock-combination"></i><div><a href="${contextPath}/sm/file_management">File Bank</a></div></li>
+              <li class="${diaryActive?'active':''}"><i class="fa fa-calendar" aria-hidden="true"></i><div><a href="${contextPath}/sm/getUserDairiesList">My Dairies</a></div></li>
               <%-- <li class="${msgActive?'active':''}"><i class="icon ion-chatboxes"></i><div><a href="${contextPath}/sm/messanger">Messanger</a></div></li> --%>
-              <li class="${galleryActive?'active':''}"><i class="fa fa-book" aria-hidden="true"></i><div><a href="${contextPath}/sm/eBooklist">E-Book</a></div></li>
-              <li class="${paActive?'active':''}"><i class="fa fa-bell-o" aria-hidden="true"></i><div><a href="${contextPath}/sm/personallist">Personal Assistant (PA)</a></div></li>
+              <li class="${galleryActive?'active':''}"><i class="fa fa-book" aria-hidden="true"></i><div><a href="${contextPath}/sm/eBooklist">My Books</a></div></li>
+              <li class="${paActive?'active':''}"><i class="fa fa-bell-o" aria-hidden="true"></i><div><a href="${contextPath}/sm/personallist">My PA</a></div></li>
               <li class="${settActive?'active':''}"><i class="fa  fa-cog" aria-hidden="true"></i><div><a href="${contextPath}/sm/settings">Settings</a></div></li>
               <!-- <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li> -->
             </ul>

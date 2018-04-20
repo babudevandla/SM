@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -160,12 +162,12 @@ public class DigilockerServiceImpl implements DigilockerService{
 
 
 	@Override
-	public String uploadFiles(MultipartFile multipart, Integer userid, String folderPath, Integer folderId) {
+	public String uploadFiles(MultipartFile multipart, Integer userid, String folderPath, Integer folderId, HttpServletRequest request) {
 
 		String fileName = multipart.getOriginalFilename();
 		String filePath = folderPath+fileName.replaceAll(" ", "_");
 		
-		String fileURL=fileUploadServices.uploadWebDavServer(multipart,folderPath);
+		String fileURL=fileUploadServices.uploadWebDavServer(multipart,folderPath, request);
 		String fileType =digiLockerUtils.getFileType(multipart);
 		String fileExtension=fileName.substring(fileName.lastIndexOf(".")+1);
 		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(userid, UniqueKeyEnum.FILES_ID.toString(), 1);
@@ -195,7 +197,7 @@ public class DigilockerServiceImpl implements DigilockerService{
 
 
 	@Override
-	public void storeFilesInGalleryFromDigiLocker(Integer userId, Integer folderId, MultipartFile[] multipartList) {
+	public void storeFilesInGalleryFromDigiLocker(Integer userId, Integer folderId, MultipartFile[] multipartList, HttpServletRequest request) {
 
 		FolderInfo gallery =digilockerService.getGalleryDetails(userId);
 		if(gallery==null){
@@ -209,7 +211,7 @@ public class DigilockerServiceImpl implements DigilockerService{
 		String fileName =null;
 		for (int i=0;i<multipartList.length;i++) {	
             if (!multipartList[i].isEmpty()) {
-            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath());
+            	fileURL =fileUploadServices.uploadWebDavServer(multipartList[i], gallery.getFolderPath(), request);
             	if(fileURL!=null){
 	            	filesInfo =new FilesInfo();
 	            	fileName= multipartList[i].getOriginalFilename();

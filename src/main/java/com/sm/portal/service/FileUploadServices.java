@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +25,7 @@ public class FileUploadServices {
 	
 	static Sardine sardine = SardineFactory.begin();
 	  private static final String FILE_PATTERN ="([^\\s]+(\\.(?i)(jpg|png|gif|bmp|pdf|xls))$)";
-	public String uploadWebDavServer(MultipartFile multipartFile, String folderPath) {
+	public String uploadWebDavServer(MultipartFile multipartFile, String folderPath, HttpServletRequest request) {
 		boolean status=false;
 		String fileURL=null;
 		String filename=multipartFile.getOriginalFilename().replaceAll(" ", "_");
@@ -43,7 +45,7 @@ public class FileUploadServices {
 			System.out.println("file stored successfully!");
 			//status=true;
 			//fileURL=directoryPath+"/"+filename;
-			fileURL=WebDavServerConstant.MEDIA_URL+"?filePath="+folderPath+""+filename;
+			fileURL=request.getContextPath()+WebDavServerConstant.MEDIA_URL+"?filePath="+folderPath+""+filename;
 		
 		} catch (Exception e) {	
 			e.printStackTrace();

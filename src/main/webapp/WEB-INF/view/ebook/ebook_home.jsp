@@ -76,13 +76,13 @@
              	</c:choose>
                </a>&nbsp;
               
-               <span>
+               <!-- <span>
 	               <span class="fa fa-star checked"></span>
 					<span class="fa fa-star checked"></span>
 					<span class="fa fa-star checked"></span>
 					<span class="fa fa-star"></span>
 					<span class="fa fa-star"></span> 3.00 avg rating
-			    </span>
+			    </span> -->
                 <br/><span style="font-size: 10px;"> by </span><span class="greyText">${book.createdBy} </span>
                 <p>&nbsp;<span class="label label-primary">${book.bookSize} </span>&nbsp;Pages  | &nbsp;<span class="label label-warning">${book.pageSize}</span>&nbsp; Lines per Page </p>
              </div>

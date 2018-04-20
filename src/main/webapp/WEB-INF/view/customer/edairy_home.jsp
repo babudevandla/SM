@@ -13,9 +13,9 @@
 <defaultTemplate:defaultDecorator>
 <jsp:attribute name="title">E-Diary</jsp:attribute>
 <jsp:body>
-	<a href="${contextPath}/sm/getDairyInfo/${userId}/${dairyId}?actionBy=${EdairyActionEnum.TODAYS_PAGE}" class="btn btn-primary">Go to today's page</a>
+	<%-- <a href="${contextPath}/sm/getDairyInfo/${userId}/${dairyId}?actionBy=${EdairyActionEnum.TODAYS_PAGE}" class="btn btn-primary">Go to today's page</a>
 	<a href="${contextPath}/sm/getDairyInfo/${userId}/${dairyId}?actionBy=${EdairyActionEnum.LAST_UPDATD_DATE}" class="btn btn-primary">Go to last updated page</a>
-	<a href="${contextPath}/sm/getDairyInfo/${userId}/${dairyId}?actionBy=${EdairyActionEnum.SELECTED_DATE}" class="btn btn-primary">Select date to open page</a></br></br>
+	<a href="${contextPath}/sm/getDairyInfo/${userId}/${dairyId}?actionBy=${EdairyActionEnum.SELECTED_DATE}" class="btn btn-primary">Select date to open page</a></br></br> --%>
 	<a href="${contextPath}/sm/getDairyInfo/${userId}/${dairyId}?actionBy=${EdairyActionEnum.FAVORITE_PAGE}&defaultPageNo=1" class="btn btn-primary">select favorite Page</a>
 	<a href="${contextPath}/sm/getDairyInfo/${userId}/${dairyId}?actionBy=${EdairyActionEnum.TITLE_PAGE}&defaultPageNo=1" class="btn btn-primary">Open page by page title</a>
 	<%-- <a href="${contextPath}/sm/getDairyInfo/${userDairies.userId}/${dairy.dairyId}" >${dairy.name}</a> --%>

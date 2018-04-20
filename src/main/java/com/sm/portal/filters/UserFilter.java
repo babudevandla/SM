@@ -92,8 +92,11 @@ public class UserFilter implements Filter{
 			((Hashtable)localObject).put(paramString, paramObject);
 			ThreadLocalInfoContainer.INFO_CONTAINER.set((Map<String, Object>) localObject);;
 		}else{
-			localObject=(Map)ThreadLocalInfoContainer.INFO_CONTAINER.get();
-			((Map)localObject).put(paramString, localObject);
+			/*localObject=(Map)ThreadLocalInfoContainer.INFO_CONTAINER.get();
+			((Map)localObject).put(paramString, localObject);*/
+			localObject = new Hashtable(5);
+			((Hashtable)localObject).put(paramString, paramObject);
+			ThreadLocalInfoContainer.INFO_CONTAINER.set((Map<String, Object>) localObject);;
 		}
 	}
 

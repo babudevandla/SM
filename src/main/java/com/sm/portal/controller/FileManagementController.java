@@ -73,10 +73,14 @@ public class FileManagementController  extends CommonController{
 	UniqueKeyDaoImpl uniqueKeyDaoImpl;
 	
 	@GetMapping(value=URLCONSTANT.FILE_MANAGEMENT_HOME)
-	public ModelAndView getDigiLockerHomeData(@PathVariable Integer userId,@RequestParam(name="message",required=false) String message,
+	public ModelAndView getDigiLockerHomeData(@RequestParam(name="userId",required=false)  Integer userId,@RequestParam(name="message",required=false) String message,
 			Principal principal,HttpServletRequest request){
 		logger.debug(" show fileManagement ...");
-		
+		if(userId==null){
+			try{
+				userId=(Integer) (ThreadLocalInfoContainer.INFO_CONTAINER.get()).get("USER_ID");
+			}catch(Exception e){e.printStackTrace();}
+		}
 		ModelAndView mvc = new ModelAndView("/customer/file_management");
 		//Integer UId=(Integer) ThreadLocalInfoContainer.INFO_CONTAINER.get().get("USER_ID");
 		try{
@@ -206,7 +210,7 @@ public class FileManagementController  extends CommonController{
 		
 		ModelAndView mvc = new ModelAndView();
 		//Users user=userService.findUserByUserName(principal.getName());
-		String fileUrl=digilockerService.uploadFiles(multipart,userid,  folderPath,folderId );
+		String fileUrl=digilockerService.uploadFiles(multipart,userid,  folderPath,folderId, request );
 		
 		if(fileUrl!=null)mvc.addObject("message","file uploaded successfully!");
 		
@@ -329,6 +333,11 @@ public class FileManagementController  extends CommonController{
 			@RequestParam(name="filesType", required=false) String filesType,@RequestParam(name="fileStatus", required=false) String fileStatus
 			,HttpServletRequest request){
 		ModelAndView mvc = new ModelAndView("/customer/gallery_content");
+		if(userid==null){
+			try{
+				userid=(Integer) (ThreadLocalInfoContainer.INFO_CONTAINER.get()).get("USER_ID");
+			}catch(Exception e){e.printStackTrace();}
+		}
 		try {
 			if(filesType==null)
 				filesType="ALL";
@@ -350,7 +359,7 @@ public class FileManagementController  extends CommonController{
 			 @RequestParam("files") MultipartFile multipartList[],
 			 HttpServletRequest request) {
 	
-		digilockerService.storeFilesInGalleryFromDigiLocker(userId,folderId,  multipartList);
+		digilockerService.storeFilesInGalleryFromDigiLocker(userId,folderId,  multipartList, request);
 		
 		ModelAndView mvc= new ModelAndView();
 		mvc.setViewName("redirect:/sm/getGallerContent?userid="+userId);
