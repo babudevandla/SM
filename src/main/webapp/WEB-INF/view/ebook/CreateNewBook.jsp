@@ -21,9 +21,13 @@
 	<form:form action="${contextPath}/sm/creatEbook" id="createEbook"  method="POST" commandName="eBook" >
 	
 		<form:hidden path="userId" />
-		 <div class="form-group col-xs-4">
+		 <div class="form-group col-xs-6">
 			<label>Book Name: </label>
 			<form:input path="bookTitle" id="bookTitle" maxlength="150" class="form-control" required="required" />
+		</div>
+		 <div class="form-group col-xs-6">
+			<label>Tag Name: </label>
+			<form:input path="tagline" id="tagline" maxlength="150" class="form-control" />
 		</div>
 		 <div class="form-group col-xs-3">
 			<label>Book Size: </label>

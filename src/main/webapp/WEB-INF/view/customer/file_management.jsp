@@ -172,7 +172,7 @@
 				                			<c:when test="${files.fileExtension eq 'xls' || files.fileExtension eq 'xlsx' }">
 				                				 <img alt="" src="${contextPath}/resources/default/images/excel_icon.png" style="width: 25px;margin-top: -3px;"> 
 				                			</c:when>
-				                			<c:when test="${files.fileExtension eq 'doc' files.fileExtension eq 'docx'}">
+				                			<c:when test="${files.fileExtension eq 'doc' && files.fileExtension eq 'docx'}">
 				                				<img alt="" src="${contextPath}/resources/default/images/doc_icon.png" style="width: 25px;margin-top: -3px;">
 				                			</c:when>
 				                			<c:when test="${files.fileExtension eq 'txt' }">

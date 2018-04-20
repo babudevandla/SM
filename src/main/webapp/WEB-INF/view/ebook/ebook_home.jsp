@@ -19,13 +19,27 @@
 <defaultTemplate:defaultDecorator>
 <jsp:attribute name="title">E-Book</jsp:attribute>
 <jsp:body>
-	
-	
+ <style>
+ .bookSmallImg {
+    max-width: 70px;
+}
+ .greyText {
+    color: #999999;
+    font-size: 11px;
+}
+.checked {
+    color: red;
+}
+
+
+
+</style>	
+
+<script>
+
+
+</script>	
 	</br>
-	<%-- <c:forEach items="${userBooks.books }" var="book" >
-	
-		<a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}" >${book.bookTitle}</a></br>
-	</c:forEach> --%>
 	
 	<div class="create-post">
       	<div class="row">
@@ -34,28 +48,47 @@
       		</a>
       	</div>
       </div>
+      <div  class="row">
+      <form:form action="${contextPath}/sm/eBooklist" method="get" commandName="searchDto">
+       	<div class="col-md-10 col-sm-10">
+      		<form:input path="bookTitle" class="form-control" placeholder="Search books" style="height: 37px;"/>
+      		<form:hidden path="userId" value="${userBooks.userId}"/>
+      	</div>
+      	 <div class="col-md-2 col-sm-2">
+      		<input type="submit" value="Search" class="btn btn-secondary">
+      	</div>	
+      	</form:form>
+      </div>
+      <br/>
      <div class="people-nearby">
        <c:forEach items="${userBooks.books }" var="book" >
          <div class="nearby-user">
-           <div class="row">
+           <div class="row" style="height: 100px;">
              <div class="col-md-4 col-sm-4">
              	<a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}">
              	<c:choose>
              		<c:when test="${not empty book.coverPage}">
-             			<img src="${contextPath}${WebDavServerURL}?filePath=${book.coverPage}" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+             			<img src="${contextPath}${WebDavServerURL}?filePath=${book.coverPage}" alt="user" id="myImg"  class="profile-photo-lg bookSmallImg" style="border-radius:0px;"/>
              		</c:when>
              		<c:otherwise>
-             			 <img src="${contextPath}/resources/default/images/Book_icon.png" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+             			 <img src="${contextPath}/resources/default/images/Book_icon.png" alt="user" id="myImg"  class="profile-photo-lg bookSmallImg" style="border-radius:0px;"/>
              		</c:otherwise>
              	</c:choose>
-              	
-               </a>
-               <p>&nbsp;<span class="label label-primary">${book.bookSize} </span>&nbsp;Pages  | &nbsp;<span class="label label-warning">${book.pageSize}</span>&nbsp; Lines per Page </p>
+               </a>&nbsp;
+              
+               <span>
+	               <span class="fa fa-star checked"></span>
+					<span class="fa fa-star checked"></span>
+					<span class="fa fa-star checked"></span>
+					<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span> 3.00 avg rating
+			    </span>
+                <br/><span style="font-size: 10px;"> by </span><span class="greyText">${book.createdBy} </span>
+                <p>&nbsp;<span class="label label-primary">${book.bookSize} </span>&nbsp;Pages  | &nbsp;<span class="label label-warning">${book.pageSize}</span>&nbsp; Lines per Page </p>
              </div>
              <div class="col-md-5 col-sm-5">
-             	<h5><a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}" class="profile-link">${book.bookTitle}</a></h5>
-               <p><f:formatDate value="${book.createdDate}" type="both"/> </p>
-              
+             	<h5><a href="${contextPath}/sm/getEbookContent?userId=${userBooks.userId}&bookId=${book.bookId}" class="profile-link">${book.bookTitle}</a>	</h5>
+              	<p><f:formatDate value="${book.createdDate}" type="both"/> </p>
                <c:choose>
                		<c:when test="${book.status eq 'ACTIVE'}">
                			<span class="label label-success">${book.status}</span>
@@ -73,12 +106,13 @@
 	             	Update cover Img:<input type="file" name="coverImg" ><br/>
 	             	<input type="hidden" name="bookId" value="${book.bookId}">
 	             	<input type="hidden" name="userId" value="${userBooks.userId}">
-	             	<input type="submit" value="Upload" class="btn btn">
+	             	<input type="submit" value="Upload" class="btn btn-info">
 	             </form>
              </div>
              
            </div>
          </div>
+         
        </c:forEach>
        </div>
         

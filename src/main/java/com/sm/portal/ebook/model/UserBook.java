@@ -1,6 +1,7 @@
 package com.sm.portal.ebook.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class UserBook {
 
@@ -11,6 +12,9 @@ public class UserBook {
 	private String coverPage;
 	private Integer bookSize;
 	private Integer pageSize;
+	private String createdBy;
+	private String tagline;
+	private List<BookRating> ratingList;
 	
 	public Integer getBookId() {
 		return bookId;
@@ -53,6 +57,24 @@ public class UserBook {
 	}
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	public String getTagline() {
+		return tagline;
+	}
+	public void setTagline(String tagline) {
+		this.tagline = tagline;
+	}
+	public List<BookRating> getRatingList() {
+		return ratingList;
+	}
+	public void setRatingList(List<BookRating> ratingList) {
+		this.ratingList = ratingList;
 	}
 	
 	

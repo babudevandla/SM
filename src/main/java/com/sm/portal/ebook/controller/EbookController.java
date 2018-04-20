@@ -2,11 +2,8 @@ package com.sm.portal.ebook.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,11 +28,11 @@ import com.sm.portal.digilocker.service.DigilockerService;
 import com.sm.portal.digilocker.utils.DigiLockeUtils;
 import com.sm.portal.ebook.enums.BookSizeEnum;
 import com.sm.portal.ebook.enums.PageSizeEnum;
+import com.sm.portal.ebook.model.BookSearchDto;
 import com.sm.portal.ebook.model.Ebook;
 import com.sm.portal.ebook.model.EbookPage;
 import com.sm.portal.ebook.model.EbookPageBean;
 import com.sm.portal.ebook.model.EbookPageDto;
-import com.sm.portal.ebook.model.UserBook;
 import com.sm.portal.ebook.model.UserBooks;
 import com.sm.portal.ebook.service.EbookServiceImpl;
 import com.sm.portal.edairy.model.EdairyActionEnum;
@@ -75,16 +72,17 @@ public class EbookController {
 	UniqueKeyDaoImpl uniqueKeyDaoImpl;
 	
 	@RequestMapping(value="/eBooklist", method=RequestMethod.GET)
-	public ModelAndView getEbookList(@RequestParam(name="userId", required=false) Integer userId, Principal principal){
+	public ModelAndView getEbookList(@ModelAttribute("searchDto") BookSearchDto searchDto, Principal principal){
 		ModelAndView mav = new ModelAndView("/ebook/ebook_home");
 		Users user =userService.findUserByUserName(principal.getName());
-		if(userId==null)userId=user.getUserId();
-		UserBooks userBooks = ebookServiceImple.getEbookList(userId);
+		if(searchDto.getUserId()==null)
+			searchDto.setUserId(user.getUserId());
+		UserBooks userBooks = ebookServiceImple.getEbookListBySearch(searchDto);
 		
 		//userBooks.getBooks().stream().sorted().collect(Collectors.toList());
 		mav.addObject("userBooks",userBooks);
 		if(user.getUserId()!=null)mav.addObject("userId",user.getUserId());
-		else mav.addObject("userId",userId);
+		else mav.addObject("userId",searchDto.getUserId());
 		return mav;
 	}//getEbookList() closing
 	
@@ -107,11 +105,12 @@ public class EbookController {
 	}//getEbookList() closing
 	
 	@RequestMapping(value="/creatEbook", method=RequestMethod.POST)
-	public ModelAndView creatEbookSubmit(@ModelAttribute Ebook eBook,BindingResult result, HttpServletRequest request){
+	public ModelAndView creatEbookSubmit(@ModelAttribute Ebook eBook,BindingResult result, HttpServletRequest request,Principal principal){
 		ModelAndView mav = new ModelAndView();
-		
+		Users user =userService.findUserByUserName(principal.getName());
 		int	fileUniqueKey=uniqueKeyDaoImpl.getUniqueKey(eBook.getUserId(), UniqueKeyEnum.BOOK_ID.toString(), 1);
 		eBook.setBookId(fileUniqueKey);
+		eBook.setCreatedBy(user.getFirstname()+" "+user.getLastname());
 		ebookServiceImple.createUserBook(eBook);
 		mav.setViewName("redirect:/sm/eBooklist?userId="+eBook.getUserId());
 		return mav;

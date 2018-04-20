@@ -1,3 +1,8 @@
+<%@ page import="com.sm.portal.constants.WebDavServerConstant" %>
+<% 
+	//pageContext.setAttribute("WebDav_Server_Url", WebDavServerConstant.WEBDAV_SERVER_URL);
+	pageContext.setAttribute("WebDavServerURL", WebDavServerConstant.MEDIA_URL);
+%>
 <%@ page pageEncoding="ISO-8859-1"  contentType="text/html; charset=UTF-8" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -133,7 +138,7 @@
 	 <div class="book-read" itemscope="" itemtype="http://schema.org/Book">
 	 <c:choose>
   		<c:when test="${not empty eBook.coverImage}">
-  			<img src="${contextPath}/${eBook.coverImage}" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
+  			<img src="${contextPath}${WebDavServerURL}?filePath=${eBook.coverImage}" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
   		</c:when>
   		<c:otherwise>
   			 <img src="${contextPath}/resources/default/images/Book_icon.png" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>

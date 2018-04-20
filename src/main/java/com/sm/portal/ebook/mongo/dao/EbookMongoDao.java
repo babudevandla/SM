@@ -1,15 +1,18 @@
 package com.sm.portal.ebook.mongo.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.google.gson.Gson;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
@@ -17,6 +20,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.sm.portal.constants.CollectionsConstant;
 import com.sm.portal.ebook.enums.EbookChapterTypeEnum;
 import com.sm.portal.ebook.enums.EbookStatusEnum;
+import com.sm.portal.ebook.model.BookSearchDto;
 import com.sm.portal.ebook.model.Ebook;
 import com.sm.portal.ebook.model.EbookPage;
 import com.sm.portal.ebook.model.EbookPageBean;
@@ -32,11 +36,11 @@ public class EbookMongoDao {
 	@Autowired
 	MongoDBUtil mongoDBUtil ;
 	
-	public UserBooks getEbookList(Integer userId) {
+	public UserBooks getEbookList(BookSearchDto searchDto) {
 		UserBooks userBooks =null;
 		MongoCollection<Document> coll = null;
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_MONGO_COLLECTION);
-		Document userBookDoc =this.getUserBookDocumentByUserId(userId, coll);
+		Document userBookDoc =this.getUserBookDocumentByUserId(searchDto.getUserId(), coll);
 		if(userBookDoc!=null){
 			userBooks =new UserBooks();
 			userBooks.setUserId(userBookDoc.getInteger("userId"));
@@ -84,7 +88,8 @@ public class EbookMongoDao {
 		ebookDoc.put("coverImage", ebook.getCoverImage());
 		ebookDoc.put("bookSize", ebook.getBookSize());
 		ebookDoc.put("pageSize", ebook.getPageSize());
-		
+		ebookDoc.put("createdBy", ebook.getCreatedBy());
+		ebookDoc.put("tagline", ebook.getTagline());
 		List<Document> ebookPageDocs = new ArrayList<>();
 		
 		Document ebookPageDoc =null;
@@ -163,6 +168,8 @@ public class EbookMongoDao {
 		bookDoc.put("createdDate", new Date());
 		bookDoc.put("status", EbookStatusEnum.ACTIVE.toString());
 		bookDoc.put("coverPage", ebook.getCoverImage());
+		bookDoc.put("createdBy", ebook.getCreatedBy());
+		bookDoc.put("tagline", ebook.getTagline());
 		userBookList.add(bookDoc);
 		userBookDoc.put("books", userBookList);
 		return userBookDoc;
@@ -313,39 +320,71 @@ public class EbookMongoDao {
 		update.put( "$set", updateEbookDoc);
 		
 		coll.updateOne( match, update );
-	}
-
-	private Document getUserBookDocumentForCoverImg(Ebook ebook, MongoCollection<Document> coll) {
-		Document userBookDoc=null;
-		List<Document> userBookList =null;
-		if(coll!=null){
-			userBookDoc =this.getUserBookDocumentByUserId(ebook.getUserId(), coll);
-			if(userBookDoc!=null){
-				userBookList =(List<Document>) userBookDoc.get("books");
-			}
-		}
-		if(userBookDoc==null){//if already not available createing first
-			userBookDoc=new Document();
-			userBookDoc.put("userId", ebook.getUserId());
-			userBookDoc.put("books", userBookList);
-			coll.findOneAndUpdate(Filters.eq("userId",ebook.getUserId()),new Document("$set", userBookDoc),new FindOneAndUpdateOptions().upsert(true));//creating first and getting then
-			userBookDoc =this.getUserBookDocumentByUserId(ebook.getUserId(), coll);
-			if(userBookDoc!=null){
-				userBookList =(List<Document>) userBookDoc.get("books");
-			}
-		}
-		if(userBookList==null)userBookList =new ArrayList<>();
 		
-		Document bookDoc = new Document();
-		bookDoc.put("bookId", ebook.getBookId());
-		bookDoc.put("coverPage", ebook.getCoverImage());
-		userBookList.add(bookDoc);
-		userBookDoc.put("books", userBookList);
-		return userBookDoc;
+		//update cover image in books collection
+		updateCoverImgInBooks(ebook);
+		
 	}
 
-	
+	private void updateCoverImgInBooks(Ebook ebook) {
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_LIST_MONGO_COLLECTON);
+		Document match = new Document();
+		match.put("userId", ebook.getUserId());
+		match.put("bookId", ebook.getBookId());
+		Document updateEbookDoc = new Document();
+		updateEbookDoc.put("coverImage", ebook.getCoverImage());
+		
+		Document update = new Document();
+		update.put( "$set", updateEbookDoc);
+		
+		coll.updateOne( match, update );
+	}
 
-	
+	public UserBooks getEbookListBySearch(BookSearchDto searchDto) {
+		UserBooks userBooks=new UserBooks();
+		List<UserBook> books = new ArrayList<>();
+		AggregateIterable<Document> userbookDoc=null;
+		MongoCollection<Document> coll = null;
+		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_MONGO_COLLECTION);
+		
+		Document match = new Document();
+		match.append("$match", new Document("userId", searchDto.getUserId()));
+		Document unwind1 = new Document();
+		unwind1.append("$unwind", "$books");
+		
+		Document sort = new Document();
+		sort.append("$sort", new Document("books.createdDate",-1));
+		
+		if(StringUtils.isNotBlank(searchDto.getBookTitle())){
+			Document matchFilter=new Document();
+			Pattern pattern = Pattern.compile("^"+searchDto.getBookTitle().trim(),Pattern.CASE_INSENSITIVE);
+			matchFilter.append("$match", new Document("books.bookTitle", new Document("$regex",pattern)));
+			userbookDoc=coll.aggregate(Arrays.asList(match,unwind1,matchFilter,sort));
+		}else{
+			userbookDoc=coll.aggregate(Arrays.asList(match,unwind1,sort));
+		}
+		
+		if(null != userbookDoc){
+			for (Document usrDoc :  userbookDoc ) {
+				Document doc=(Document) usrDoc.get("books");
+				UserBook bv =new UserBook();
+				bv.setBookId(doc.getInteger("bookId"));
+				bv.setBookTitle(doc.getString("bookTitle"));
+				bv.setCreatedDate(doc.getDate("createdDate"));
+				bv.setCoverPage(doc.getString("coverPage"));
+				bv.setStatus(doc.getString("status"));
+				bv.setPageSize(doc.getInteger("pageSize"));
+				bv.setBookSize(doc.getInteger("bookSize"));
+				bv.setCreatedBy(doc.getString("createdBy"));
+				bv.setTagline(doc.getString("tagline"));
+				books.add(bv);
+			}//for closing
+			
+		}//if closing
+		userBooks.setBooks(books);
+		userBooks.setUserId(searchDto.getUserId());
+		return userBooks;
+	}
 
 }//class closing

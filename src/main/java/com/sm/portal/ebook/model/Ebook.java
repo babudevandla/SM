@@ -20,6 +20,10 @@ public class Ebook implements Serializable {
 	List<EbookPage> ebookPages;
 	private EbookPage defaultPage;
 	
+	private String createdBy;
+	private String tagline;
+	private List<BookRating> ratingList;
+	
 	private MultipartFile coverImg;
 	
 	public Integer getBookId() {
@@ -75,6 +79,24 @@ public class Ebook implements Serializable {
 	}
 	public void setCoverImg(MultipartFile coverImg) {
 		this.coverImg = coverImg;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	public String getTagline() {
+		return tagline;
+	}
+	public void setTagline(String tagline) {
+		this.tagline = tagline;
+	}
+	public List<BookRating> getRatingList() {
+		return ratingList;
+	}
+	public void setRatingList(List<BookRating> ratingList) {
+		this.ratingList = ratingList;
 	}
 	
 	
