@@ -100,8 +100,8 @@ public class EbookController {
 	@RequestMapping(value="/uploadCoverimg", method=RequestMethod.POST)
 	public ModelAndView uploadCoverimg(@ModelAttribute Ebook eBook,BindingResult result, HttpServletRequest request){
 		ModelAndView mav = new ModelAndView();
-		
-		ebookServiceImple.updateBookCoverImg(eBook);
+		FolderInfo gallery =digilockerService.getGalleryDetails(eBook.getUserId());
+		ebookServiceImple.updateBookCoverImg(eBook,gallery.getFolderPath());
 		mav.setViewName("redirect:/sm/eBooklist?userId="+eBook.getUserId());
 		return mav;
 	}//getEbookList() closing

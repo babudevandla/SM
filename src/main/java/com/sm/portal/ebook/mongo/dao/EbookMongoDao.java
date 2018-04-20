@@ -303,11 +303,45 @@ public class EbookMongoDao {
 	public void updateBookCoverImg(Ebook ebook) {
 		MongoCollection<Document> coll = null;
 		coll = mongoDBUtil.getMongoCollection(CollectionsConstant.EBOOK_MONGO_COLLECTION);
-		Bson filter=Filters.and(Filters.eq("userId",ebook.getUserId()));
-		Document userBookDoc =new Document();
-		coll.findOneAndUpdate(filter,new Document("$set", userBookDoc),new FindOneAndUpdateOptions().upsert(true)) ;
-		this.createEbook(ebook);
+		Document match = new Document();
+		match.put("userId", ebook.getUserId());
+		match.put("books.bookId", ebook.getBookId());
+		Document updateEbookDoc = new Document();
+		updateEbookDoc.put("books.$.coverPage", ebook.getCoverImage());
 		
+		Document update = new Document();
+		update.put( "$set", updateEbookDoc);
+		
+		coll.updateOne( match, update );
+	}
+
+	private Document getUserBookDocumentForCoverImg(Ebook ebook, MongoCollection<Document> coll) {
+		Document userBookDoc=null;
+		List<Document> userBookList =null;
+		if(coll!=null){
+			userBookDoc =this.getUserBookDocumentByUserId(ebook.getUserId(), coll);
+			if(userBookDoc!=null){
+				userBookList =(List<Document>) userBookDoc.get("books");
+			}
+		}
+		if(userBookDoc==null){//if already not available createing first
+			userBookDoc=new Document();
+			userBookDoc.put("userId", ebook.getUserId());
+			userBookDoc.put("books", userBookList);
+			coll.findOneAndUpdate(Filters.eq("userId",ebook.getUserId()),new Document("$set", userBookDoc),new FindOneAndUpdateOptions().upsert(true));//creating first and getting then
+			userBookDoc =this.getUserBookDocumentByUserId(ebook.getUserId(), coll);
+			if(userBookDoc!=null){
+				userBookList =(List<Document>) userBookDoc.get("books");
+			}
+		}
+		if(userBookList==null)userBookList =new ArrayList<>();
+		
+		Document bookDoc = new Document();
+		bookDoc.put("bookId", ebook.getBookId());
+		bookDoc.put("coverPage", ebook.getCoverImage());
+		userBookList.add(bookDoc);
+		userBookDoc.put("books", userBookList);
+		return userBookDoc;
 	}
 
 	

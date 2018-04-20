@@ -53,6 +53,37 @@ public class FileUploadServices {
 		return fileURL;
 	}
 
+	
+	public String uploadWebDavServer2(MultipartFile multipartFile, String folderPath) {
+		boolean status=false;
+		String fileURL=null;
+		String filePathInWebDev=null;
+		String filename=multipartFile.getOriginalFilename().replaceAll(" ", "_");
+		File file =new File(filename);
+		System.out.println("file name::"+file.getAbsolutePath());
+		InputStream fis;
+		try {
+			 byte[] bytes = multipartFile.getBytes();
+			fis = new ByteArrayInputStream(bytes);
+			String directoryPath=WebDavServerConstant.WEBDAV_SERVER_URL+folderPath;
+			//unCreatedFolder(folderPath);
+			if(!sardine.exists(directoryPath))
+				sardine.createDirectory(directoryPath);
+			
+			sardine.put(directoryPath+"/"+filename, fis);
+			//sardine.delete("http://104.155.27.172:8081/caweb_admin/images/actions/delete.png");
+			System.out.println("file stored successfully!");
+			//status=true;
+			//fileURL=directoryPath+"/"+filename;
+			fileURL=WebDavServerConstant.MEDIA_URL+"?filePath="+folderPath+""+filename;
+			filePathInWebDev=folderPath+""+filename;
+		} catch (Exception e) {	
+			e.printStackTrace();
+			fileURL=null;;
+		}
+		
+		return filePathInWebDev;
+	}
 	/*private void unCreatedFolder(String folderPath) {
 		// TODO Auto-generated method stub
 		

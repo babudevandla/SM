@@ -154,7 +154,7 @@
 				                	<a href="${Media_rul}?filePath=${files.filePath}"  target="_blank" style="cursor: pointer;"	class="user-link">
 				                		<c:choose>
 				                			<c:when test="${files.fileType eq 'IMAGE' }">
-				                				<img src="${Media_rul}?filePath=${files.filePath}" alt="" class="digilocker-photo-sm " />
+				                				<img src="${contextPath}${Media_rul}?filePath=${files.filePath}" alt="" class="digilocker-photo-sm " />
 				                				<%-- <img alt="" src="${contextPath}/resources/default/images/img_icon.png" style="width: 20px;margin-top: -3px;"> --%>
 				                			</c:when>
 				                			<c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'pdf' }">
@@ -172,7 +172,7 @@
 				                			<c:when test="${files.fileExtension eq 'xls' || files.fileExtension eq 'xlsx' }">
 				                				 <img alt="" src="${contextPath}/resources/default/images/excel_icon.png" style="width: 25px;margin-top: -3px;"> 
 				                			</c:when>
-				                			<c:when test="${files.fileExtension eq 'doc' }">
+				                			<c:when test="${files.fileExtension eq 'doc' files.fileExtension eq 'docx'}">
 				                				<img alt="" src="${contextPath}/resources/default/images/doc_icon.png" style="width: 25px;margin-top: -3px;">
 				                			</c:when>
 				                			<c:when test="${files.fileExtension eq 'txt' }">

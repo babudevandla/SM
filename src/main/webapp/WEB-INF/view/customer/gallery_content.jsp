@@ -69,31 +69,31 @@
                   <div class="img-wrapper" data-toggle="modal"  data-target=".modal-${status.count}">
                   <c:choose>
 				      <c:when test="${files.fileType eq 'IMAGE' }">
-                    		<img src="${WebDav_Server_Url}?filePath=${files.filePath}" alt="" class="img-responsive post-image" style="height: 134px;"/>
+                    		<img src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" alt="" class="img-responsive post-image" style="height: 134px;"/>
                    	  </c:when> 
                    	  <c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'pdf' }">
-              				<embed src="${WebDav_Server_Url}?filePath=${files.filePath}" style="height: 134px;"/>
+              				<embed src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" style="height: 134px;"/>
               		  </c:when>
               		  <c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'xlsx' }">
-              				<iframe src="http://docs.google.com/gview?url=${WebDav_Server_Url}?filePath=${files.filePath}&embedded=true"  ></iframe>
+              				<iframe src="http://docs.google.com/gview?url=${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}&embedded=true"  ></iframe>
               		  </c:when>
               		  <c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'log' ||files.fileExtension eq 'txt' ||files.fileExtension eq 'json')}">
-              				<iframe src="${WebDav_Server_Url}?filePath=${files.filePath}" ></iframe>
+              				<iframe src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" ></iframe>
               		  </c:when>
               		  <c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'ppt'  )}">
-              				<iframe src="http://docs.google.com/gview?url=${WebDav_Server_Url}?filePath=${files.filePath}&embedded=true" ></iframe>
+              				<iframe src="http://docs.google.com/gview?url=${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}&embedded=true" ></iframe>
               		  </c:when>
               		  <c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'doc' || files.fileExtension eq 'docx'  )}">
-              				<iframe src="http://docs.google.com/gview?url=${WebDav_Server_Url}?filePath=${files.filePath}&embedded=true"  ></iframe>
+              				<iframe src="http://docs.google.com/gview?url=${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}&embedded=true"  ></iframe>
               		  </c:when>
               		  <c:when test="${files.fileType eq 'VIDEO' }">
              			<video  height="134" controls>
-						  <source src="${WebDav_Server_Url}?filePath=${files.filePath}" type="video/mp4" style="height: 134px;"/>
+						  <source src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" type="video/mp4" style="height: 134px;"/>
 						</video>
               		 </c:when>
            			 <c:when test="${files.fileType eq 'AUDIO' }">
            				<audio height="134" controls>
-				 		 <source src="${WebDav_Server_Url}?filePath=${files.filePath}" type="audio/mpeg"  style="height: 134px;">
+				 		 <source src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" type="audio/mpeg"  style="height: 134px;">
 						</audio>
            			 </c:when>
            			 <c:when test="${files.fileType eq 'doc' }">
@@ -151,32 +151,32 @@
                      <div class="post-content">
                      <c:choose>
 					      <c:when test="${files.fileType eq 'IMAGE' }">
-	                       	<img src="${WebDav_Server_Url}?filePath=${files.filePath}" alt="post-image" class="img-responsive post-image" />
+	                       	<img src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" alt="post-image" class="img-responsive post-image" />
 	                       </c:when>
 	                       <c:when test="${files.fileType eq 'VIDEO' }">
 	             				<video controls>
-							  		<source src="${WebDav_Server_Url}?filePath=${files.filePath}" type="video/mp4" style="height: 134px;">
+							  		<source src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" type="video/mp4" style="height: 134px;">
 								</video>
 	              			</c:when>
 	              			<c:when test="${files.fileType eq 'AUDIO' }">
 	              				<audio  controls>
-								  <source src="${WebDav_Server_Url}?filePath=${files.filePath}" type="audio/mpeg"  style="height: 134px;">
+								  <source src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" type="audio/mpeg"  style="height: 134px;">
 								</audio>
 	              			</c:when>
 	              			<c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'pdf' }">
-	              				<embed src="${WebDav_Server_Url}?filePath=${files.filePath}"   frameborder="0" width="100%" height="600px"/>
+	              				<embed src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}"   frameborder="0" width="100%" height="600px"/>
 	              		  </c:when>
 	              		  <c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'xlsx' }">
-              					<iframe src="http://docs.google.com/gview?url=${WebDav_Server_Url}?filePath=${files.filePath}"  height= "100%"  width= "100%"></iframe>
+              					<iframe src="http://docs.google.com/gview?url=${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}"  height= "100%"  width= "100%"></iframe>
               		  	  </c:when>
               		  	   <c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'log' ||files.fileExtension eq 'txt' ||files.fileExtension eq 'json' )}">
-              					<iframe src="${WebDav_Server_Url}?filePath=${files.filePath}" height= "100%"  width= "100%"></iframe>
+              					<iframe src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" height= "100%"  width= "100%"></iframe>
               		  		</c:when>
               		  		<c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'ppt'  )}">
-	              				<iframe src="http://docs.google.com/gview?url=${WebDav_Server_Url}?filePath=${files.filePath}"  height= "100%"  width= "100%"></iframe>
+	              				<iframe src="http://docs.google.com/gview?url=${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}"  height= "100%"  width= "100%"></iframe>
 	              		  </c:when>
 	              		  <c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'doc' || files.fileExtension eq 'docx' )}">
-              				<iframe src="http://docs.google.com/gview?url=${WebDav_Server_Url}?filePath=${files.filePath}"  height= "100%"  width= "100%"></iframe>
+              				<iframe src="http://docs.google.com/gview?url=${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}"  height= "100%"  width= "100%"></iframe>
               		      </c:when>
                       </c:choose> 
                      </div>

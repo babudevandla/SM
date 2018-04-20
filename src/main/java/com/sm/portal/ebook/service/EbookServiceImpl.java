@@ -79,10 +79,10 @@ public class EbookServiceImpl implements EbookService{
 		ebookMongoDao.updateChapter(bookId,pageNo,chapterName,existingName ,userId);
 	}
 
-	public void updateBookCoverImg(Ebook eBook) {
+	public void updateBookCoverImg(Ebook eBook, String folderPath) {
 		String fileURL=null;
 		 if (!eBook.getCoverImg().isEmpty()) {
-			 fileURL =fileUploadServices.uploadWebDavServer(eBook.getCoverImg());
+			 fileURL =fileUploadServices.uploadWebDavServer2(eBook.getCoverImg(),folderPath);
 		 }
 		 eBook.setCoverImage(fileURL);
 		 ebookMongoDao.updateBookCoverImg(eBook);
