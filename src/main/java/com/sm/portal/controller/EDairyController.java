@@ -97,6 +97,31 @@ public class EDairyController {
 	    return data;
 	}//
 	
+	@RequestMapping(value="/getFileBankMedia", method=RequestMethod.GET)
+	public byte[] getFileBankMedia(@RequestParam(value = "filePath") String filePath, HttpServletResponse response){
+		byte[] data=null;
+		try {
+			data = IOUtils.toByteArray(fileUploadServices.downloadFile(filePath));
+			this.getContentType(response,filePath);
+			//response.setContentType("application/octet-stream");
+			response.setContentLength(data.length);
+			response.getOutputStream().write(data);
+		} catch (IOException e) {e.printStackTrace();}
+	    return data;
+	}//
+	
+	private void getContentType(HttpServletResponse response, String filePath) {
+		if(filePath.endsWith(".pdf"))
+			response.setContentType("application/pdf");
+		else if(filePath.endsWith(".mp4"))
+			response.setContentType("video/mp4");
+		else if(filePath.endsWith(".mp3"))
+			response.setContentType("audio/mp3");
+		else
+			response.setContentType("image/jpg");
+		//response.setHeader("Content-type: image");
+	}
+
 	@RequestMapping(value="/e_dairy_list", method=RequestMethod.GET)
 	public ModelAndView eDairyLists(Principal principal){
 		logger.debug(" show user profile ...");

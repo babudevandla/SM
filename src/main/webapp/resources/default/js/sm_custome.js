@@ -59,6 +59,16 @@ $(document).ready(function() {
 			$("#updateCptrNameFrom").attr("action", href);
 			$("#updateCptrNameFrom").submit();
 		});
+		
+		$("#fileOrigin").change(function(event){
+			event.preventDefault();
+			var	fileOrigin=$(this).val();
+			var	href=$(this).attr('data-href');
+			console.log(fileOrigin);
+			window.location.href=href+"?fileOrigin="+fileOrigin;
+		});
+		
+		
 	
 });
 

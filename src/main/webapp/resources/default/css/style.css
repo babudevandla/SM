@@ -198,7 +198,7 @@ img.profile-photo-md{
 img.profile-photo-sm{
 	height: 40px;
 	width: 40px;
-	border-radius: 50%;
+	border-radius: 30%;
 }
 
 img.digilocker-photo-sm{

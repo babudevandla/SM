@@ -109,6 +109,7 @@ public class DigiLockeUtils {
 		documentList.add("pdf");
 		documentList.add("xml");
 		documentList.add("xlsx");
+		documentList.add("xls");
 		documentList.add("doc");
 		documentList.add("docx");
 		documentList.add("json");

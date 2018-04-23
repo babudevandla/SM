@@ -1,6 +1,7 @@
 <%@ page import="com.sm.portal.constants.WebDavServerConstant" %>
 <% 
 	pageContext.setAttribute("Media_rul", WebDavServerConstant.MEDIA_URL);
+	pageContext.setAttribute("Media_rul2", WebDavServerConstant.MEDIA_URL2);
 %>
 <%@ page pageEncoding="ISO-8859-1"  contentType="text/html; charset=UTF-8" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
@@ -38,12 +39,12 @@
                 	</button>
               </div>
               </div>
-              <form action="${contextPath}/sm/upload_files" method="post" enctype="multipart/form-data">
+              <form action="${contextPath}/sm/upload_files" method="post" enctype="multipart/form-data" >
               <div class="col-md-3 col-sm-3">
             	<div class="form-group">
             	<button class="btn btn-primary pull-right">
                 		<!-- <i class="fa fa-cloud-upload" aria-hidden="true"></i>&nbsp;  --> 
-                	<input type="file" name="fileName" />	
+                	<input type="file" name="fileName" multiple="multiple"/>	
                 	<input type="hidden" name="userid" value="${userid}">
                 	<input type="hidden" name="folderPath" value="${folderInfo.folderPath}">
                 	<input type="hidden" name="folderId" value="${folderInfo.fId}">
@@ -151,7 +152,7 @@
                 		<c:forEach items="${folderInfo.localFilesInfo}" var="files" varStatus="status">
 			                <tr>
 				                <td>
-				                	<a href="${Media_rul}?filePath=${files.filePath}"  target="_blank" style="cursor: pointer;"	class="user-link">
+				                	<a href="${contextPath}${Media_rul2}?filePath=${files.filePath}"  target="_blank" style="cursor: pointer;"	class="user-link">
 				                		<c:choose>
 				                			<c:when test="${files.fileType eq 'IMAGE' }">
 				                				<img src="${contextPath}${Media_rul}?filePath=${files.filePath}" alt="" class="digilocker-photo-sm " />
@@ -162,17 +163,17 @@
 				                				<img alt="" src="${contextPath}/resources/default/images/pdf_icon.png" style="width: 20px;margin-top: -3px;">
 				                			</c:when>
 				                			<c:when test="${files.fileType eq 'VIDEO' }">
-				                				<i class="fa fa-file-video-o" aria-hidden="true"></i>
-				                				<%-- <img alt="" src="${contextPath}/resources/default/images/excel_icon.png" style="width: 25px;margin-top: -3px;"> --%>
+				                				<!-- <i class="fa fa-file-video-o" aria-hidden="true"></i> -->
+				                				<img alt="" src="${contextPath}/resources/default/images/vedio_icon.png" style="width: 25px;margin-top: -3px;">
 				                			</c:when>
 				                			<c:when test="${files.fileType eq 'AUDIO' }">
-				                				<i class="fa fa-file-audio-o" aria-hidden="true"></i>
-				                				<%-- <img alt="" src="${contextPath}/resources/default/images/excel_icon.png" style="width: 25px;margin-top: -3px;"> --%>
+				                				<!-- <i class="fa fa-file-audio-o" aria-hidden="true"></i> -->
+				                				<img alt="" src="${contextPath}/resources/default/images/audio_icon.png" style="width: 25px;margin-top: -3px;">
 				                			</c:when>
 				                			<c:when test="${files.fileExtension eq 'xls' || files.fileExtension eq 'xlsx' }">
 				                				 <img alt="" src="${contextPath}/resources/default/images/excel_icon.png" style="width: 25px;margin-top: -3px;"> 
 				                			</c:when>
-				                			<c:when test="${files.fileExtension eq 'doc' && files.fileExtension eq 'docx'}">
+				                			<c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'doc' || files.fileExtension eq 'docx')}">
 				                				<img alt="" src="${contextPath}/resources/default/images/doc_icon.png" style="width: 25px;margin-top: -3px;">
 				                			</c:when>
 				                			<c:when test="${files.fileExtension eq 'txt' }">

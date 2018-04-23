@@ -37,7 +37,7 @@
             	<div class="form-group">
             		<button class="btn btn-primary pull-right">
                 		<!-- <i class="fa fa-cloud-upload" aria-hidden="true"></i>&nbsp;  --> 
-	                	<input type="file" name="files" />	
+	                	<input type="file" name="files" multiple="multiple" />	
 	                	<input type="hidden" name="userId" value="${userid}">
 	                	<input type="hidden" name="folderPath" value="${folderInfo.folderPath}">
 	                	<input type="hidden" name="folderId" value="${folderInfo.fId}">
@@ -49,17 +49,28 @@
               </div>
               </form>
               
-            </div><br/>
-            <div align="right">
-            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=ALL" > ALL</a>  &nbsp; | &nbsp; &nbsp;
-            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=IMAGE" ><i class="fa fa-image" aria-hidden="true"></i> IMAGE</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
-            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=AUDIO" ><i class="fa fa-file-audio-o" aria-hidden="true"></i> AUDIO</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
-            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=VIDEO" ><i class="fa fa-file-video-o" aria-hidden="true"></i> VIDEO</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
-	            <a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=DOCUMENT" ><i class="fa fa-file-text" aria-hidden="true"></i> DOCUMENTS</a> &nbsp; &nbsp;|  &nbsp; &nbsp;
-	            <a href="${contextPath}/sm/getGallerContent?userid=${userid}&fileStatus=DELETED" ><img alt="" src="${contextPath}/resources/default/images/bin-blue-icon.png"> RECYCLE BIN</a> 
+            </div><br/><br/>
+            <div class="col-md-12 col-sm-12">
+            	<div class="col-md-3 col-sm-3" align="left" style="right: 45px;top: -10px;">
+            		<select name="fileOrigin" id="fileOrigin" data-href="${contextPath}/sm/getGallerContent">
+	             		<option value=""> --- Select File Origin ---</option>
+	             		<option value="LOCKER" >FILE BANK</option>
+	             		<option value="GALLERY">GALLERY</option>
+	             		<option value="E-BOOK">E-BOOK</option>
+	             		<option value="E-DAIRY">E-DAIRY</option>
+             		</select>
+            	</div>
+            	<div  class="col-md-9 col-sm-9" align="right" style="left: 103px;top: -18px;">
+	            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=ALL" class="${allCls?'btn active':''}"> ALL</a>  &nbsp; | &nbsp; &nbsp;
+	            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=IMAGE" class="${imgCls?'btn active':''}"><i class="fa fa-image" aria-hidden="true"></i> IMAGE</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
+	            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=AUDIO" class="${audCls?'btn active':''}"><i class="fa fa-file-audio-o" aria-hidden="true"></i> AUDIO</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
+	            	<a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=VIDEO" class="${vedCls?'btn active':''}"><i class="fa fa-file-video-o" aria-hidden="true"></i> VIDEO</a>  &nbsp; &nbsp;|  &nbsp; &nbsp;
+		            <a href="${contextPath}/sm/getGallerContent?userid=${userid}&filesType=DOCUMENT" class="${docCls?'btn active':''}"><i class="fa fa-file-text" aria-hidden="true"></i> DOCUMENTS</a> &nbsp; &nbsp;|  &nbsp; &nbsp;
+		            <a href="${contextPath}/sm/getGallerContent?userid=${userid}&fileStatus=DELETED" class="${recyleCls?'btn active':''}"><img alt="" src="${contextPath}/resources/default/images/bin-blue-icon.png"> RECYCLE BIN</a>
+            	</div>
             </div>
         </div>
-         
+         <br/>
     
    <div class="media">
    	<div class="row js-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": ".grid-sizer", "percentPosition": true }'>
@@ -74,7 +85,7 @@
                    	  <c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'pdf' }">
               				<embed src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" style="height: 134px;"/>
               		  </c:when>
-              		  <c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'xlsx' }">
+              		  <c:when test="${files.fileType eq 'DOCUMENT' && ( files.fileExtension eq 'xls' || files.fileExtension eq 'xlsx') }">
               				<iframe src="http://docs.google.com/gview?url=${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}&embedded=true"  ></iframe>
               		  </c:when>
               		  <c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'log' ||files.fileExtension eq 'txt' ||files.fileExtension eq 'json')}">
@@ -100,7 +111,7 @@
            				<img alt="" src="${contextPath}/resources/default/images/doc_icon.png" style="height: 134px;"/>
            			 </c:when>
            			 <c:otherwise>
-           				<i class="fa fa-folder" aria-hidden="true"></i>
+           				<img src="${contextPath}/resources/default/images/folder_icon.png" alt="" class="img-responsive post-image" style="height: 134px;"/>
            			 </c:otherwise>
               		</c:choose>
                   </div>
@@ -114,6 +125,18 @@
                     	<c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'pdf'  )}">
                       		<img src="${contextPath}/resources/default/images/pdf_icon.png" alt="" class="profile-photo-sm pull-left" />
                       </c:when>
+                      <c:when test="${files.fileType eq 'DOCUMENT' && ( files.fileExtension eq 'xls' || files.fileExtension eq 'xlsx' ) }">
+           					<img src="${contextPath}/resources/default/images/excel_icon.png"  class="profile-photo-sm pull-left"/>
+           		  	  </c:when>
+           		  	  <c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'doc' || files.fileExtension eq 'docx'  )}">
+              				<img src="${contextPath}/resources/default/images/doc_icon.png"  class="profile-photo-sm pull-left"/>
+              		  </c:when>
+              		  <c:when test="${files.fileType eq 'AUDIO' }">
+              		  		<img src="${contextPath}/resources/default/images/audio_icon.png"  class="profile-photo-sm pull-left"/>
+              		  </c:when>
+              		  <c:when test="${files.fileType eq 'VIDEO' }">
+              		  		<img src="${contextPath}/resources/default/images/vedio_icon.png"  class="profile-photo-sm pull-left"/>
+              		  </c:when>
                       <c:otherwise>
                       		<img src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}" alt="" class="profile-photo-sm pull-left" />
                       </c:otherwise>
@@ -166,7 +189,7 @@
 	              			<c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'pdf' }">
 	              				<embed src="${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}"   frameborder="0" width="100%" height="600px"/>
 	              		  </c:when>
-	              		  <c:when test="${files.fileType eq 'DOCUMENT' && files.fileExtension eq 'xlsx' }">
+	              		  <c:when test="${files.fileType eq 'DOCUMENT' && ( files.fileExtension eq 'xls' || files.fileExtension eq 'xlsx' ) }">
               					<iframe src="http://docs.google.com/gview?url=${contextPath}${WebDav_Server_Url}?filePath=${files.filePath}"  height= "100%"  width= "100%"></iframe>
               		  	  </c:when>
               		  	   <c:when test="${files.fileType eq 'DOCUMENT' && (files.fileExtension eq 'log' ||files.fileExtension eq 'txt' ||files.fileExtension eq 'json' )}">

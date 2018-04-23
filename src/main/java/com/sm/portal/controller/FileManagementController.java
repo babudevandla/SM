@@ -203,16 +203,23 @@ public class FileManagementController  extends CommonController{
 	}//createFolder() closing
 	
 	@PostMapping(value=URLCONSTANT.FILE_MANAGEMENT_UPLOAD_FILES)
-	public ModelAndView uploadFiles(@RequestParam("fileName") MultipartFile multipart,@RequestParam Integer userid,@RequestParam String folderPath,
+	public ModelAndView uploadFiles(@RequestParam("fileName") MultipartFile multipartList[],@RequestParam Integer userid,@RequestParam String folderPath,
 			@RequestParam Integer folderId,Principal principal,
 			RedirectAttributes redirectAttributes, HttpServletRequest request){
 		logger.debug(" show fileManagement ...");
 		
 		ModelAndView mvc = new ModelAndView();
 		//Users user=userService.findUserByUserName(principal.getName());
-		String fileUrl=digilockerService.uploadFiles(multipart,userid,  folderPath,folderId, request );
+		String fileUrl=null;
+		for (int i=0;i<multipartList.length;i++) {	
+            if (!multipartList[i].isEmpty()) {
+            	fileUrl=digilockerService.uploadFiles(multipartList[i],userid,  folderPath,folderId, request );
+            	if(fileUrl!=null)
+            		mvc.addObject("message","file uploaded successfully!");
+            }
+		}
 		
-		if(fileUrl!=null)mvc.addObject("message","file uploaded successfully!");
+		
 		
 		List<FolderInfo>	allFolderList=digilockerService.getDigiLockerHomeData(new Long(userid));
 		
@@ -329,8 +336,9 @@ public class FileManagementController  extends CommonController{
 	
 	
 	@GetMapping(value="/getGallerContent")
-	public ModelAndView getGallerContent(@RequestParam Integer userid,Principal principal,
-			@RequestParam(name="filesType", required=false) String filesType,@RequestParam(name="fileStatus", required=false) String fileStatus
+	public ModelAndView getGallerContent(@RequestParam(name="userid", required=false) Integer userid,Principal principal,
+			@RequestParam(name="filesType", required=false) String filesType,@RequestParam(name="fileStatus", required=false) String fileStatus,
+			@RequestParam(name="fileOrigin", required=false) String fileOrigin
 			,HttpServletRequest request){
 		ModelAndView mvc = new ModelAndView("/customer/gallery_content");
 		if(userid==null){
@@ -342,8 +350,41 @@ public class FileManagementController  extends CommonController{
 			if(filesType==null)
 				filesType="ALL";
 			List<GalleryDetails> gallerylist = digilockerService.getGallerContent(userid, filesType,fileStatus);
+			if(fileOrigin!=null)
+				gallerylist=gallerylist.stream().filter( g -> fileOrigin.equals(g.getOrigin())).collect(Collectors.toList());
+			boolean filesTypeClr=false;
+			
 			mvc.addObject("galleryContent", gallerylist);
 			mvc.addObject("fileType", filesType);
+
+			boolean allCls=false;
+			boolean imgCls=false;
+			boolean audCls=false;
+			boolean vedCls=false;
+			boolean docCls=false;
+			
+			boolean recyleCls=false;
+			if(filesType.equals("ALL"))
+				allCls=true;
+			else if(filesType.equals("IMAGE"))
+				imgCls=true;
+			else if(filesType.equals("AUDIO"))
+				audCls=true;
+			else if(filesType.equals("VIDEO"))
+				vedCls=true;
+			else if(filesType.equals("DOCUMENT"))
+				docCls=true;
+			else if(fileStatus.equals("DELETED"))
+				recyleCls=true;
+			
+			
+			mvc.addObject("allCls", allCls);
+			mvc.addObject("imgCls", imgCls);
+			mvc.addObject("audCls", audCls);
+			mvc.addObject("vedCls", vedCls);
+			mvc.addObject("docCls", docCls);
+			mvc.addObject("recyleCls", recyleCls);
+			
 			mvc.addObject("userid", userid);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -353,6 +394,9 @@ public class FileManagementController  extends CommonController{
 	}//getGallerContent() closing
 	
 	
+
+
+
 	@RequestMapping(value = "/storeFilesFromGallery", method = RequestMethod.POST)
 	public ModelAndView  storeFilesInGalleryFromDigiLocker(@RequestParam("userId") Integer userId,
 			 @RequestParam("folderId") Integer folderId,
