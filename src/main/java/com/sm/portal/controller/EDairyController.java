@@ -110,6 +110,8 @@ public class EDairyController {
 	    return data;
 	}//
 	
+	
+	
 	private void getContentType(HttpServletResponse response, String filePath) {
 		if(filePath.endsWith(".pdf"))
 			response.setContentType("application/pdf");
@@ -119,7 +121,6 @@ public class EDairyController {
 			response.setContentType("audio/mp3");
 		else
 			response.setContentType("image/jpg");
-		//response.setHeader("Content-type: image");
 	}
 
 	@RequestMapping(value="/e_dairy_list", method=RequestMethod.GET)
