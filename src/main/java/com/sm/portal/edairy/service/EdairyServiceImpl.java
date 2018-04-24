@@ -1,6 +1,7 @@
 package com.sm.portal.edairy.service;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,10 +71,15 @@ public class EdairyServiceImpl implements EdairyService{
 	}
 
 	public String getContentAfterFileUpload(String pagecontent, List<String> fileUrlList) {
-		
+		String updatedImageString =null;
+		List<String> updatedImageList =new ArrayList<String>();
 		if(pagecontent!=null && fileUrlList.size()>0 ){
-			String updatedImageString = MessageFormat.format(WebDavServerConstant.HTML_IMAGE_TAG,fileUrlList.get(0));
-			String updatedPageContent = pagecontent+updatedImageString;
+			for(int i=0;i<fileUrlList.size();i++){
+			 updatedImageString = MessageFormat.format(WebDavServerConstant.HTML_IMAGE_TAG,fileUrlList.get(i));
+			 updatedImageList.add(updatedImageString);
+			}
+			System.out.println(updatedImageList.toString());
+			String updatedPageContent = pagecontent+updatedImageList;
 			return updatedPageContent;
 			
 		}else{

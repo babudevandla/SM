@@ -51,7 +51,6 @@
                 	</button>
                 	&nbsp;&nbsp;  
                 	<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button>
-                	<!-- <input type="submit" class="btn btn-primary pull-right" value="Upload"> -->
               	</div>
               </div>
               </form>
