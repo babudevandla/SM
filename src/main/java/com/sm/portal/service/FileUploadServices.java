@@ -156,7 +156,6 @@ public class FileUploadServices {
 		InputStream inputStream=null;
 		try {
 			inputStream =sardine.get(directoryPath);
-			System.err.println("file deleted from given webdav localtion::"+directoryPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

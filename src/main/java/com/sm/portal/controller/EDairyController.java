@@ -92,6 +92,7 @@ public class EDairyController {
 			data = IOUtils.toByteArray(fileUploadServices.downloadFile(filePath));
 			response.setContentType("application/pdf");
 			response.setContentLength(data.length);
+			response.setBufferSize(150000);
 			response.getOutputStream().write(data);
 		} catch (IOException e) {e.printStackTrace();}
 	    return data;
@@ -104,6 +105,7 @@ public class EDairyController {
 			data = IOUtils.toByteArray(fileUploadServices.downloadFile(filePath));
 			this.getContentType(response,filePath);
 			//response.setContentType("application/octet-stream");
+			response.setBufferSize(150000);
 			response.setContentLength(data.length);
 			response.getOutputStream().write(data);
 		} catch (IOException e) {e.printStackTrace();}
