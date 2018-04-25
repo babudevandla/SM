@@ -41,7 +41,8 @@
          <div class="nearby-user">
            <div class="row">
              <div class="col-md-3 col-sm-3">
-              <a href="${contextPath}/sm/getUserDairyCoverPage/${userDairies.userId}/${dairy.dairyId}">
+              <%-- <a href="${contextPath}/sm/getUserDairyCoverPage/${userDairies.userId}/${dairy.dairyId}"> --%>
+              <a href="${contextPath}/sm/getDairyInfo/${userDairies.userId}/${dairy.dairyId}?actionBy=${EdairyActionEnum.TITLE_PAGE}&defaultPageNo=1">
              	 <img src="${contextPath}/resources/default/images/diary_icon.png" alt="user" class="profile-photo-lg" style="border-radius:0px;"/>
               </a> 
              </div>
