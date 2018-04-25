@@ -75,7 +75,7 @@ public class EdairyServiceImpl implements EdairyService{
 		List<String> updatedImageList =new ArrayList<String>();
 		if(pagecontent!=null && fileUrlList.size()>0 ){
 			for(int i=0;i<fileUrlList.size();i++){
-			 updatedImageString = MessageFormat.format(WebDavServerConstant.HTML_IMAGE_TAG,fileUrlList.get(i));
+			 updatedImageString =this.getUpdatedUrlWithHtmlTag( fileUrlList.get(i));
 			 updatedImageList.add(updatedImageString);
 			}
 			System.out.println(updatedImageList.toString());
@@ -87,4 +87,16 @@ public class EdairyServiceImpl implements EdairyService{
 		}
 		
 	}//getContentAfterFileUpload() closing
+
+	private String getUpdatedUrlWithHtmlTag(String raw_url) {
+		String updatedUrlWithHtmlTag=null;
+		
+		if(raw_url.endsWith(".jpg") || raw_url.endsWith(".jpeg") || raw_url.endsWith(".png"))
+			updatedUrlWithHtmlTag= MessageFormat.format(WebDavServerConstant.HTML_IMAGE_TAG,raw_url);
+		else if(raw_url.endsWith(".mp4"))
+			updatedUrlWithHtmlTag= MessageFormat.format(WebDavServerConstant.HTML_VIDEO_TAG,raw_url);
+		else if(raw_url.endsWith(".mp3"))
+			updatedUrlWithHtmlTag= MessageFormat.format(WebDavServerConstant.HTML_AUDIO_TAG,raw_url);
+		return updatedUrlWithHtmlTag;
+	}
 }//class closing
