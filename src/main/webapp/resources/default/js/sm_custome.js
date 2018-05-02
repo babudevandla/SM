@@ -41,13 +41,7 @@ $(document).ready(function() {
 	  $('#viewFileContent').on('click',function(){
 		    var filename=$("#viewFileContent").attr("data-file");
 		    	$(".filename").html(filename);
-		        $('#viewFile').modal({
-		        	backdrop: 'static', 
-		        	keyboard: false,
-		        	show:true,
-		        	height:'100%',
-		        	width:'100%'
-		        });
+		        
 		    
 		});
 	  
@@ -68,7 +62,26 @@ $(document).ready(function() {
 			window.location.href=href+"?fileOrigin="+fileOrigin;
 		});
 		
-		
+		$('#fileBankWindow').click(function(event){
+			event.preventDefault();
+			var	href=$(this).attr('data-href');
+			console.log(href);
+			$.ajax({
+				url: href,
+				type:'GET',
+				cache: false,
+				success: function(data) {
+					$("#fileBankFilesList").html(data);
+					$('#fileBankModelPopup').modal({
+			        	backdrop: 'static', 
+			        	keyboard: false,
+			        	show:true,
+			        	height:'100%',
+			        	width:'100%'
+			        });
+				}
+			});
+		});
 	
 });
 

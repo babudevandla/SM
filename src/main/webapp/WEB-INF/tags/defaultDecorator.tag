@@ -236,10 +236,7 @@ body {
 <script src="${contextPath}/resources/default/datatables/media/js/jquery.dataTables.min.js"></script>
 <script src="${contextPath}/resources/default/_mod/datatables/jquery.dataTables.bootstrap.min.js"></script>
 <script src="${contextPath}/resources/default/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="${contextPath}/resources/default/ckeditor/ckeditor.js"></script>
-<%-- <script src="${contextPath}/resources/default/ckfinder/ckfinder.js"></script> 
-<script src="${contextPath}/resources/default/ckfinder/samples/js/sf.js"></script>
-<script src="${contextPath}/resources/default/ckfinder/samples/js/tree-a.js"></script> --%>
+
 
 <script type="text/javascript">
 	
