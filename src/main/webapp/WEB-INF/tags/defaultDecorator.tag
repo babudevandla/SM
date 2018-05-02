@@ -101,7 +101,7 @@ body {
             	<a  class="text-white"><i class="fa fa-phone" aria-hidden="true"></i> ${user.mobile_no}</a>
             </div><!--profile card ends-->
             <ul class="nav-news-feed">
-              <%-- <li class="${digiLockActive?'active':''}"><i class="icon ion-lock-combination"></i><div><a href="${contextPath}/sm/file_management/${user.userId}">File Bank</a></div></li> --%>
+              <li class="${digiLockActive?'active':''}"><i class="fa fa-dashboard"></i><div><a href="${contextPath}/sm/dashboard">Dashboard</a></div></li>
               <li class="${digiLockActive?'active':''}"><i class="icon ion-lock-combination"></i><div><a href="${contextPath}/sm/file_management">File Bank</a></div></li>
               <li class="${diaryActive?'active':''}"><i class="fa fa-calendar" aria-hidden="true"></i><div><a href="${contextPath}/sm/getUserDairiesList">My Dairies</a></div></li>
               <%-- <li class="${msgActive?'active':''}"><i class="icon ion-chatboxes"></i><div><a href="${contextPath}/sm/messanger">Messanger</a></div></li> --%>
@@ -191,6 +191,29 @@ body {
         <p>SM Team © 2018. All rights reserved</p>
       </div>
 		</footer>
+		
+		
+		
+<div class="modal fade" id="fileBankModelPopup" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content" style="width: 100%">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">File Bank</h4>
+        </div>
+        <div class="modal-body" >
+          <div id="fileBankFilesList"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"  data-dismiss="modal">Ok</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+		
+		
     <!--preloader-->
    <!--  <div id="spinner-wrapper">
       <div class="spinner"></div>
@@ -213,6 +236,10 @@ body {
 <script src="${contextPath}/resources/default/datatables/media/js/jquery.dataTables.min.js"></script>
 <script src="${contextPath}/resources/default/_mod/datatables/jquery.dataTables.bootstrap.min.js"></script>
 <script src="${contextPath}/resources/default/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="${contextPath}/resources/default/ckeditor/ckeditor.js"></script>
+<%-- <script src="${contextPath}/resources/default/ckfinder/ckfinder.js"></script> 
+<script src="${contextPath}/resources/default/ckfinder/samples/js/sf.js"></script>
+<script src="${contextPath}/resources/default/ckfinder/samples/js/tree-a.js"></script> --%>
 
 <script type="text/javascript">
 	
@@ -240,16 +267,13 @@ body {
 	    '//www.tinymce.com/css/codepen.min.css'
 	  ]
 	});
-	</script>
   
-	
-	<!--  CKEditor plug-in -->
-	<%-- <script src="${contextPath}/resources/default/ckeditor/ckeditor.js"></script>
-	<script src="${contextPath}/resources/default/ckeditor/adapters/jquery.js"></script>
-	<script type="text/javascript">
-	
-	$( '#myfield' ).ckeditor();
-	</script> --%>
+  
+ 
+  
+  </script>
+  
+
 	
 </body>
 

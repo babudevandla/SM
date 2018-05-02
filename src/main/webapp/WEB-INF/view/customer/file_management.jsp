@@ -13,8 +13,9 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <%@taglib prefix="defaultTemplate" tagdir="/WEB-INF/tags"%>
 
+
 <defaultTemplate:defaultDecorator>
-<jsp:attribute name="title">File Manager</jsp:attribute>
+<jsp:attribute name="title">File Bank</jsp:attribute>
 <jsp:body>
  
 <style>
@@ -50,7 +51,8 @@
                 	<input type="hidden" name="folderId" value="${folderInfo.fId}">
                 	</button>
                 	&nbsp;&nbsp;  
-                	<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button>
+                	<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button> &nbsp; 
+                	
               	</div>
               </div>
               </form>
@@ -58,7 +60,10 @@
                	<a href="${contextPath}/sm/getGallerContent?userid=${userId}" class="btn btn-primary pull-right"><i class="fa fa-image" aria-hidden="true"></i> GALLERY</button></a>
             </div>
         </div>
-      
+        
+      	 <button id="fileBankWindow" data-href="${contextPath}/sm/getFileBankList?userid=${userid}" class="fileBankWindowCls">File Bank</button><br/>
+      	
+      	
          <div class="pull-right"><a href="${contextPath}/sm/showHiddenFoldersAndFiles/${folderInfo.fId}?userid=${userid}"><label style="color:red">show hidden files and folders</label></a></div>
         
         <a href="${contextPath}/sm/file_management/${userid}" style="cursor: pointer;"	class="user-link">Home &nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></a>
@@ -346,10 +351,28 @@
 </div>
 
 
+  
+  
+  
 <script type="text/javascript">
 
-	
-	
+
+/* function BrowseServer()
+{
+	 CKFinder.popup( {
+         chooseFiles: true,
+         onInit: function( finder ) {
+             finder.on( 'files:choose', function( evt ) {
+                 var file = evt.data.files.first();
+                 document.getElementById( '${contextPath}/resources/default/images/sm_logo.png' ).value = file.getUrl();
+             } );
+             finder.on( 'file:choose:resizedImage', function( evt ) {
+                 document.getElementById( '${contextPath}/resources/default/images/sm_logo.png' ).value = evt.data.resizedUrl;
+             } );
+         }
+     } );
+} */
+
 </script>
     
   </jsp:body>
